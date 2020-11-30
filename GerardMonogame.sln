@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GerardMonogame", "ClassLibrary1\GerardMonogame.fsproj", "{C5A24AC0-6B4E-4E9C-A38D-C70F66689A99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5A24AC0-6B4E-4E9C-A38D-C70F66689A99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5A24AC0-6B4E-4E9C-A38D-C70F66689A99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5A24AC0-6B4E-4E9C-A38D-C70F66689A99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5A24AC0-6B4E-4E9C-A38D-C70F66689A99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10C4A1BF-E96F-4FB5-870E-C4C74B4ED36E}
+	EndGlobalSection
+EndGlobal
