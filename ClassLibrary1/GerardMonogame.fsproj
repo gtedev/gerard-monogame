@@ -19,10 +19,10 @@
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <Compile Include="GameState.fs" />
     <Compile Include="Game1.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
