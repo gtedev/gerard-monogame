@@ -13,11 +13,21 @@ type Game1 () as x =
     let mutable spriteBatch = Unchecked.defaultof<SpriteBatch>
     let mutable bonhommeSprite = Unchecked.defaultof<Texture2D>
     let mutable bonhommeSpriteTexture = Unchecked.defaultof<SpriteTexture>
-    let speed = 100.0;
-
-    //let mutable contentManager =  new Content.ContentManager()
+    let mutable bonhommeGameEntity = Unchecked.defaultof<GameEntity>
+    let speed = 150.0;
 
     let ASSET_BONHOMME_SPRITE = "bonhomme1";
+        
+    let (|KeyDown|_|) k (state: KeyboardState) =
+        if state.IsKeyDown k then Some() else None
+
+    let getMovementVector keyState = 
+        match keyState with
+        | KeyDown Keys.Up -> Vector2(0f, -1.f)
+        | KeyDown Keys.Down  -> Vector2(0f, 1.f)
+        | KeyDown Keys.Right  -> Vector2(1.f, 0f)
+        | KeyDown Keys.Left  -> Vector2(-1.f, 0f)
+        | _ -> Vector2.Zero
 
     override x.Initialize() =
         do spriteBatch <- new SpriteBatch(x.GraphicsDevice)
@@ -31,19 +41,16 @@ type Game1 () as x =
         
          // TODO: use this.Content to load your game content here        
         bonhommeSprite <- x.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE);
-        bonhommeSpriteTexture <-  { texture = bonhommeSprite; x = 0.0;  y = 100.0; height = 100; width=100 }
+        bonhommeSpriteTexture <-  { texture = bonhommeSprite }
+        bonhommeGameEntity <-  { name = "bonhomme"; isEnabled = true;  spriteAnimation = [bonhommeSpriteTexture]; position = new Vector2(0f,100f) }
         ()
  
     override x.Update (gameTime) =
 
          // TODO: Add your update logic here
-        let keyboardState = Keyboard.GetState()
-
-        if(keyboardState.IsKeyDown(Keys.Right)) then
-            let posX = bonhommeSpriteTexture.x + gameTime.ElapsedGameTime.TotalSeconds
-            bonhommeSpriteTexture <-  { texture = bonhommeSprite; y = bonhommeSpriteTexture.y;  x = bonhommeSpriteTexture.x + speed*gameTime.ElapsedGameTime.TotalSeconds; height = 100; width=100 }
-        else
-            ()
+        let vectorMovement = getMovementVector (Keyboard.GetState())
+        let newVector = Vector2.Add(bonhommeGameEntity.position, vectorMovement )
+        bonhommeGameEntity <-  { bonhommeGameEntity with position = newVector }
         ()
  
     override x.Draw (gameTime) =
@@ -52,7 +59,8 @@ type Game1 () as x =
         // TODO: Add your drawing code here
         spriteBatch.Begin();
 
-        spriteBatch.Draw(bonhommeSpriteTexture.texture, new Vector2((float32)bonhommeSpriteTexture.x,(float32)bonhommeSpriteTexture.y), Color.White)
+        let sprite = List.head bonhommeGameEntity.spriteAnimation
+        spriteBatch.Draw(sprite.texture, bonhommeGameEntity.position, Color.White)
 
         spriteBatch.End();
 
