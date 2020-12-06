@@ -16,10 +16,14 @@
   <ItemGroup>
     <None Include="Content\obj\DesktopGL\Content\.mgstats" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
+    <Compile Include="Types.fs" />
+    <Compile Include="KeyboardState.fs" />
+    <Compile Include="Entities\BonhommeEntity.fs" />
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
-    <Compile Include="GameState.fs" />
+    <Compile Include="GameStateManager.fs" />
+    <Compile Include="SpriteManager.fs" />
     <Compile Include="Game1.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
