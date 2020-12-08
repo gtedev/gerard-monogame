@@ -5,7 +5,7 @@
  let updateEntities gameTime gameState:GameState = 
      let newEntities = 
       gameState.entities 
-      |> List.map (fun entity -> entity.updateEntity gameTime entity)
+      |> List.map (fun entity -> entity.UpdateEntity gameTime entity)
 
      { entities = newEntities }
 

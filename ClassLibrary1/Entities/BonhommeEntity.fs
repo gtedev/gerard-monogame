@@ -11,14 +11,12 @@ let SPEED_BONHOMME_SPRITE = 2f
 
 let update (gameTime:GameTime) (currentGameEntity: IGameEntity) : IGameEntity = 
          
-         let properties = currentGameEntity.properties
-
          let vectorMovement = KeyboardState.getMovementVector (Keyboard.GetState()) SPEED_BONHOMME_SPRITE
-         let newVector = Vector2.Add(properties.position, vectorMovement)
+         let newVector = Vector2.Add(currentGameEntity.Position, vectorMovement)
 
-         let properties = { properties with position = newVector }
+         let properties = { currentGameEntity.Properties with position = newVector }
 
-         createGameEntity properties currentGameEntity.updateEntity
+         createGameEntity properties currentGameEntity.UpdateEntity
 
 
 let initializeEntity (game:Game) =

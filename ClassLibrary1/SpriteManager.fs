@@ -17,7 +17,7 @@ let loadSpritesIntoState<'T when 'T :> Game> (game: 'T)(gameState: GameState) =
 
 
 let drawSprite (spriteBatch:SpriteBatch) (gameEntity: IGameEntity)  =
-     let properties = gameEntity.properties
-     let textureToDraw = getTextureToDraw properties.sprite
 
-     spriteBatch.Draw(textureToDraw, properties.position, Color.White)
+     let textureToDraw = getTextureToDraw gameEntity.Sprite
+
+     spriteBatch.Draw(textureToDraw, gameEntity.Position, Color.White)
