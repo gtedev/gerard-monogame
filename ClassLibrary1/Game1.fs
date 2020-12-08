@@ -37,8 +37,6 @@ type Game1 () as game =
         ()
  
 
-
-
     override x.Draw (gameTime) =
         do x.GraphicsDevice.Clear Color.Black
         

@@ -4,7 +4,7 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
 
-let getSpriteToDraw sprite = 
+let getTextureToDraw sprite = 
     match sprite with
     | SingleSprite sprite -> sprite.texture
     | _ -> Unchecked.defaultof<Texture2D>
@@ -16,6 +16,8 @@ let loadSpritesIntoState<'T when 'T :> Game> (game: 'T)(gameState: GameState) =
     { gameState with entities = [bonhommeGameEntity]}
 
 
-let drawSprite (spriteBatch:SpriteBatch) (gameEntity: GameEntity)  =
-     let textureToDraw = getSpriteToDraw gameEntity.sprite
-     spriteBatch.Draw(textureToDraw, gameEntity.position, Color.White)
+let drawSprite (spriteBatch:SpriteBatch) (gameEntity: IGameEntity)  =
+     let properties = gameEntity.properties
+     let textureToDraw = getTextureToDraw properties.sprite
+
+     spriteBatch.Draw(textureToDraw, properties.position, Color.White)
