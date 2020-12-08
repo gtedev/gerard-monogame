@@ -5,14 +5,6 @@ open Microsoft.Xna.Framework.Graphics
 
 type CurrentSpriteIndex =  int
 
-type ITextOutputSink =
- abstract WriteChar : char -> unit
- abstract WriteString : string -> unit
-
-let simpleOutputSink writeCharFunction =
- { new ITextOutputSink with
- member x.WriteChar(c) = writeCharFunction(c)
- member x.WriteString(s) = s |> String.iter x.WriteChar }
 
 type SpriteTexture = {
  texture: Texture2D 
@@ -23,9 +15,6 @@ type Sprite =
  | UnloadedSprite
  | SingleSprite of SpriteTexture
  | AnimatedSprite of SpriteTexture list * CurrentSpriteIndex
-
-type GameEntityType =
- | BonhommeEntity
 
 
 type GameEntityProperties = {
