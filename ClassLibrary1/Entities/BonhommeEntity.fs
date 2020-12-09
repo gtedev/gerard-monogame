@@ -9,25 +9,31 @@ let ASSET_BONHOMME_SPRITE = "bonhomme1"
 let SPEED_BONHOMME_SPRITE = 2f
 
 
-let update (gameTime:GameTime) (currentGameEntity: IGameEntity) : IGameEntity = 
-         
-         let vectorMovement = KeyboardState.getMovementVector (Keyboard.GetState()) SPEED_BONHOMME_SPRITE
-         let newVector = Vector2.Add(currentGameEntity.Position, vectorMovement)
+let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 
-         let properties = { currentGameEntity.Properties with position = newVector }
+    let vectorMovement =
+        KeyboardState.getMovementVector (Keyboard.GetState()) SPEED_BONHOMME_SPRITE
 
-         createGameEntity properties currentGameEntity.UpdateEntity
+    let newVector =
+        Vector2.Add(currentGameEntity.Position, vectorMovement)
+
+    let properties =
+        { currentGameEntity.Properties with
+              position = newVector }
+
+    createGameEntity properties currentGameEntity.UpdateEntity
 
 
-let initializeEntity (game:Game) =
+let initializeEntity (game: Game) =
 
-        let bonhommeSprite = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE)
-        let bonhommeSpriteTexture =  { texture = bonhommeSprite }
+    let bonhommeSprite =
+        game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE)
 
-        let properties = {
-            position = new Vector2(0f,100f);
-            sprite = SingleSprite bonhommeSpriteTexture; 
-            isEnabled = true 
-        }
+    let bonhommeSpriteTexture = { texture = bonhommeSprite }
 
-        createGameEntity properties update
+    let properties =
+        { position = new Vector2(0f, 100f)
+          sprite = SingleSprite bonhommeSpriteTexture
+          isEnabled = true }
+
+    createGameEntity properties update

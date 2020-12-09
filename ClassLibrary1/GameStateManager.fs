@@ -1,11 +1,10 @@
 ﻿module GameStateManager
 
- open Types
+open Types
 
- let updateEntities gameTime gameState:GameState = 
-     let newEntities = 
-      gameState.entities 
-      |> List.map (fun entity -> entity.UpdateEntity gameTime entity)
+let updateEntities gameTime gameState: GameState =
+    let newEntities =
+        gameState.entities
+        |> List.map (fun entity -> entity.UpdateEntity gameTime entity)
 
-     { entities = newEntities }
-
+    { entities = newEntities }
