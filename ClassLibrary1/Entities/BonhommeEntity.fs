@@ -21,7 +21,7 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
         { currentGameEntity.Properties with
               position = newVector }
 
-    createGameEntity properties currentGameEntity.UpdateEntity
+    EntityHelper.createGameEntity properties currentGameEntity.UpdateEntity
 
 
 let initializeEntity (game: Game) =
@@ -36,4 +36,4 @@ let initializeEntity (game: Game) =
           sprite = SingleSprite bonhommeSpriteTexture
           isEnabled = true }
 
-    createGameEntity properties update
+    EntityHelper.createGameEntity properties update

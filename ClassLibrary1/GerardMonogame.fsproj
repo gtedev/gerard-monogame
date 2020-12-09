@@ -17,6 +17,7 @@
     <None Include="Content\obj\DesktopGL\Content\.mgstats" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <Compile Include="Types.fs" />
+    <Compile Include="EntityHelper.fs" />
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Entities\BonhommeEntity.fs" />
     <None Include="app.manifest" />

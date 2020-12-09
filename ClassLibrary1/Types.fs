@@ -8,6 +8,7 @@ type CurrentSpriteIndex = int
 
 type SpriteTexture = { texture: Texture2D }
 
+
 type Sprite =
     | UnloadedSprite
     | SingleSprite of SpriteTexture
@@ -19,17 +20,12 @@ type GameEntityProperties =
       position: Vector2
       sprite: Sprite }
 
+
 type IGameEntity =
     abstract Properties: GameEntityProperties
     abstract UpdateEntity: GameTime -> IGameEntity -> IGameEntity
     abstract Position: Vector2
     abstract Sprite: Sprite
 
-let createGameEntity properties updateEntity =
-    { new IGameEntity with
-        member x.Properties = properties
-        member x.UpdateEntity gameTime currentGameEntity = updateEntity gameTime currentGameEntity
-        member x.Position = properties.position
-        member x.Sprite = properties.sprite }
 
 type GameState = { entities: IGameEntity list }
