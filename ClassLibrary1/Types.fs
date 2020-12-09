@@ -10,9 +10,8 @@ type SpriteTexture = { texture: Texture2D }
 
 
 type Sprite =
-    | UnloadedSprite
     | SingleSprite of SpriteTexture
-    | AnimatedSprite of SpriteTexture list * CurrentSpriteIndex
+    | AnimatedSprite of SpriteTexture list * int
 
 
 type GameEntityProperties =

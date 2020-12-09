@@ -4,10 +4,11 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
 
+
 let getTextureToDraw sprite =
     match sprite with
     | SingleSprite sprite -> sprite.texture
-    | _ -> Unchecked.defaultof<Texture2D>
+    | AnimatedSprite (sprites, index) -> sprites.[index].texture
 
 
 let loadSpritesIntoState<'T when 'T :> Game> (game: 'T) (gameState: GameState) =
