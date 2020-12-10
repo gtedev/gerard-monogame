@@ -1,4 +1,4 @@
-﻿module EntityHelper
+﻿module GameEntity
 
 open Types
 

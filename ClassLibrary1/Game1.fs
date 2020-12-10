@@ -3,7 +3,6 @@
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
-open Microsoft.Xna.Framework.Input
 
 type Game1 () as game =
     inherit Game()
@@ -28,7 +27,7 @@ type Game1 () as game =
     override x.LoadContent() =
         
          // TODO: use this.Content to load your game content here        
-        gameState <- SpriteManager.loadSpritesIntoState game gameState
+        gameState <- LoadContent.loadSpritesIntoState game gameState
         ()
  
 
@@ -36,7 +35,7 @@ type Game1 () as game =
     override x.Update (gameTime) =
 
          // TODO: Add your update logic here
-        gameState <- GameStateManager.updateEntities gameTime gameState
+        gameState <- GameState.updateEntities gameTime gameState
         
         ()
  
@@ -48,7 +47,7 @@ type Game1 () as game =
         spriteBatch.Begin();
 
         gameState.entities
-        |> List.iter (SpriteManager.drawSprite spriteBatch)
+        |> List.iter (Sprites.drawSprite spriteBatch)
 
         spriteBatch.End();
 

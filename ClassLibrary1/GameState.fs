@@ -1,4 +1,4 @@
-﻿module GameStateManager
+﻿module GameState
 
 open Types
 
