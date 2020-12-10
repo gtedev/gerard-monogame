@@ -4,14 +4,19 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 
 type CurrentSpriteIndex = int
-
+type ElapsedTimeSinceLastFrame = float32
 
 type SpriteTexture = { texture: Texture2D }
 
+type AnimatedSpriteState = {
+    sprites : SpriteTexture list
+    currentSpriteIndex: CurrentSpriteIndex
+    elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame
+}
 
 type Sprite =
     | SingleSprite of SpriteTexture
-    | AnimatedSprite of SpriteTexture list * int
+    | AnimatedSprite of AnimatedSpriteState
 
 
 type GameEntityProperties =

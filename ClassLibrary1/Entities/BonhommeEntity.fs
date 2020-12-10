@@ -8,25 +8,44 @@ open Microsoft.Xna.Framework.Graphics
 let ASSET_BONHOMME_SPRITE1 = "bonhomme3-piskel"
 let ASSET_BONHOMME_SPRITE2 = "bonhomme5-piskel"
 let SPEED_BONHOMME_SPRITE = 2f
+let ANIMATION_FRAME_TIME = 1f / 6f
 
-let updateAnimatedSpriteState sprites currentIndex =
 
+let computeNextSpriteIndex sprites currentSpriteIndex =
     let lastIndex = List.length sprites - 1
+    if currentSpriteIndex = lastIndex then 0 else (currentSpriteIndex + 1)
 
-    let nexIndex =
-        if currentIndex = lastIndex then 0 else (currentIndex + 1)
 
-    AnimatedSprite(sprites, nexIndex)
+let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
 
-let updateSpriteState sprite =
+    let nextElapsedTime =
+        (float32) gameTime.ElapsedGameTime.TotalSeconds
+        + animatedSpriteState.elapsedTimeSinceLastFrame
+
+    let currentSpriteIndex = animatedSpriteState.currentSpriteIndex
+    let sprites = animatedSpriteState.sprites
+
+    let nextIndexAndElapsedTime =
+        if (nextElapsedTime > ANIMATION_FRAME_TIME)
+        then (computeNextSpriteIndex sprites currentSpriteIndex, 0f)
+        else (currentSpriteIndex, nextElapsedTime)
+
+    AnimatedSprite
+        { sprites = animatedSpriteState.sprites
+          currentSpriteIndex = fst nextIndexAndElapsedTime
+          elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
+
+
+let updateSpriteState gameTime sprite =
     match sprite with
     | SingleSprite spriteTexture -> sprite
-    | AnimatedSprite (sprites, currentIndex) -> updateAnimatedSpriteState sprites currentIndex
+    | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
+
 
 let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 
-    let sprite =
-        updateSpriteState (currentGameEntity.Sprite)
+    let nextSprite =
+        updateSpriteState gameTime (currentGameEntity.Sprite)
 
     let vectorMovement =
         KeyboardState.getMovementVector (Keyboard.GetState()) SPEED_BONHOMME_SPRITE
@@ -37,7 +56,7 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
     let properties =
         { currentGameEntity.Properties with
               position = newVector
-              sprite = sprite }
+              sprite = nextSprite }
 
     EntityHelper.createGameEntity properties currentGameEntity.UpdateEntity
 
@@ -46,33 +65,15 @@ let initializeEntity (game: Game) =
 
     let spriteTextures =
         [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
           { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) } ]
 
     let properties =
         { position = new Vector2(0f, 100f)
-          sprite = AnimatedSprite(spriteTextures, 0)
+          sprite =
+              AnimatedSprite
+                  { sprites = spriteTextures
+                    currentSpriteIndex = 0
+                    elapsedTimeSinceLastFrame = 0f }
           isEnabled = true }
 
     EntityHelper.createGameEntity properties update

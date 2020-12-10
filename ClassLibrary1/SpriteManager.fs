@@ -8,7 +8,7 @@ open Types
 let getTextureToDraw sprite =
     match sprite with
     | SingleSprite sprite -> sprite.texture
-    | AnimatedSprite (sprites, index) -> sprites.[index].texture
+    | AnimatedSprite animatedSpriteState -> animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex].texture
 
 
 let loadSpritesIntoState<'T when 'T :> Game> (game: 'T) (gameState: GameState) =
