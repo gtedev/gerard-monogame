@@ -5,8 +5,8 @@ open Types
 open Microsoft.Xna.Framework.Input
 open Microsoft.Xna.Framework.Graphics
 
-let ASSET_BONHOMME_SPRITE1 = "bonhomme3-piskel"
-let ASSET_BONHOMME_SPRITE2 = "bonhomme5-piskel"
+let ASSET_BONHOMME_SPRITE1 = "bonhomme32-piskel"
+let ASSET_BONHOMME_SPRITE2 = "bonhomme6-piskel"
 let SPEED_BONHOMME_SPRITE = 2f
 let ANIMATION_FRAME_TIME = 1f / 6f
 
