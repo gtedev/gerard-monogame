@@ -17,8 +17,9 @@ type Game1 () as game =
     override game.Initialize() =
         do spriteBatch <- new SpriteBatch(game.GraphicsDevice)
 
-        graphics.PreferredBackBufferWidth <-  512;
-        graphics.PreferredBackBufferHeight <- 448;
+        graphics.PreferredBackBufferWidth <-  1024;
+        graphics.PreferredBackBufferHeight <- 768;
+        graphics.ApplyChanges()
 
         do base.Initialize()
          // TODO: Add your initialization logic here
