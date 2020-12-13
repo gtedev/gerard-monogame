@@ -25,7 +25,18 @@ type GameEntityProperties =
       sprite: Sprite }
 
 
+type BonhommeProperties =
+    { isRunning: bool
+      staticSprite: SpriteTexture
+      runningAnimatedSprite: SpriteTexture list}
+
+
+type CustomEntityProperties =
+    | BonhommeProperties of BonhommeProperties
+
+
 type IGameEntity =
+    abstract CustomEntityProperties: CustomEntityProperties option
     abstract Properties: GameEntityProperties
     abstract UpdateEntity: GameTime -> IGameEntity -> IGameEntity
     abstract Position: Vector2
