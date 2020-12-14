@@ -17,31 +17,29 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
     let vectorMovement =
         KeyboardState.getMovementVector (Keyboard.GetState()) SPEED_BONHOMME_SPRITE
 
-    let wasRunning = properties.isRunning
+    let previousMovement = properties.movementStatus
 
-    let isRunning =
+    let currentMovement =
         if vectorMovement.X = 0f && vectorMovement.Y = 0f
-        then false
-        else true
+        then Inactive
+        else Running
 
     let newProperties =
         { properties with
-              isRunning = isRunning }
+              movementStatus = currentMovement }
 
     let bonhommeProperties = Some(BonhommeProperties newProperties)
 
     let spriteToPass =
-        if not wasRunning && isRunning then
+        match (previousMovement, currentMovement) with
+        | Inactive, Running ->
             AnimatedSprite
                 { sprites = properties.runningAnimatedSprite
                   currentSpriteIndex = 0
                   elapsedTimeSinceLastFrame = 0f }
-        elif wasRunning && isRunning then
-            currentGameEntity.Sprite
-        elif wasRunning && not isRunning then
-            SingleSprite properties.staticSprite
-        else
-            SingleSprite properties.staticSprite
+        | Running, Running -> currentGameEntity.Sprite
+        | Running, Inactive -> SingleSprite properties.staticSprite
+        | _ -> SingleSprite properties.staticSprite
 
     let nextSprite =
         Sprites.updateSpriteState gameTime spriteToPass ANIMATION_FRAME_TIME
@@ -77,7 +75,7 @@ let initializeEntity (game: Game) =
 
     let bonhommeProperties =
         BonhommeProperties
-            { isRunning = false
+            { movementStatus = Inactive
               staticSprite = staticTexture
               runningAnimatedSprite = animatedRunningTextures }
         |> Some

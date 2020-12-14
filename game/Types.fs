@@ -26,13 +26,13 @@ type GameEntityProperties =
       sprite: Sprite }
 
 
-type BonhommeState =
-    | Standing
-    | IsRunning
+type BonhommeMovemementState =
+    | Inactive
+    | Running
 
 
 type BonhommeProperties =
-    { isRunning: bool
+    { movementStatus: BonhommeMovemementState
       staticSprite: SpriteTexture
       runningAnimatedSprite: SpriteTexture list }
 
