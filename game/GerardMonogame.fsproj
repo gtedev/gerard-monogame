@@ -20,12 +20,11 @@
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Sprites.fs" />
     <Compile Include="GameEntity.fs" />
-    <Compile Include="GameState.fs" />
     <Compile Include="Entities\BonhommeEntity.fs" />
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
-    <Compile Include="LoadContent.fs" />
+    <Compile Include="GameState.fs" />
     <Compile Include="Game1.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

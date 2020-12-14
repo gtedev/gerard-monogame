@@ -27,7 +27,7 @@ type Game1() as game =
     override x.LoadContent() =
 
         // TODO: use this.Content to load your game content here
-        gameState <- LoadContent.loadSpritesIntoState game gameState
+        gameState <- GameState.initializeEntities game gameState
         ()
 
 
