@@ -3,12 +3,14 @@
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
+open Microsoft.Xna.Framework.Media
 
 type Game1() as game =
     inherit Game()
 
     do game.Content.RootDirectory <- "Content"
     let graphics = new GraphicsDeviceManager(game)
+    let mutable song =  Unchecked.defaultof<Song>
 
     let mutable spriteBatch = Unchecked.defaultof<SpriteBatch>
     let mutable gameState = Unchecked.defaultof<GameState>
@@ -28,6 +30,9 @@ type Game1() as game =
 
         // TODO: use this.Content to load your game content here
         gameState <- GameState.initializeEntities game gameState
+        song <- game.Content.Load<Song>("super-spike-vball-nes-music-chicago-match")
+        MediaPlayer.IsRepeating <- true;
+        MediaPlayer.Play(song)
         ()
 
 

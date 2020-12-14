@@ -10,7 +10,7 @@ let ASSET_BONHOMME_SPRITE2 = "bonhomme32-2-piskel"
 let ASSET_BONHOMME_SPRITE3 = "bonhomme62-piskel"
 
 let SPEED_BONHOMME_SPRITE = 2f
-let ANIMATION_FRAME_TIME = 1f / 6f
+let ANIMATION_FRAME_TIME = 1f / 8f
 
 let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
 

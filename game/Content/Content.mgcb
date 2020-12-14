@@ -145,3 +145,9 @@
 /processorParam:TextureFormat=Color
 /build:bonhomme6-piskel.png
 
+#begin super-spike-vball-nes-music-chicago-match.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:super-spike-vball-nes-music-chicago-match.mp3
+
