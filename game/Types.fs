@@ -8,11 +8,12 @@ type ElapsedTimeSinceLastFrame = float32
 
 type SpriteTexture = { texture: Texture2D }
 
-type AnimatedSpriteState = {
-    sprites : SpriteTexture list
-    currentSpriteIndex: CurrentSpriteIndex
-    elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame
-}
+
+type AnimatedSpriteState =
+    { sprites: SpriteTexture list
+      currentSpriteIndex: CurrentSpriteIndex
+      elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame }
+
 
 type Sprite =
     | SingleSprite of SpriteTexture
@@ -25,14 +26,18 @@ type GameEntityProperties =
       sprite: Sprite }
 
 
+type BonhommeState =
+    | Standing
+    | IsRunning
+
+
 type BonhommeProperties =
     { isRunning: bool
       staticSprite: SpriteTexture
-      runningAnimatedSprite: SpriteTexture list}
+      runningAnimatedSprite: SpriteTexture list }
 
 
-type CustomEntityProperties =
-    | BonhommeProperties of BonhommeProperties
+type CustomEntityProperties = BonhommeProperties of BonhommeProperties
 
 
 type IGameEntity =

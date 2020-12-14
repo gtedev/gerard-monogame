@@ -38,7 +38,9 @@ let updateSpriteState gameTime sprite animationFrameTime =
 let getTextureToDraw sprite =
     match sprite with
     | SingleSprite sprite -> sprite.texture
-    | AnimatedSprite animatedSpriteState -> animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex].texture
+    | AnimatedSprite animatedSpriteState ->
+        animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
+            .texture
 
 
 let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
