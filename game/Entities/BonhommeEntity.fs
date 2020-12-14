@@ -36,13 +36,14 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
             AnimatedSprite
                 { sprites = properties.runningAnimatedSprite
                   currentSpriteIndex = 0
-                  elapsedTimeSinceLastFrame = 0f }
+                  elapsedTimeSinceLastFrame = 0f 
+                  animatedFrameTime = ANIMATION_FRAME_TIME}
         | Running, Running -> currentGameEntity.Sprite
         | Running, Inactive -> SingleSprite properties.staticSprite
         | _ -> SingleSprite properties.staticSprite
 
     let nextSprite =
-        Sprites.updateSpriteState gameTime spriteToPass ANIMATION_FRAME_TIME
+        Sprites.updateSpriteState gameTime spriteToPass
 
     let newVector =
         Vector2.Add(currentGameEntity.Position, vectorMovement)

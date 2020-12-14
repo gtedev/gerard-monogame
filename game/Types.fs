@@ -12,7 +12,8 @@ type SpriteTexture = { texture: Texture2D }
 type AnimatedSpriteState =
     { sprites: SpriteTexture list
       currentSpriteIndex: CurrentSpriteIndex
-      elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame }
+      elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame
+      animatedFrameTime: float32 }
 
 
 type Sprite =

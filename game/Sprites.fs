@@ -9,7 +9,7 @@ let computeNextSpriteIndex sprites currentSpriteIndex =
     if currentSpriteIndex = lastIndex then 0 else (currentSpriteIndex + 1)
 
 
-let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState animationFrameTime =
+let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
 
     let nextElapsedTime =
         (float32) gameTime.ElapsedGameTime.TotalSeconds
@@ -19,20 +19,21 @@ let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState animationFrame
     let sprites = animatedSpriteState.sprites
 
     let nextIndexAndElapsedTime =
-        if (nextElapsedTime > animationFrameTime)
+        if (nextElapsedTime > animatedSpriteState.animatedFrameTime)
         then (computeNextSpriteIndex sprites currentSpriteIndex, 0f)
         else (currentSpriteIndex, nextElapsedTime)
 
     AnimatedSprite
-        { sprites = animatedSpriteState.sprites
-          currentSpriteIndex = fst nextIndexAndElapsedTime
-          elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
+        { animatedSpriteState with
+              sprites = animatedSpriteState.sprites
+              currentSpriteIndex = fst nextIndexAndElapsedTime
+              elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
 
 
-let updateSpriteState gameTime sprite animationFrameTime =
+let updateSpriteState gameTime sprite =
     match sprite with
     | SingleSprite _ -> sprite
-    | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState animationFrameTime
+    | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
 
 
 let getTextureToDraw sprite =
