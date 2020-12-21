@@ -14,7 +14,6 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Bonhomme\BonhommeConstants.fs" />
     <Compile Include="Helper.fs" />
     <None Include="Content\obj\DesktopGL\Content\.mgstats" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
@@ -22,12 +21,13 @@
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Sprites.fs" />
     <Compile Include="GameEntity.fs" />
-    <Compile Include="Entities\Bonhomme\BonhommeSprite.fs" />
-    <Compile Include="Entities\Bonhomme\BonhommeUpdate.fs" />
-    <Compile Include="Entities\Bonhomme\BonhommeEntity.fs" />
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <Compile Include="Entities\Bonhomme\BonhommeConstants.fs" />
+    <Compile Include="Entities\Bonhomme\BonhommeSprite.fs" />
+    <Compile Include="Entities\Bonhomme\BonhommeUpdate.fs" />
+    <Compile Include="Entities\Bonhomme\BonhommeEntity.fs" />
     <Compile Include="GameState.fs" />
     <Compile Include="Game1.fs" />
     <Compile Include="Program.fs" />
