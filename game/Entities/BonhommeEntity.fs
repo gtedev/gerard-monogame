@@ -17,7 +17,7 @@ let FLOOR_HEIGHT = 350f
 
 
 
-let currentMovementState (gameTime: GameTime)
+let computeCurrentMovementState (gameTime: GameTime)
                          (properties: GameEntityProperties)
                          (bonhommeProperties: BonhommeProperties)
                          (vectorMovement: Vector2)
@@ -39,31 +39,33 @@ let currentMovementState (gameTime: GameTime)
         | Jumping, None -> Some(JUMP_VELOCITY_SPEED)
         | _, _ -> None
 
-    let nextPositionYMovement =
+    let nextJumpYPosition =
         match (currentMovementState, currentVelocity) with
         | Jumping, Some velocity ->
             ((velocity)
              * (float32) gameTime.ElapsedGameTime.TotalSeconds)
         | _ -> 0f
 
-    let nextPositionYMovementWithFloor =
-        if positionY + nextPositionYMovement > FLOOR_HEIGHT
+    let nextJumpYPositionWithFloorCheck =
+        if positionY + nextJumpYPosition > FLOOR_HEIGHT
         then 0f
-        else nextPositionYMovement
+        else nextJumpYPosition
 
-    let currentMovementState2 =
+    let currentMovementStateWithFloorCheck =
         if currentMovementState = Jumping
-           && (positionY + nextPositionYMovement > FLOOR_HEIGHT) then
+           && (positionY + nextJumpYPosition > FLOOR_HEIGHT) then
             Inactive
         else
             currentMovementState
 
-    let currentVelocity2 =
-        if positionY + nextPositionYMovement > FLOOR_HEIGHT
+    let currentVelocityWithFloorCheck =
+        if positionY + nextJumpYPosition > FLOOR_HEIGHT
         then None
         else currentVelocity
 
-    (currentMovementState2, new Vector2(vectorMovement.X, nextPositionYMovementWithFloor), currentVelocity2)
+    (currentMovementStateWithFloorCheck,
+     new Vector2(vectorMovement.X, nextJumpYPositionWithFloorCheck),
+     currentVelocityWithFloorCheck)
 
 
 
@@ -98,23 +100,21 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
 
     let previousMovement = properties.movementStatus
 
-    let currentMovement =
-        currentMovementState gameTime currentGameEntity.Properties properties vectorMovement
-
-    let currentVelocity = thrd3 currentMovement
+    let currentMovementState =
+        computeCurrentMovementState gameTime currentGameEntity.Properties properties vectorMovement
 
     let newProperties =
         { properties with
-              movementStatus = fst3 currentMovement
-              jumpState = currentVelocity }
+              movementStatus = fst3 currentMovementState
+              jumpState = thrd3 currentMovementState }
 
     let bonhommeProperties = Some(BonhommeProperties newProperties)
 
     let newSprite =
-        updateSprite gameTime currentGameEntity properties previousMovement currentMovement
+        updateSprite gameTime currentGameEntity properties previousMovement currentMovementState
 
     let newVector =
-        Vector2.Add(currentGameEntity.Position, snd3 currentMovement)
+        Vector2.Add(currentGameEntity.Position, snd3 currentMovementState)
 
 
     let properties =
