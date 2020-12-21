@@ -15,57 +15,85 @@ let ANIMATION_FRAME_TIME = 1f / 8f
 let JUMP_VELOCITY_SPEED = -800f
 let FLOOR_HEIGHT = 350f
 
+let currentVelocityWithFloorCheck positionY (result: (BonhommeMovemementState * Vector2 * float32 option)) =
 
+    let currentVelocity =
+        if positionY + (snd3 result).Y > FLOOR_HEIGHT
+        then None
+        else thrd3 result
 
-let computeCurrentMovementState (gameTime: GameTime)
-                         (properties: GameEntityProperties)
-                         (bonhommeProperties: BonhommeProperties)
-                         (vectorMovement: Vector2)
-                         =
+    (fst3 result, snd3 result, currentVelocity)
 
-    let positionY = properties.position.Y
-    let previousState = bonhommeProperties.movementStatus
-
+let currentMovementStateWithFloorCheck positionY (result: (BonhommeMovemementState * Vector2 * float32 option)) =
     let currentMovementState =
+        if fst3 result = Jumping
+           && (positionY + (snd3 result).Y > FLOOR_HEIGHT) then
+            Inactive
+        else
+            fst3 result
+
+    (currentMovementState, snd3 result, thrd3 result)
+
+let withFloorCheck positionY (result: (BonhommeMovemementState * Vector2 * float32 option)) =
+
+    if positionY + (snd3 result).Y > FLOOR_HEIGHT
+    then (Inactive, new Vector2((snd3 result).X, 0f), thrd3 result)
+    else result
+
+let nextJumpYPosition (gameTime: GameTime) (result: (BonhommeMovemementState * Vector2 * float32 option)) =
+
+    let jumpPosition =
+        match (fst3 result, thrd3 result) with
+        | Jumping, Some velocity ->
+            ((velocity)
+             * (float32) gameTime.ElapsedGameTime.TotalSeconds)
+        | _ -> 0f
+
+    let newVectorPosition =
+        new Vector2((snd3 result).X, jumpPosition)
+
+    (fst3 result, newVectorPosition, thrd3 result)
+
+let currentMovementState previousState (vectorMovement: Vector2) result =
+
+    let state =
         if previousState = Jumping || vectorMovement.Y < 0f
         then Jumping
         elif vectorMovement.X = 0f && vectorMovement.Y = 0f
         then Inactive
         else Running
 
-    let currentVelocity =
-        match (currentMovementState, bonhommeProperties.jumpState) with
+    (state, snd3 result, thrd3 result)
+
+let currentVelocity (bonhommeProperties: BonhommeProperties) result =
+
+    let velocity =
+        match (fst3 result, bonhommeProperties.jumpState) with
         | Jumping, Some velocity -> Some(velocity + 25f)
         | Jumping, None -> Some(JUMP_VELOCITY_SPEED)
         | _, _ -> None
 
-    let nextJumpYPosition =
-        match (currentMovementState, currentVelocity) with
-        | Jumping, Some velocity ->
-            ((velocity)
-             * (float32) gameTime.ElapsedGameTime.TotalSeconds)
-        | _ -> 0f
+    (fst3 result, snd3 result, velocity)
 
-    let nextJumpYPositionWithFloorCheck =
-        if positionY + nextJumpYPosition > FLOOR_HEIGHT
-        then 0f
-        else nextJumpYPosition
 
-    let currentMovementStateWithFloorCheck =
-        if currentMovementState = Jumping
-           && (positionY + nextJumpYPosition > FLOOR_HEIGHT) then
-            Inactive
-        else
-            currentMovementState
+let currentXPosition (vectorMovement:Vector2) (result: (BonhommeMovemementState * Vector2 * float32 option)) =
+    let newVector =  new Vector2(vectorMovement.X, (snd3 result).Y)
+    (fst3 result, newVector, thrd3 result)
 
-    let currentVelocityWithFloorCheck =
-        if positionY + nextJumpYPosition > FLOOR_HEIGHT
-        then None
-        else currentVelocity
+let computeCurrentMovementState (gameTime: GameTime)
+                                (properties: GameEntityProperties)
+                                (bonhommeProperties: BonhommeProperties)
+                                (vectorMovement: Vector2)
+                                =
 
-    (currentMovementStateWithFloorCheck,
-     new Vector2(vectorMovement.X, nextJumpYPositionWithFloorCheck),
-     currentVelocityWithFloorCheck)
+    let previousState = bonhommeProperties.movementStatus
+
+    (previousState, properties.position, None)
+    |> currentXPosition vectorMovement
+    |> currentMovementState previousState vectorMovement
+    |> currentVelocity bonhommeProperties
+    |> nextJumpYPosition gameTime
+    |> withFloorCheck properties.position.Y
 
 
 
