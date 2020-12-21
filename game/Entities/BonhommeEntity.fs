@@ -23,9 +23,10 @@ let currentMovementState (gameTime: GameTime)
                          =
 
     let positionY = properties.position.Y
+    let previousState = bonhommeProperties.movementStatus
 
     let currentMovementState =
-        if positionY < FLOOR_HEIGHT || vectorMovement.Y < 0f
+        if previousState = Jumping || vectorMovement.Y < 0f
         then Jumping
         elif vectorMovement.X = 0f && vectorMovement.Y = 0f
         then Inactive
@@ -42,14 +43,26 @@ let currentMovementState (gameTime: GameTime)
         | Jumping, Some velocity ->
             ((velocity)
              * (float32) gameTime.ElapsedGameTime.TotalSeconds)
-        | _ -> properties.position.Y
+        | _ -> 0f
 
     let nextPositionYMovementWithFloor =
         if positionY + nextPositionYMovement > FLOOR_HEIGHT
         then 0f
         else nextPositionYMovement
 
-    (currentMovementState, new Vector2(vectorMovement.X, nextPositionYMovementWithFloor), currentVelocity)
+    let currentMovementState2 =
+        if currentMovementState = Jumping
+           && (positionY + nextPositionYMovement > FLOOR_HEIGHT) then
+            Inactive
+        else
+            currentMovementState
+
+    let currentVelocity2 =
+        if positionY + nextPositionYMovement > FLOOR_HEIGHT
+        then None
+        else currentVelocity
+
+    (currentMovementState2, new Vector2(vectorMovement.X, nextPositionYMovementWithFloor), currentVelocity2)
 
 
 
