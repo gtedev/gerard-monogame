@@ -33,9 +33,9 @@ let currentMovementState (gameTime: GameTime)
 
     let currentVelocity =
         match (currentMovementState, bonhommeProperties.jumpState) with
-        | Jumping, Some velocity -> Some (velocity + 25f)
+        | Jumping, Some velocity -> Some(velocity + 25f)
         | Jumping, None -> Some(JUMP_VELOCITY_SPEED)
-        | _,_-> None
+        | _, _ -> None
 
     let nextPositionYMovement =
         match (currentMovementState, currentVelocity) with
@@ -51,24 +51,14 @@ let currentMovementState (gameTime: GameTime)
 
     (currentMovementState, new Vector2(vectorMovement.X, nextPositionYMovementWithFloor), currentVelocity)
 
-let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
 
-    let vectorMovement =
-        KeyboardState.getMovementVector (Keyboard.GetState())
 
-    let previousMovement = properties.movementStatus
-
-    let currentMovement =
-        currentMovementState gameTime currentGameEntity.Properties properties vectorMovement
-
-    let currentVelocity = thrd3 currentMovement
-    let newProperties =
-        { properties with
-              movementStatus = fst3 currentMovement
-              jumpState = currentVelocity}
-
-    let bonhommeProperties = Some(BonhommeProperties newProperties)
-
+let updateSprite gameTime
+                 (currentGameEntity: IGameEntity)
+                 (properties: BonhommeProperties)
+                 previousMovement
+                 currentMovement
+                 =
 
     let spriteToPass =
         match (previousMovement, fst3 currentMovement) with
@@ -82,20 +72,43 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
         | Running, Inactive -> SingleSprite properties.staticSprite
         | _ -> SingleSprite properties.staticSprite
 
-    let nextSprite =
-        Sprites.updateSpriteState gameTime spriteToPass
+    Sprites.updateSpriteState gameTime spriteToPass
+
+
+
+let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
+
+    let vectorMovement =
+        KeyboardState.getMovementVector (Keyboard.GetState())
+
+    let previousMovement = properties.movementStatus
+
+    let currentMovement =
+        currentMovementState gameTime currentGameEntity.Properties properties vectorMovement
+
+    let currentVelocity = thrd3 currentMovement
+
+    let newProperties =
+        { properties with
+              movementStatus = fst3 currentMovement
+              jumpState = currentVelocity }
+
+    let bonhommeProperties = Some(BonhommeProperties newProperties)
+
+    let newSprite =
+        updateSprite gameTime currentGameEntity properties previousMovement currentMovement
 
     let newVector =
         Vector2.Add(currentGameEntity.Position, snd3 currentMovement)
-    //Vector2.Add(currentGameEntity.Position, vectorMovement)
 
 
     let properties =
         { currentGameEntity.Properties with
               position = newVector
-              sprite = nextSprite }
+              sprite = newSprite }
 
     GameEntity.createGameEntity properties bonhommeProperties currentGameEntity.UpdateEntity
+
 
 
 let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
@@ -104,6 +117,7 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
     | Some (BonhommeProperties properties) -> updateEntity gameTime currentGameEntity properties
 
     | _ -> currentGameEntity
+
 
 
 let initializeEntity (game: Game) =
