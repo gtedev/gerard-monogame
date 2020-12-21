@@ -5,6 +5,8 @@ open Microsoft.Xna.Framework.Graphics
 
 type CurrentSpriteIndex = int
 type ElapsedTimeSinceLastFrame = float32
+type CurrentJumpYPosition = float32
+type CurrentJumpVelocity = float32
 
 type SpriteTexture = { texture: Texture2D }
 
@@ -26,14 +28,24 @@ type GameEntityProperties =
       position: Vector2
       sprite: Sprite }
 
+type JumpType =
+    | Ascending
+    | Descending
+
+type JumpState =
+    { jumpType: JumpType
+      //currentJumpYPosition: CurrentJumpYPosition
+      currentJumpVelocity: CurrentJumpVelocity }
 
 type BonhommeMovemementState =
     | Inactive
     | Running
+    | Jumping
 
 
 type BonhommeProperties =
-    { movementStatus: BonhommeMovemementState
+    { jumpState: CurrentJumpVelocity option
+      movementStatus: BonhommeMovemementState
       staticSprite: SpriteTexture
       runningAnimatedSprite: SpriteTexture list }
 

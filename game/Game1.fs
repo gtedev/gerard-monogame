@@ -32,7 +32,7 @@ type Game1() as game =
         gameState <- GameState.initializeEntities game gameState
         song <- game.Content.Load<Song>("super-spike-vball-nes-music-chicago-match")
         MediaPlayer.IsRepeating <- true;
-        MediaPlayer.Play(song)
+        //MediaPlayer.Play(song)
         ()
 
 
