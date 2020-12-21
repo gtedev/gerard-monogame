@@ -8,6 +8,7 @@ open Microsoft.Xna.Framework.Graphics
 let ASSET_BONHOMME_SPRITE1 = "bonhomme32-2-piskel"
 let ASSET_BONHOMME_SPRITE2 = "bonhomme32-2-piskel"
 let ASSET_BONHOMME_SPRITE3 = "bonhomme62-piskel"
+let ASSET_BONHOMME_JUMPING = "bonhomme-jumping-piskel"
 
 let SPEED_BONHOMME_SPRITE = 2f
 let ANIMATION_FRAME_TIME = 1f / 8f
@@ -75,6 +76,7 @@ let updateSprite gameTime
 
     let spriteToPass =
         match (previousMovement, fst3 currentMovement) with
+        | _, Jumping -> SingleSprite properties.jumpingSprite
         | Inactive, Running ->
             AnimatedSprite
                 { sprites = properties.runningAnimatedSprite
@@ -135,6 +137,9 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 
 let initializeEntity (game: Game) =
 
+    let jumpingTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_JUMPING) }
+
     let staticTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
 
@@ -146,6 +151,7 @@ let initializeEntity (game: Game) =
         BonhommeProperties
             { jumpState = None
               movementStatus = Inactive
+              jumpingSprite = jumpingTexture
               staticSprite = staticTexture
               runningAnimatedSprite = animatedRunningTextures }
         |> Some

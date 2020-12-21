@@ -145,6 +145,18 @@
 /processorParam:TextureFormat=Color
 /build:bonhomme6-piskel.png
 
+#begin bonhomme-jumping-piskel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:bonhomme-jumping-piskel.png
+
 #begin super-spike-vball-nes-music-chicago-match.mp3
 /importer:Mp3Importer
 /processor:SongProcessor

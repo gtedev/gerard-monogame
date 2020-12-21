@@ -47,6 +47,7 @@ type BonhommeProperties =
     { jumpState: CurrentJumpVelocity option
       movementStatus: BonhommeMovemementState
       staticSprite: SpriteTexture
+      jumpingSprite: SpriteTexture
       runningAnimatedSprite: SpriteTexture list }
 
 
