@@ -28,7 +28,7 @@ let currentMovementStateWithFloorCheck positionY (nextMovementState: (BonhommeMo
 let withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
 
     if positionY + (snd3 nextMovementState).Y > FLOOR_HEIGHT
-    then (Inactive, new Vector2((snd3 nextMovementState).X, 0f), thrd3 nextMovementState)
+    then (Inactive, new Vector2((snd3 nextMovementState).X, 0f), None)
     else nextMovementState
 
 
