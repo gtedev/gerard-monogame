@@ -43,6 +43,12 @@ let getTextureToDraw sprite =
         animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
             .texture
 
+let createAnimatedSprite animatedFrameTime sprite  =
+    AnimatedSprite
+        { sprites = sprite
+          currentSpriteIndex = 0
+          elapsedTimeSinceLastFrame = 0f
+          animatedFrameTime = animatedFrameTime  }
 
 let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
 

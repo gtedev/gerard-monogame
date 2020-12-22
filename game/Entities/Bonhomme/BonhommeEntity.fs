@@ -17,25 +17,25 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
     let (nextMovementState, nextPositionMovement, nextJumpVelocity) =
         BonhommeUpdate.updateBonhommeStateAndPosition gameTime currentGameEntity.Properties properties vectorMovement
 
+    let newSprite =
+        BonhommeSprite.updateSprite gameTime currentGameEntity properties previousMovement nextMovementState
+
     let newProperties =
         { properties with
               movementStatus = nextMovementState
-              jumpState = nextJumpVelocity }
+              jumpVelocityState = nextJumpVelocity }
 
     let nextBonhommeProperties = Some(BonhommeProperties newProperties)
 
     let newVector =
         Vector2.Add(currentGameEntity.Position, nextPositionMovement)
 
-    let newSprite =
-        BonhommeSprite.updateSprite gameTime currentGameEntity properties previousMovement nextMovementState
-
-    let properties =
+    let nextGameEntityProperties =
         { currentGameEntity.Properties with
               position = newVector
               sprite = newSprite }
 
-    GameEntity.createGameEntity properties nextBonhommeProperties currentGameEntity.UpdateEntity
+    GameEntity.createGameEntity nextGameEntityProperties nextBonhommeProperties currentGameEntity.UpdateEntity
 
 
 let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
@@ -49,27 +49,36 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 let initializeEntity (game: Game) =
 
     let jumpingTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_JUMPING) }
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
 
-    let staticTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE1) }
+    let leftStaticSprite =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_STATIC_SPRITE) }
 
-    let animatedRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE2) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_SPRITE3) } ]
+    let rightStaticTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_STATIC_SPRITE) }
+
+    let rightRunningTextures =
+        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
+
+    let leftRunningTextures =
+        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
 
     let bonhommeProperties =
         BonhommeProperties
-            { jumpState = None
+            { jumpVelocityState = None
               movementStatus = Inactive
               jumpingSprite = jumpingTexture
-              staticSprite = staticTexture
-              runningAnimatedSprite = animatedRunningTextures }
+              rightStaticSprite = rightStaticTexture
+              leftStaticSprite = leftStaticSprite
+              rightRunningAnimatedSprite = rightRunningTextures
+              leftRunningAnimatedSprite = leftRunningTextures }
         |> Some
 
     let properties =
         { position = new Vector2(0f, 350f)
-          sprite = SingleSprite staticTexture
+          sprite = SingleSprite rightStaticTexture
           isEnabled = true }
 
     GameEntity.createGameEntity properties bonhommeProperties update
