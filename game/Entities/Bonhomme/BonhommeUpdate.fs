@@ -26,7 +26,7 @@ let updateYPosition (gameTime: GameTime)
     let newVectorPosition =
         new Vector2((snd3 nextMovementState).X, jumpPosition)
 
-    (fst3 nextMovementState, newVectorPosition, thrd3 nextMovementState)
+    updateSnd3 newVectorPosition nextMovementState
 
 
 let updateMovementState previousState
@@ -41,7 +41,7 @@ let updateMovementState previousState
         then Inactive
         else Running
 
-    (state, snd3 nextMovementState, thrd3 nextMovementState)
+    updateFst3 state nextMovementState
 
 
 let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
@@ -54,7 +54,7 @@ let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
         | Jumping, None -> Some(JUMP_VELOCITY_SPEED)
         | _, _ -> None
 
-    (fst3 nextMovementState, snd3 nextMovementState, velocity)
+    updateThrd3 velocity nextMovementState
 
 
 let updateXPosition (vectorMovement: Vector2)
@@ -63,7 +63,7 @@ let updateXPosition (vectorMovement: Vector2)
     let newVector =
         new Vector2(vectorMovement.X, (snd3 nextMovementState).Y)
 
-    (fst3 nextMovementState, newVector, thrd3 nextMovementState)
+    updateSnd3 newVector nextMovementState
 
 
 let updateBonhommeStateAndPosition (gameTime: GameTime)
