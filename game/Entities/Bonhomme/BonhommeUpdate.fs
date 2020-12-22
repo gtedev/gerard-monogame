@@ -4,35 +4,17 @@ open Microsoft.Xna.Framework
 open Types
 open BonhommeConstants
 
-let currentVelocityWithFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
 
-    let currentVelocity =
-        if positionY + (snd3 nextMovementState).Y > FLOOR_HEIGHT
-        then None
-        else thrd3 nextMovementState
-
-    (fst3 nextMovementState, snd3 nextMovementState, currentVelocity)
-
-
-let currentMovementStateWithFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
-    let currentMovementState =
-        if fst3 nextMovementState = Jumping
-           && (positionY + (snd3 nextMovementState).Y > FLOOR_HEIGHT) then
-            Inactive
-        else
-            fst3 nextMovementState
-
-    (currentMovementState, snd3 nextMovementState, thrd3 nextMovementState)
-
-
-let withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
+let withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option)) =
 
     if positionY + (snd3 nextMovementState).Y > FLOOR_HEIGHT
     then (Inactive, new Vector2((snd3 nextMovementState).X, 0f), None)
     else nextMovementState
 
 
-let updateYPosition (gameTime: GameTime) (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
+let updateYPosition (gameTime: GameTime)
+                    (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
+                    =
 
     let jumpPosition =
         match (fst3 nextMovementState, thrd3 nextMovementState) with
@@ -47,7 +29,10 @@ let updateYPosition (gameTime: GameTime) (nextMovementState: (BonhommeMovemement
     (fst3 nextMovementState, newVectorPosition, thrd3 nextMovementState)
 
 
-let updateMovementState previousState (vectorMovement: Vector2) nextMovementState =
+let updateMovementState previousState
+                        (vectorMovement: Vector2)
+                        (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
+                        =
 
     let state =
         if previousState = Jumping || vectorMovement.Y < 0f
@@ -59,7 +44,9 @@ let updateMovementState previousState (vectorMovement: Vector2) nextMovementStat
     (state, snd3 nextMovementState, thrd3 nextMovementState)
 
 
-let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties) nextMovementState =
+let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
+                                (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
+                                =
 
     let velocity =
         match (fst3 nextMovementState, bonhommeProperties.jumpState) with
@@ -70,7 +57,9 @@ let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties) nextMov
     (fst3 nextMovementState, snd3 nextMovementState, velocity)
 
 
-let updateXPosition (vectorMovement: Vector2) (nextMovementState: (BonhommeMovemementState * Vector2 * float32 option)) =
+let updateXPosition (vectorMovement: Vector2)
+                    (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
+                    =
     let newVector =
         new Vector2(vectorMovement.X, (snd3 nextMovementState).Y)
 
@@ -78,10 +67,10 @@ let updateXPosition (vectorMovement: Vector2) (nextMovementState: (BonhommeMovem
 
 
 let updateBonhommeStateAndPosition (gameTime: GameTime)
-                             (properties: GameEntityProperties)
-                             (bonhommeProperties: BonhommeProperties)
-                             (vectorMovement: Vector2)
-                             =
+                                   (properties: GameEntityProperties)
+                                   (bonhommeProperties: BonhommeProperties)
+                                   (vectorMovement: Vector2)
+                                   =
 
     let previousState = bonhommeProperties.movementStatus
 
