@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:bonhomme32-2-piskel.png
 
+#begin bonhomme32-2-piskel-left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:bonhomme32-2-piskel-left.png
+
 #begin bonhomme32-piskel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -132,6 +144,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:bonhomme62-piskel.png
+
+#begin bonhomme62-piskel-left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:bonhomme62-piskel-left.png
 
 #begin bonhomme6-piskel.png
 /importer:TextureImporter

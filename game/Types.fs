@@ -27,19 +27,24 @@ type GameEntityProperties =
       position: Vector2
       sprite: Sprite }
 
+type Direction =
+    | Left
+    | Right
 
 type BonhommeMovemementState =
     | Inactive
-    | Running
+    | Running of Direction
     | Jumping
 
 
 type BonhommeProperties =
-    { jumpState: CurrentJumpVelocity option
+    { jumpVelocityState: CurrentJumpVelocity option
       movementStatus: BonhommeMovemementState
-      staticSprite: SpriteTexture
+      rightStaticSprite: SpriteTexture
+      leftStaticSprite: SpriteTexture
       jumpingSprite: SpriteTexture
-      runningAnimatedSprite: SpriteTexture list }
+      rightRunningAnimatedSprite: SpriteTexture list 
+      leftRunningAnimatedSprite: SpriteTexture list }
 
 
 type CustomEntityProperties = BonhommeProperties of BonhommeProperties
