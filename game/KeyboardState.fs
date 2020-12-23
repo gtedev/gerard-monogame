@@ -1,9 +1,10 @@
-﻿module KeyboardState
+﻿[<RequireQualifiedAccess>]
+module KeyboardState
 
 open Microsoft.Xna.Framework.Input
 open Microsoft.Xna.Framework
 
-let (|KeyDown|_|) k (state: KeyboardState) =
+let private (|KeyDown|_|) k (state: KeyboardState) =
     if state.IsKeyDown k then Some() else None
 
 let getMovementVectorFromKeyState keyState =

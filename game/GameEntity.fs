@@ -1,4 +1,5 @@
-﻿module GameEntity
+﻿[<RequireQualifiedAccess>]
+module GameEntity
 
 open Types
 

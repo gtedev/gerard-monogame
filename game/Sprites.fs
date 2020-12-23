@@ -1,15 +1,16 @@
-﻿module Sprites
+﻿[<RequireQualifiedAccess>]
+module Sprites
 
 open Microsoft.Xna.Framework
 open Types
 open Microsoft.Xna.Framework.Graphics
 
-let computeNextSpriteIndex sprites currentSpriteIndex =
+let private computeNextSpriteIndex sprites currentSpriteIndex =
     let lastIndex = List.length sprites - 1
     if currentSpriteIndex = lastIndex then 0 else (currentSpriteIndex + 1)
 
 
-let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
+let private updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
 
     let nextElapsedTime =
         (float32) gameTime.ElapsedGameTime.TotalSeconds
@@ -29,6 +30,12 @@ let updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
               currentSpriteIndex = fst nextIndexAndElapsedTime
               elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
 
+let private getTextureToDraw sprite =
+    match sprite with
+    | SingleSprite sprite -> sprite.texture
+    | AnimatedSprite animatedSpriteState ->
+        animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
+            .texture
 
 let updateSpriteState gameTime sprite =
     match sprite with
@@ -36,19 +43,12 @@ let updateSpriteState gameTime sprite =
     | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
 
 
-let getTextureToDraw sprite =
-    match sprite with
-    | SingleSprite sprite -> sprite.texture
-    | AnimatedSprite animatedSpriteState ->
-        animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
-            .texture
-
-let createAnimatedSprite animatedFrameTime sprite  =
+let createAnimatedSprite animatedFrameTime sprite =
     AnimatedSprite
         { sprites = sprite
           currentSpriteIndex = 0
           elapsedTimeSinceLastFrame = 0f
-          animatedFrameTime = animatedFrameTime  }
+          animatedFrameTime = animatedFrameTime }
 
 let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
 

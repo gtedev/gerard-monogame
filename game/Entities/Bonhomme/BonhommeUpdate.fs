@@ -1,11 +1,12 @@
-﻿module BonhommeUpdate
+﻿[<RequireQualifiedAccess>]
+module BonhommeUpdate
 
 open Microsoft.Xna.Framework
 open Types
 open BonhommeConstants
 
 
-let withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option)) =
+let private withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option)) =
 
     if positionY + (snd3 nextMovementState).Y > FLOOR_HEIGHT
     then (Inactive, new Vector2((snd3 nextMovementState).X, 0f), None)
@@ -13,7 +14,7 @@ let withFloorCheck positionY (nextMovementState: (BonhommeMovemementState * Vect
 
 
 
-let updateYPosition (gameTime: GameTime)
+let private updateYPosition (gameTime: GameTime)
                     (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
                     =
 
@@ -31,7 +32,7 @@ let updateYPosition (gameTime: GameTime)
 
 
 
-let updateMovementState previousState
+let private updateMovementState previousState
                         (vectorMovement: Vector2)
                         (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
                         =
@@ -52,7 +53,7 @@ let updateMovementState previousState
 
 
 
-let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
+let private updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
                                 (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
                                 =
 
@@ -66,7 +67,7 @@ let updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
 
 
 
-let updateXPosition (vectorMovement: Vector2)
+let private updateXPosition (vectorMovement: Vector2)
                     (nextMovementState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
                     =
     let newVector =

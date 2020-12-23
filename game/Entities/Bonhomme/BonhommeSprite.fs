@@ -1,9 +1,10 @@
-﻿module BonhommeSprite
+﻿[<RequireQualifiedAccess>]
+module BonhommeSprite
 
 open Types
 open BonhommeConstants
 
-let createBonhommeAnimatedSprite =
+let private createBonhommeAnimatedSprite =
     Sprites.createAnimatedSprite ANIMATION_FRAME_TIME
 
 let updateSprite gameTime
