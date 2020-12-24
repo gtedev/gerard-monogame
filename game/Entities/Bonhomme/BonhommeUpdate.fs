@@ -56,15 +56,11 @@ let private updateMovementState prevMovState
 
         | (_, vectorMovement) when vectorMovement.X < 0f -> Running Left
         | (_, vectorMovement) when vectorMovement.X > 0f -> Running Right
-        | (Jumping dir, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
+        | (prevMovState, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
 
-            match dir with
-            | Left -> Inactive Left
-            | Right -> Inactive Right
+            let prevDir = extractDirection prevMovState
 
-        | (Running dir, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
-
-            match dir with
+            match prevDir with
             | Left -> Inactive Left
             | Right -> Inactive Right
 
