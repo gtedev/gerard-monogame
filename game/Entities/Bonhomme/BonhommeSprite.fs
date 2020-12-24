@@ -10,18 +10,34 @@ let private createBonhommeAnimatedSprite =
 let updateSprite gameTime
                  (currentGameEntity: IGameEntity)
                  (properties: BonhommeProperties)
-                 previousMovementState
-                 currentMovementState
+                 prevMovState
+                 currentMovState
                  =
 
-    let spriteToPass =
-        match (previousMovementState, currentMovementState) with
-        | _, Jumping -> SingleSprite properties.jumpingSprite
-        | Jumping, Inactive -> SingleSprite properties.rightStaticSprite
-        | Inactive, Running direction ->
+    let nextSprite =
+        match (prevMovState, currentMovState) with
+        | _, Jumping dir ->
+
+            let jumpingSprite =
+                match dir with
+                | Left -> properties.leftJumpingSprite
+                | Right -> properties.rightJumpingSprite
+
+            SingleSprite jumpingSprite
+
+        | _, Inactive dir ->
+
+            let staticSprite =
+                match dir with
+                | Left -> properties.leftStaticSprite
+                | Right -> properties.rightStaticSprite
+
+            SingleSprite staticSprite
+
+        | Inactive _, Running dir ->
 
             let runningSprite =
-                match direction with
+                match dir with
                 | Left -> properties.leftRunningAnimatedSprite
                 | Right -> properties.rightRunningAnimatedSprite
 
@@ -30,14 +46,6 @@ let updateSprite gameTime
         | Running Left, Running Right -> createBonhommeAnimatedSprite properties.rightRunningAnimatedSprite
         | Running Right, Running Left -> createBonhommeAnimatedSprite properties.leftRunningAnimatedSprite
         | Running _, Running _ -> currentGameEntity.Sprite
-        | Running prevDir, Inactive ->
-
-            let staticSprite =
-                match prevDir with
-                | Left -> properties.leftStaticSprite
-                | Right -> properties.rightStaticSprite
-
-            SingleSprite staticSprite
         | _ -> currentGameEntity.Sprite
 
-    Sprites.updateSpriteState gameTime spriteToPass
+    Sprites.updateSpriteState gameTime nextSprite

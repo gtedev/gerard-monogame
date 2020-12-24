@@ -48,8 +48,11 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 
 let initializeEntity (game: Game) =
 
-    let jumpingTexture =
+    let rightJumpingTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
+        
+    let leftJumpingTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
 
     let leftStaticSprite =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_STATIC_SPRITE) }
@@ -68,8 +71,9 @@ let initializeEntity (game: Game) =
     let bonhommeProperties =
         BonhommeProperties
             { jumpVelocityState = None
-              movementStatus = Inactive
-              jumpingSprite = jumpingTexture
+              movementStatus = Inactive Right
+              leftJumpingSprite = leftJumpingTexture
+              rightJumpingSprite = rightJumpingTexture
               rightStaticSprite = rightStaticTexture
               leftStaticSprite = leftStaticSprite
               rightRunningAnimatedSprite = rightRunningTextures
