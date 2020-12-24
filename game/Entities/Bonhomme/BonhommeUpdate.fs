@@ -84,7 +84,7 @@ let private updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
                                         =
     let velocity =
         match (fst3 nextMovState, bonhommeProperties.jumpVelocityState) with
-        | Jumping _, Some velocity -> Some(velocity + 25f)
+        | Jumping _, Some velocity -> Some(velocity + JUMP_VELOCITY_INCREASE_STEP)
         | Jumping _, None -> Some(JUMP_VELOCITY_SPEED)
         | _, _ -> None
 
@@ -98,6 +98,7 @@ let private updateXPosition (vectorMovement: Vector2)
     let xPosition = 
         match fst3 nextMoveState with 
         | Duck dir -> 0f
+        | Running _ -> vectorMovement.X * SPEED_RUNNING_BONHOMME
         | _ -> vectorMovement.X
             
     let newVector =
