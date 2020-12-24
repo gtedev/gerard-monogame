@@ -50,7 +50,7 @@ let initializeEntity (game: Game) =
 
     let rightJumpingTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
-        
+
     let leftJumpingTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
 
@@ -74,18 +74,21 @@ let initializeEntity (game: Game) =
         [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
           { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
 
+    let spriteSheet =
+        { leftJumpingSprite = leftJumpingTexture
+          rightJumpingSprite = rightJumpingTexture
+          leftDuckSprite = leftDuckSprite
+          rightDuckSprite = rightDuckTexture
+          rightStaticSprite = rightStaticTexture
+          leftStaticSprite = leftStaticSprite
+          rightRunningAnimatedSprite = rightRunningTextures
+          leftRunningAnimatedSprite = leftRunningTextures }
+
     let bonhommeProperties =
         BonhommeProperties
             { jumpVelocityState = None
               movementStatus = Inactive Right
-              leftJumpingSprite = leftJumpingTexture
-              rightJumpingSprite = rightJumpingTexture
-              leftDuckSprite = leftDuckSprite
-              rightDuckSprite = rightDuckTexture
-              rightStaticSprite = rightStaticTexture
-              leftStaticSprite = leftStaticSprite
-              rightRunningAnimatedSprite = rightRunningTextures
-              leftRunningAnimatedSprite = leftRunningTextures }
+              spriteSheet = spriteSheet }
         |> Some
 
     let properties =
