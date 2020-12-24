@@ -11,7 +11,7 @@ let getMovementVectorFromKeyState keyState =
 
     match keyState with
     | KeyDown Keys.Right & KeyDown Keys.Up -> Vector2(1.f, -1f)
-    | KeyDown Keys.Right & KeyDown Keys.Down -> Vector2(1.f, 1f)
+    | KeyDown Keys.Left & KeyDown Keys.Up-> Vector2(-1.f, -1f)
     | KeyDown Keys.Up -> Vector2(0f, -1.f)
     | KeyDown Keys.Down -> Vector2(0f, 1.f)
     | KeyDown Keys.Right -> Vector2(1.f, 0f)

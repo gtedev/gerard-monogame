@@ -32,9 +32,9 @@ type Direction =
     | Right
 
 type BonhommeMovemementState =
-    | Inactive
+    | Inactive of Direction
     | Running of Direction
-    | Jumping
+    | Jumping of Direction
 
 
 type BonhommeProperties =
@@ -42,8 +42,9 @@ type BonhommeProperties =
       movementStatus: BonhommeMovemementState
       rightStaticSprite: SpriteTexture
       leftStaticSprite: SpriteTexture
-      jumpingSprite: SpriteTexture
-      rightRunningAnimatedSprite: SpriteTexture list 
+      leftJumpingSprite: SpriteTexture
+      rightJumpingSprite: SpriteTexture
+      rightRunningAnimatedSprite: SpriteTexture list
       leftRunningAnimatedSprite: SpriteTexture list }
 
 
