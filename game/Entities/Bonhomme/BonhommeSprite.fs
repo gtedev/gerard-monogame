@@ -7,6 +7,7 @@ open BonhommeConstants
 let private createBonhommeAnimatedSprite =
     Sprites.createAnimatedSprite ANIMATION_FRAME_TIME
 
+
 let updateSprite gameTime
                  (currentGameEntity: IGameEntity)
                  (properties: BonhommeProperties)
@@ -34,7 +35,25 @@ let updateSprite gameTime
 
             SingleSprite staticSprite
 
+        | _, Duck dir ->
+
+            let duckSprite =
+                match dir with
+                | Left -> properties.leftDuckSprite
+                | Right -> properties.rightDuckSprite
+
+            SingleSprite duckSprite
+
         | Inactive _, Running dir ->
+
+            let runningSprite =
+                match dir with
+                | Left -> properties.leftRunningAnimatedSprite
+                | Right -> properties.rightRunningAnimatedSprite
+
+            createBonhommeAnimatedSprite runningSprite
+
+        | Duck _, Running dir ->
 
             let runningSprite =
                 match dir with

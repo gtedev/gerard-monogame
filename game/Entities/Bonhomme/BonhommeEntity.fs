@@ -60,6 +60,12 @@ let initializeEntity (game: Game) =
     let rightStaticTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_STATIC_SPRITE) }
 
+    let leftDuckSprite =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
+
+    let rightDuckTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
+
     let rightRunningTextures =
         [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
           { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
@@ -74,6 +80,8 @@ let initializeEntity (game: Game) =
               movementStatus = Inactive Right
               leftJumpingSprite = leftJumpingTexture
               rightJumpingSprite = rightJumpingTexture
+              leftDuckSprite = leftDuckSprite
+              rightDuckSprite = rightDuckTexture
               rightStaticSprite = rightStaticTexture
               leftStaticSprite = leftStaticSprite
               rightRunningAnimatedSprite = rightRunningTextures

@@ -10,6 +10,7 @@ let private extractDirection movState =
     | Running direction -> direction
     | Inactive direction -> direction
     | Jumping direction -> direction
+    | Duck direction -> direction
 
 
 let private withFloorCheck positionY (nextMovState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option)) =
@@ -53,7 +54,8 @@ let private updateMovementState prevMovState
             match dir with
             | Left -> Jumping Left
             | Right -> Jumping Right
-
+        | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
+        | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
         | (_, vectorMovement) when vectorMovement.X < 0f -> Running Left
         | (_, vectorMovement) when vectorMovement.X > 0f -> Running Right
         | (prevMovState, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
@@ -63,6 +65,13 @@ let private updateMovementState prevMovState
             match prevDir with
             | Left -> Inactive Left
             | Right -> Inactive Right
+        | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
+
+            let prevDir = extractDirection prevMovState
+
+            match prevDir with
+            | Left -> Duck Left
+            | Right -> Duck Right
 
         | (_, _) -> prevMovState
 
@@ -86,8 +95,13 @@ let private updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
 let private updateXPosition (vectorMovement: Vector2)
                             (nextMoveState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
                             =
+    let xPosition = 
+        match fst3 nextMoveState with 
+        | Duck dir -> 0f
+        | _ -> vectorMovement.X
+            
     let newVector =
-        new Vector2(vectorMovement.X, (snd3 nextMoveState).Y)
+        new Vector2(xPosition, (snd3 nextMoveState).Y)
 
     updateSnd3 newVector nextMoveState
 
@@ -102,8 +116,8 @@ let updateBonhommeStateAndPosition (gameTime: GameTime)
     let previousState = bonhommeProperties.movementStatus
 
     (previousState, properties.position, None)
-    |> updateXPosition vectorMovement
     |> updateMovementState previousState vectorMovement
+    |> updateXPosition vectorMovement
     |> updateJumpVelocityOrDefault bonhommeProperties
     |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
