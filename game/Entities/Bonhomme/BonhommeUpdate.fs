@@ -49,14 +49,15 @@ let private updateMovementState prevMovState (vectorMovement: Vector2) (nextMove
 
     let state =
         match (prevMovState, vectorMovement) with
-        | (Jumping dir, _) -> Jumping dir
+        | (Jumping prevDir, _) -> Jumping prevDir
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> Jumping Left
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> Jumping Right
-        | (Inactive dir, vectorMovement) when vectorMovement.Y < 0f ->
+        | (Inactive prevDir, vectorMovement) when vectorMovement.Y < 0f ->
 
-            match dir with
+            match prevDir with
             | Left -> Jumping Left
             | Right -> Jumping Right
+
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
         | (_, vectorMovement) when vectorMovement.X < 0f -> Running Left
@@ -68,6 +69,7 @@ let private updateMovementState prevMovState (vectorMovement: Vector2) (nextMove
             match prevDir with
             | Left -> Inactive Left
             | Right -> Inactive Right
+
         | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
 
             let prevDir = extractDirection prevMovState
