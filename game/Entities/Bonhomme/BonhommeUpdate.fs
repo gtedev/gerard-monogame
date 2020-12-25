@@ -4,6 +4,7 @@ module BonhommeUpdate
 open Microsoft.Xna.Framework
 open Types
 open BonhommeConstants
+open BonhommeTypes
 
 let private extractDirection movState =
     match movState with
@@ -13,37 +14,38 @@ let private extractDirection movState =
     | Duck direction -> direction
 
 
-let private withFloorCheck positionY (nextMovState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option)) =
+let private withFloorCheck positionY (nextMovement: NextBonhommeMovement) =
 
-    let direction = extractDirection (fst3 nextMovState)
+    let (nextMovState, nextMovPosition, _) = nextMovement
 
-    if positionY + (snd3 nextMovState).Y > FLOOR_HEIGHT
-    then (Inactive direction, new Vector2((snd3 nextMovState).X, 0f), None)
-    else nextMovState
+    let direction = extractDirection nextMovState
+
+    if positionY + nextMovPosition.Y > FLOOR_HEIGHT
+    then (Inactive direction, new Vector2(nextMovPosition.X, 0f), None)
+    else nextMovement
 
 
 
-let private updateYPosition (gameTime: GameTime)
-                            (nextMovState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
-                            =
+let private updateYPosition (gameTime: GameTime) (nextMovement: NextBonhommeMovement) =
+
+    let (nextMovState, nextMovPosition, nextJumpVelocity) = nextMovement
+
     let nextYPosition =
-        match (fst3 nextMovState, thrd3 nextMovState) with
+        match (nextMovState, nextJumpVelocity) with
         | Jumping dir, Some velocity ->
             ((velocity)
              * (float32) gameTime.ElapsedGameTime.TotalSeconds)
         | _ -> 0f
 
     let newVectorPosition =
-        new Vector2((snd3 nextMovState).X, nextYPosition)
+        new Vector2(nextMovPosition.X, nextYPosition)
 
-    updateSnd3 newVectorPosition nextMovState
+    updateSnd3 newVectorPosition nextMovement
 
 
 
-let private updateMovementState prevMovState
-                                (vectorMovement: Vector2)
-                                (nextMovState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
-                                =
+let private updateMovementState prevMovState (vectorMovement: Vector2) (nextMovement: NextBonhommeMovement) =
+
     let state =
         match (prevMovState, vectorMovement) with
         | (Jumping dir, _) -> Jumping dir
@@ -75,36 +77,38 @@ let private updateMovementState prevMovState
 
         | (_, _) -> prevMovState
 
-    updateFst3 state nextMovState
+    updateFst3 state nextMovement
 
 
 
-let private updateJumpVelocityOrDefault (bonhommeProperties: BonhommeProperties)
-                                        (nextMovState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
-                                        =
+let private updateJumpVelocityOrDefault bonhommeProperties nextMovement =
+
+    let (nextMovState, _, _) = nextMovement
+
     let velocity =
-        match (fst3 nextMovState, bonhommeProperties.jumpVelocityState) with
+        match (nextMovState, bonhommeProperties.jumpVelocityState) with
         | Jumping _, Some velocity -> Some(velocity + JUMP_VELOCITY_INCREASE_STEP)
         | Jumping _, None -> Some(JUMP_VELOCITY_SPEED)
         | _, _ -> None
 
-    updateThrd3 velocity nextMovState
+    updateThrd3 velocity nextMovement
 
 
 
-let private updateXPosition (vectorMovement: Vector2)
-                            (nextMoveState: (BonhommeMovemementState * Vector2 * CurrentJumpVelocity option))
-                            =
-    let xPosition = 
-        match fst3 nextMoveState with 
+let private updateXPosition (vectorMovement: Vector2) (nextMovement: NextBonhommeMovement) =
+
+    let (nextMovState, nextMovPosition, _) = nextMovement
+
+    let xPosition =
+        match nextMovState with
         | Duck dir -> 0f
         | Running _ -> vectorMovement.X * SPEED_RUNNING_BONHOMME
         | _ -> vectorMovement.X
-            
-    let newVector =
-        new Vector2(xPosition, (snd3 nextMoveState).Y)
 
-    updateSnd3 newVector nextMoveState
+    let newVector =
+        new Vector2(xPosition, nextMovPosition.Y)
+
+    updateSnd3 newVector nextMovement
 
 
 

@@ -48,41 +48,8 @@ let update (gameTime: GameTime) (currentGameEntity: IGameEntity): IGameEntity =
 
 let initializeEntity (game: Game) =
 
-    let rightJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
-
-    let leftJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
-
-    let leftStaticSprite =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_STATIC_SPRITE) }
-
-    let rightStaticTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_STATIC_SPRITE) }
-
-    let leftDuckSprite =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
-
-    let rightDuckTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
-
-    let rightRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
-
-    let leftRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
-
     let spriteSheet =
-        { leftJumpingSprite = leftJumpingTexture
-          rightJumpingSprite = rightJumpingTexture
-          leftDuckSprite = leftDuckSprite
-          rightDuckSprite = rightDuckTexture
-          rightStaticSprite = rightStaticTexture
-          leftStaticSprite = leftStaticSprite
-          rightRunningAnimatedSprite = rightRunningTextures
-          leftRunningAnimatedSprite = leftRunningTextures }
+        BonhommeSprite.createBonhommeSpriteSheet game
 
     let bonhommeProperties =
         BonhommeProperties
@@ -93,7 +60,7 @@ let initializeEntity (game: Game) =
 
     let properties =
         { position = new Vector2(0f, 350f)
-          sprite = SingleSprite rightStaticTexture
+          sprite = SingleSprite spriteSheet.rightStaticSprite
           isEnabled = true }
 
     GameEntity.createGameEntity properties bonhommeProperties update

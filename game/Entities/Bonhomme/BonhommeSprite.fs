@@ -3,9 +3,49 @@ module BonhommeSprite
 
 open Types
 open BonhommeConstants
+open Microsoft.Xna.Framework
+open Microsoft.Xna.Framework.Graphics
 
 let private createBonhommeAnimatedSprite =
     Sprites.createAnimatedSprite ANIMATION_FRAME_TIME
+
+
+let createBonhommeSpriteSheet (game: Game) =
+
+    let rightJumpingTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
+
+    let leftJumpingTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
+
+    let leftStaticSprite =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_STATIC_SPRITE) }
+
+    let rightStaticTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_STATIC_SPRITE) }
+
+    let leftDuckSprite =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
+
+    let rightDuckTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
+
+    let rightRunningTextures =
+        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
+
+    let leftRunningTextures =
+        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
+
+    { leftJumpingSprite = leftJumpingTexture
+      rightJumpingSprite = rightJumpingTexture
+      leftDuckSprite = leftDuckSprite
+      rightDuckSprite = rightDuckTexture
+      rightStaticSprite = rightStaticTexture
+      leftStaticSprite = leftStaticSprite
+      rightRunningAnimatedSprite = rightRunningTextures
+      leftRunningAnimatedSprite = leftRunningTextures }
 
 
 let updateSprite gameTime

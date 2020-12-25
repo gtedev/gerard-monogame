@@ -24,6 +24,7 @@
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <Compile Include="Entities\Bonhomme\BonhommeTypes.fs" />
     <Compile Include="Entities\Bonhomme\BonhommeConstants.fs" />
     <Compile Include="Entities\Bonhomme\BonhommeSprite.fs" />
     <Compile Include="Entities\Bonhomme\BonhommeUpdate.fs" />
