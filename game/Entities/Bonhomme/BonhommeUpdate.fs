@@ -5,6 +5,7 @@ open Microsoft.Xna.Framework
 open Types
 open BonhommeConstants
 open BonhommeTypes
+open Microsoft.Xna.Framework.Input
 
 let private extractDirection movState =
     match movState with
@@ -112,11 +113,11 @@ let private updateXPosition (vectorMovement: Vector2) (nextMovement: NextBonhomm
 
 
 
-let updateBonhommeStateAndPosition (gameTime: GameTime)
-                                   (properties: GameEntityProperties)
-                                   (bonhommeProperties: BonhommeProperties)
-                                   (vectorMovement: Vector2)
-                                   =
+let private updateBonhommeStateAndPosition (gameTime: GameTime)
+                                           (properties: GameEntityProperties)
+                                           (bonhommeProperties: BonhommeProperties)
+                                           (vectorMovement: Vector2)
+                                           =
 
     let previousState = bonhommeProperties.movementStatus
 
@@ -126,3 +127,32 @@ let updateBonhommeStateAndPosition (gameTime: GameTime)
     |> updateJumpVelocityOrDefault bonhommeProperties
     |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
+
+
+let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
+
+    let vectorMovement =
+        KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
+
+    let previousMovement = properties.movementStatus
+
+    let (nextMovementState, nextPositionMovement, nextJumpVelocity) =
+        updateBonhommeStateAndPosition gameTime currentGameEntity.Properties properties vectorMovement
+
+    let newSprite =
+        BonhommeSprite.updateSprite gameTime currentGameEntity properties previousMovement nextMovementState
+
+
+    let nextBonhommeProperties =
+        BonhommeProperties
+            { properties with
+                  movementStatus = nextMovementState
+                  jumpVelocityState = nextJumpVelocity }
+        |> Some
+
+    let nextGameEntityProperties =
+        { currentGameEntity.Properties with
+              position = Vector2.Add(currentGameEntity.Position, nextPositionMovement)
+              sprite = newSprite }
+
+    GameEntity.createGameEntity nextGameEntityProperties nextBonhommeProperties currentGameEntity.UpdateEntity
