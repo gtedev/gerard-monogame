@@ -35,17 +35,22 @@ type BonhommeMovemementState =
     | Inactive of Direction
     | Running of Direction
     | Jumping of Direction
+    | Duck of Direction
 
-
-type BonhommeProperties =
-    { jumpVelocityState: CurrentJumpVelocity option
-      movementStatus: BonhommeMovemementState
-      rightStaticSprite: SpriteTexture
+type BonhommeSpriteSheet =
+    { rightStaticSprite: SpriteTexture
       leftStaticSprite: SpriteTexture
+      rightDuckSprite: SpriteTexture
+      leftDuckSprite: SpriteTexture
       leftJumpingSprite: SpriteTexture
       rightJumpingSprite: SpriteTexture
       rightRunningAnimatedSprite: SpriteTexture list
       leftRunningAnimatedSprite: SpriteTexture list }
+
+type BonhommeProperties =
+    { jumpVelocityState: CurrentJumpVelocity option
+      movementStatus: BonhommeMovemementState
+      spriteSheet: BonhommeSpriteSheet }
 
 
 type CustomEntityProperties = BonhommeProperties of BonhommeProperties
