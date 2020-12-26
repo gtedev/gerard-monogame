@@ -37,19 +37,13 @@ let private updateYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemem
             * (float32) gameTime.ElapsedGameTime.TotalSeconds
         | _ -> 0f
 
-    let newVectorPosition =
-        new Vector2(nextMovPosition.X, nextYPosition)
-
-    updateSnd2 newVectorPosition nextMovement
+    (nextMovState, new Vector2(nextMovPosition.X, nextYPosition))
 
 
 
-let private updateMovementState prevMovState
-                                (vectorMovement: Vector2)
-                                (nextMovement: (BonhommeMovemementState * Vector2))
-                                =
+let private updateMovementState (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
-    let (_, nextMovPosition) = nextMovement
+    let (prevMovState, nextMovPosition) = nextMovement
 
     let state =
         match (prevMovState, vectorMovement) with
@@ -98,10 +92,7 @@ let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMo
         | Running _ -> vectorMovement.X * SPEED_RUNNING_BONHOMME
         | _ -> vectorMovement.X
 
-    let newMovVector =
-        new Vector2(xPosition, nextMovPosition.Y)
-
-    (nextMovState, newMovVector)
+    (nextMovState, new Vector2(xPosition, nextMovPosition.Y))
 
 
 
@@ -114,7 +105,7 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
     let previousState = bonhommeProperties.movementStatus
 
     (previousState, properties.position)
-    |> updateMovementState previousState vectorMovement
+    |> updateMovementState vectorMovement
     |> updateXPosition vectorMovement
     |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
@@ -125,13 +116,13 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
     let vectorMovement =
         KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
 
-    let previousMovement = properties.movementStatus
+    let prevMovementState = properties.movementStatus
 
     let (nextMovementState, nextPositionMovement) =
         updateBonhommeStateAndPosition gameTime currentGameEntity.Properties properties vectorMovement
 
     let newSprite =
-        BonhommeSprite.updateSprite gameTime currentGameEntity properties previousMovement nextMovementState
+        BonhommeSprite.updateSprite gameTime currentGameEntity properties prevMovementState nextMovementState
 
 
     let nextBonhommeProperties =
