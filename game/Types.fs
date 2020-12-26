@@ -34,7 +34,7 @@ type Direction =
 type BonhommeMovemementState =
     | Inactive of Direction
     | Running of Direction
-    | Jumping of Direction
+    | Jumping of Direction * CurrentJumpVelocity
     | Duck of Direction
 
 type BonhommeSpriteSheet =
@@ -48,8 +48,7 @@ type BonhommeSpriteSheet =
       leftRunningAnimatedSprite: SpriteTexture list }
 
 type BonhommeProperties =
-    { jumpVelocityState: CurrentJumpVelocity option
-      movementStatus: BonhommeMovemementState
+    { movementStatus: BonhommeMovemementState
       spriteSheet: BonhommeSpriteSheet }
 
 

@@ -59,7 +59,7 @@ let updateSprite gameTime
 
     let nextSprite =
         match (prevMovState, currentMovState) with
-        | _, Jumping dir ->
+        | _, Jumping (dir, _) ->
 
             let jumpingSprite =
                 match dir with

@@ -19,8 +19,7 @@ let initializeEntity (game: Game) =
 
     let bonhommeProperties =
         BonhommeProperties
-            { jumpVelocityState = None
-              movementStatus = Inactive Right
+            { movementStatus = Inactive Right
               spriteSheet = spriteSheet }
         |> Some
 

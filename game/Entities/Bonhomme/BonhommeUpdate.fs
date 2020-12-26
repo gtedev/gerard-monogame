@@ -4,59 +4,63 @@ module BonhommeUpdate
 open Microsoft.Xna.Framework
 open Types
 open BonhommeConstants
-open BonhommeTypes
 open Microsoft.Xna.Framework.Input
 
 let private extractDirection movState =
     match movState with
-    | Running direction -> direction
-    | Inactive direction -> direction
-    | Jumping direction -> direction
-    | Duck direction -> direction
+    | Running dir -> dir
+    | Inactive dir -> dir
+    | Jumping (dir, _) -> dir
+    | Duck dir -> dir
 
 
-let private withFloorCheck positionY (nextMovement: NextBonhommeMovement) =
+let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * Vector2)) =
 
-    let (nextMovState, nextMovPosition, _) = nextMovement
+    let (nextMovState, nextMovPosition) = nextMovement
 
     let direction = extractDirection nextMovState
 
     if positionY + nextMovPosition.Y > FLOOR_HEIGHT
-    then (Inactive direction, new Vector2(nextMovPosition.X, 0f), None)
+    then (Inactive direction, new Vector2(nextMovPosition.X, 0f))
     else nextMovement
 
 
 
-let private updateYPosition (gameTime: GameTime) (nextMovement: NextBonhommeMovement) =
+let private updateYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
-    let (nextMovState, nextMovPosition, nextJumpVelocity) = nextMovement
+    let (nextMovState, nextMovPosition) = nextMovement
 
     let nextYPosition =
-        match (nextMovState, nextJumpVelocity) with
-        | Jumping dir, Some velocity ->
-            ((velocity)
-             * (float32) gameTime.ElapsedGameTime.TotalSeconds)
+        match nextMovState with
+        | Jumping (prevDir, velocity) ->
+            velocity
+            * (float32) gameTime.ElapsedGameTime.TotalSeconds
         | _ -> 0f
 
     let newVectorPosition =
         new Vector2(nextMovPosition.X, nextYPosition)
 
-    updateSnd3 newVectorPosition nextMovement
+    updateSnd2 newVectorPosition nextMovement
 
 
 
-let private updateMovementState prevMovState (vectorMovement: Vector2) (nextMovement: NextBonhommeMovement) =
+let private updateMovementState prevMovState
+                                (vectorMovement: Vector2)
+                                (nextMovement: (BonhommeMovemementState * Vector2))
+                                =
+
+    let (_, nextMovPosition) = nextMovement
 
     let state =
         match (prevMovState, vectorMovement) with
-        | (Jumping prevDir, _) -> Jumping prevDir
-        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> Jumping Left
-        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> Jumping Right
+        | (Jumping (prevDir, velocity), _) -> Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
+        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> Jumping(Left, JUMP_VELOCITY_SPEED)
+        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> Jumping(Right, JUMP_VELOCITY_SPEED)
         | (Inactive prevDir, vectorMovement) when vectorMovement.Y < 0f ->
 
             match prevDir with
-            | Left -> Jumping Left
-            | Right -> Jumping Right
+            | Left -> Jumping(Left, JUMP_VELOCITY_SPEED)
+            | Right -> Jumping(Right, JUMP_VELOCITY_SPEED)
 
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
@@ -80,38 +84,24 @@ let private updateMovementState prevMovState (vectorMovement: Vector2) (nextMove
 
         | (_, _) -> prevMovState
 
-    updateFst3 state nextMovement
+    (state, nextMovPosition)
 
 
 
-let private updateJumpVelocityOrDefault bonhommeProperties nextMovement =
+let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
-    let (nextMovState, _, _) = nextMovement
-
-    let velocity =
-        match (nextMovState, bonhommeProperties.jumpVelocityState) with
-        | Jumping _, Some velocity -> Some(velocity + JUMP_VELOCITY_INCREASE_STEP)
-        | Jumping _, None -> Some(JUMP_VELOCITY_SPEED)
-        | _, _ -> None
-
-    updateThrd3 velocity nextMovement
-
-
-
-let private updateXPosition (vectorMovement: Vector2) (nextMovement: NextBonhommeMovement) =
-
-    let (nextMovState, nextMovPosition, _) = nextMovement
+    let (nextMovState, nextMovPosition) = nextMovement
 
     let xPosition =
         match nextMovState with
-        | Duck dir -> 0f
+        | Duck _ -> 0f
         | Running _ -> vectorMovement.X * SPEED_RUNNING_BONHOMME
         | _ -> vectorMovement.X
 
-    let newVector =
+    let newMovVector =
         new Vector2(xPosition, nextMovPosition.Y)
 
-    updateSnd3 newVector nextMovement
+    (nextMovState, newMovVector)
 
 
 
@@ -123,10 +113,9 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
 
     let previousState = bonhommeProperties.movementStatus
 
-    (previousState, properties.position, None)
+    (previousState, properties.position)
     |> updateMovementState previousState vectorMovement
     |> updateXPosition vectorMovement
-    |> updateJumpVelocityOrDefault bonhommeProperties
     |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
 
@@ -138,7 +127,7 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
 
     let previousMovement = properties.movementStatus
 
-    let (nextMovementState, nextPositionMovement, nextJumpVelocity) =
+    let (nextMovementState, nextPositionMovement) =
         updateBonhommeStateAndPosition gameTime currentGameEntity.Properties properties vectorMovement
 
     let newSprite =
@@ -148,8 +137,7 @@ let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Bonhomme
     let nextBonhommeProperties =
         BonhommeProperties
             { properties with
-                  movementStatus = nextMovementState
-                  jumpVelocityState = nextJumpVelocity }
+                  movementStatus = nextMovementState }
         |> Some
 
     let nextGameEntityProperties =
