@@ -14,7 +14,7 @@ type AnimatedSpriteState =
     { sprites: SpriteTexture list
       currentSpriteIndex: CurrentSpriteIndex
       elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame
-      animatedFrameTime: float32 }
+      frameTime: float32 }
 
 
 type Sprite =
@@ -32,20 +32,20 @@ type Direction =
     | Right
 
 type BonhommeMovemementState =
-    | Inactive of Direction
+    | Idle of Direction
     | Running of Direction
     | Jumping of Direction * CurrentJumpVelocity
     | Duck of Direction
 
 type BonhommeSpriteSheet =
-    { rightStaticSprite: SpriteTexture
-      leftStaticSprite: SpriteTexture
+    { rightIdleSprite: SpriteTexture
+      leftIdleSprite: SpriteTexture
       rightDuckSprite: SpriteTexture
       leftDuckSprite: SpriteTexture
-      leftJumpingSprite: SpriteTexture
       rightJumpingSprite: SpriteTexture
-      rightRunningAnimatedSprite: SpriteTexture list
-      leftRunningAnimatedSprite: SpriteTexture list }
+      leftJumpingSprite: SpriteTexture
+      rightRunningSprites: SpriteTexture list
+      leftRunningSprites: SpriteTexture list }
 
 type BonhommeProperties =
     { movementStatus: BonhommeMovemementState

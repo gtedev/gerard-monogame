@@ -19,13 +19,13 @@ let initializeEntity (game: Game) =
 
     let bonhommeProperties =
         BonhommeProperties
-            { movementStatus = Inactive Right
+            { movementStatus = Idle Right
               spriteSheet = spriteSheet }
         |> Some
 
     let properties =
         { position = new Vector2(0f, 350f)
-          sprite = SingleSprite spriteSheet.rightStaticSprite
+          sprite = SingleSprite spriteSheet.rightIdleSprite
           isEnabled = true }
 
     GameEntity.createGameEntity properties bonhommeProperties updateEntity

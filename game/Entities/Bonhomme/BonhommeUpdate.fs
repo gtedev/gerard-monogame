@@ -9,7 +9,7 @@ open Microsoft.Xna.Framework.Input
 let private extractDirection movState =
     match movState with
     | Running dir -> dir
-    | Inactive dir -> dir
+    | Idle dir -> dir
     | Jumping (dir, _) -> dir
     | Duck dir -> dir
 
@@ -21,7 +21,7 @@ let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * V
     let direction = extractDirection nextMovState
 
     if positionY + nextMovPosition.Y > FLOOR_HEIGHT
-    then (Inactive direction, new Vector2(nextMovPosition.X, 0f))
+    then (Idle direction, new Vector2(nextMovPosition.X, 0f))
     else nextMovement
 
 
@@ -56,7 +56,7 @@ let private updateMovementState prevMovState
         | (Jumping (prevDir, velocity), _) -> Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> Jumping(Left, JUMP_VELOCITY_SPEED)
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> Jumping(Right, JUMP_VELOCITY_SPEED)
-        | (Inactive prevDir, vectorMovement) when vectorMovement.Y < 0f ->
+        | (Idle prevDir, vectorMovement) when vectorMovement.Y < 0f ->
 
             match prevDir with
             | Left -> Jumping(Left, JUMP_VELOCITY_SPEED)
@@ -71,8 +71,8 @@ let private updateMovementState prevMovState
             let prevDir = extractDirection prevMovState
 
             match prevDir with
-            | Left -> Inactive Left
-            | Right -> Inactive Right
+            | Left -> Idle Left
+            | Right -> Idle Right
 
         | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
 

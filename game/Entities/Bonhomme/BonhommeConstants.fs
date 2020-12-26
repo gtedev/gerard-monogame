@@ -1,7 +1,7 @@
 ﻿module BonhommeConstants
 
-let ASSET_BONHOMME_RIGHT_STATIC_SPRITE = "bonhomme32-2-piskel"
-let ASSET_BONHOMME_LEFT_STATIC_SPRITE = "bonhomme32-2-piskel-left"
+let ASSET_BONHOMME_RIGHT_IDLE_SPRITE = "bonhomme32-2-piskel"
+let ASSET_BONHOMME_LEFT_IDLE_SPRITE = "bonhomme32-2-piskel-left"
 
 let ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1 = "bonhomme32-2-piskel"
 let ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2 = "bonhomme62-piskel"

@@ -18,11 +18,11 @@ let createBonhommeSpriteSheet (game: Game) =
     let leftJumpingTexture =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
 
-    let leftStaticSprite =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_STATIC_SPRITE) }
+    let leftIdleSprite =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
 
-    let rightStaticTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_STATIC_SPRITE) }
+    let rightIdleTexture =
+        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
 
     let leftDuckSprite =
         { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
@@ -42,10 +42,10 @@ let createBonhommeSpriteSheet (game: Game) =
       rightJumpingSprite = rightJumpingTexture
       leftDuckSprite = leftDuckSprite
       rightDuckSprite = rightDuckTexture
-      rightStaticSprite = rightStaticTexture
-      leftStaticSprite = leftStaticSprite
-      rightRunningAnimatedSprite = rightRunningTextures
-      leftRunningAnimatedSprite = leftRunningTextures }
+      rightIdleSprite = rightIdleTexture
+      leftIdleSprite = leftIdleSprite
+      rightRunningSprites = rightRunningTextures
+      leftRunningSprites = leftRunningTextures }
 
 
 let updateSprite gameTime
@@ -55,7 +55,7 @@ let updateSprite gameTime
                  currentMovState
                  =
 
-    let spriteSheet = properties.spriteSheet
+    let sprSheet = properties.spriteSheet
 
     let nextSprite =
         match (prevMovState, currentMovState) with
@@ -63,49 +63,49 @@ let updateSprite gameTime
 
             let jumpingSprite =
                 match dir with
-                | Left -> spriteSheet.leftJumpingSprite
-                | Right -> spriteSheet.rightJumpingSprite
+                | Left -> sprSheet.leftJumpingSprite
+                | Right -> sprSheet.rightJumpingSprite
 
             SingleSprite jumpingSprite
 
-        | _, Inactive dir ->
+        | _, Idle dir ->
 
-            let staticSprite =
+            let idleSprite =
                 match dir with
-                | Left -> spriteSheet.leftStaticSprite
-                | Right -> spriteSheet.rightStaticSprite
+                | Left -> sprSheet.leftIdleSprite
+                | Right -> sprSheet.rightIdleSprite
 
-            SingleSprite staticSprite
+            SingleSprite idleSprite
 
         | _, Duck dir ->
 
             let duckSprite =
                 match dir with
-                | Left -> spriteSheet.leftDuckSprite
-                | Right -> spriteSheet.rightDuckSprite
+                | Left -> sprSheet.leftDuckSprite
+                | Right -> sprSheet.rightDuckSprite
 
             SingleSprite duckSprite
 
-        | Inactive _, Running dir ->
+        | Idle _, Running dir ->
 
-            let runningSprite =
+            let runningSprites =
                 match dir with
-                | Left -> spriteSheet.leftRunningAnimatedSprite
-                | Right -> spriteSheet.rightRunningAnimatedSprite
+                | Left -> sprSheet.leftRunningSprites
+                | Right -> sprSheet.rightRunningSprites
 
-            createBonhommeAnimatedSprite runningSprite
+            createBonhommeAnimatedSprite runningSprites
 
         | Duck _, Running dir ->
 
-            let runningSprite =
+            let runningSprites =
                 match dir with
-                | Left -> spriteSheet.leftRunningAnimatedSprite
-                | Right -> spriteSheet.rightRunningAnimatedSprite
+                | Left -> sprSheet.leftRunningSprites
+                | Right -> sprSheet.rightRunningSprites
 
-            createBonhommeAnimatedSprite runningSprite
+            createBonhommeAnimatedSprite runningSprites
 
-        | Running Left, Running Right -> createBonhommeAnimatedSprite spriteSheet.rightRunningAnimatedSprite
-        | Running Right, Running Left -> createBonhommeAnimatedSprite spriteSheet.leftRunningAnimatedSprite
+        | Running Left, Running Right -> createBonhommeAnimatedSprite sprSheet.rightRunningSprites
+        | Running Right, Running Left -> createBonhommeAnimatedSprite sprSheet.leftRunningSprites
         | Running _, Running _ -> currentGameEntity.Sprite
         | _ -> currentGameEntity.Sprite
 
