@@ -20,7 +20,7 @@ let private updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
     let sprites = animatedSpriteState.sprites
 
     let nextIndexAndElapsedTime =
-        if (nextElapsedTime > animatedSpriteState.animatedFrameTime)
+        if (nextElapsedTime > animatedSpriteState.frameTime)
         then (computeNextSpriteIndex sprites currentSpriteIndex, 0f)
         else (currentSpriteIndex, nextElapsedTime)
 
@@ -43,12 +43,12 @@ let updateSpriteState gameTime sprite =
     | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
 
 
-let createAnimatedSprite animatedFrameTime sprite =
+let createAnimatedSprite frameTime sprite =
     AnimatedSprite
         { sprites = sprite
           currentSpriteIndex = 0
           elapsedTimeSinceLastFrame = 0f
-          animatedFrameTime = animatedFrameTime }
+          frameTime = frameTime }
 
 let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
 
