@@ -55,57 +55,47 @@ let updateSprite gameTime
                  currentMovState
                  =
 
-    let sprSheet = properties.spriteSheet
+    let ss = properties.spriteSheet
 
     let nextSprite =
         match (prevMovState, currentMovState) with
         | _, Jumping (dir, _) ->
 
             let jumpingSprite =
-                match dir with
-                | Left -> sprSheet.leftJumpingSprite
-                | Right -> sprSheet.rightJumpingSprite
+                Helper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
 
             SingleSprite jumpingSprite
 
         | _, Idle dir ->
 
             let idleSprite =
-                match dir with
-                | Left -> sprSheet.leftIdleSprite
-                | Right -> sprSheet.rightIdleSprite
+                Helper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
 
             SingleSprite idleSprite
 
         | _, Duck dir ->
 
             let duckSprite =
-                match dir with
-                | Left -> sprSheet.leftDuckSprite
-                | Right -> sprSheet.rightDuckSprite
+                Helper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
 
             SingleSprite duckSprite
 
         | Idle _, Running dir ->
 
             let runningSprites =
-                match dir with
-                | Left -> sprSheet.leftRunningSprites
-                | Right -> sprSheet.rightRunningSprites
+                Helper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
 
             createBonhommeAnimatedSprite runningSprites
 
         | Duck _, Running dir ->
 
             let runningSprites =
-                match dir with
-                | Left -> sprSheet.leftRunningSprites
-                | Right -> sprSheet.rightRunningSprites
+                Helper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
 
             createBonhommeAnimatedSprite runningSprites
 
-        | Running Left, Running Right -> createBonhommeAnimatedSprite sprSheet.rightRunningSprites
-        | Running Right, Running Left -> createBonhommeAnimatedSprite sprSheet.leftRunningSprites
+        | Running Left, Running Right -> createBonhommeAnimatedSprite ss.rightRunningSprites
+        | Running Right, Running Left -> createBonhommeAnimatedSprite ss.leftRunningSprites
         | Running _, Running _ -> currentGameEntity.Sprite
         | _ -> currentGameEntity.Sprite
 
