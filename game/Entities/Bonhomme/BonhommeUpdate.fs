@@ -6,6 +6,10 @@ open Types
 open BonhommeConstants
 open Microsoft.Xna.Framework.Input
 
+let private newJumpLeft = Jumping(Left, JUMP_VELOCITY_SPEED)
+
+let private newJumpRight = Jumping(Right, JUMP_VELOCITY_SPEED)
+
 let private extractDirection movState =
     match movState with
     | Running dir -> dir
@@ -26,7 +30,7 @@ let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * V
 
 
 
-let private updateYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
+let private updateMovementYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
     let (nextMovState, nextMovPosition) = nextMovement
 
@@ -48,13 +52,11 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
     let state =
         match (prevMovState, vectorMovement) with
         | (Jumping (prevDir, velocity), _) -> Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
-        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> Jumping(Left, JUMP_VELOCITY_SPEED)
-        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> Jumping(Right, JUMP_VELOCITY_SPEED)
+        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> newJumpLeft
+        | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> newJumpRight
         | (Idle prevDir, vectorMovement) when vectorMovement.Y < 0f ->
 
-            match prevDir with
-            | Left -> Jumping(Left, JUMP_VELOCITY_SPEED)
-            | Right -> Jumping(Right, JUMP_VELOCITY_SPEED)
+            Helper.matchDirection prevDir newJumpLeft newJumpRight
 
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
@@ -63,18 +65,12 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
         | (prevMovState, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
 
             let prevDir = extractDirection prevMovState
-
-            match prevDir with
-            | Left -> Idle Left
-            | Right -> Idle Right
+            Helper.matchDirection prevDir (Idle Left) (Idle Right)
 
         | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
 
             let prevDir = extractDirection prevMovState
-
-            match prevDir with
-            | Left -> Duck Left
-            | Right -> Duck Right
+            Helper.matchDirection prevDir (Duck Left) (Duck Right)
 
         | (_, _) -> prevMovState
 
@@ -82,7 +78,7 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
 
 
 
-let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
+let private updateMovementXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
     let (nextMovState, nextMovPosition) = nextMovement
 
@@ -106,8 +102,8 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
 
     (previousState, properties.position)
     |> updateMovementState vectorMovement
-    |> updateXPosition vectorMovement
-    |> updateYPosition gameTime
+    |> updateMovementXPosition vectorMovement
+    |> updateMovementYPosition gameTime
     |> withFloorCheck properties.position.Y
 
 
