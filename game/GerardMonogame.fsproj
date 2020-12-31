@@ -16,8 +16,11 @@
   <ItemGroup>
     <None Include="Content\obj\DesktopGL\Content\.mgstats" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
-    <Compile Include="Types.fs" />
-    <Compile Include="Helper.fs" />
+    <Compile Include="CommonTypes.fs" />
+    <Compile Include="Dictionary.fs" />
+    <Compile Include="List.fs" />
+    <Compile Include="GameTypes.fs" />
+    <Compile Include="GameHelper.fs" />
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Sprites.fs" />
     <Compile Include="GameEntity.fs" />

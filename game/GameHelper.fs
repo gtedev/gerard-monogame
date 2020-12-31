@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
-module Helper
+module GameHelper
 
-open Types
+open GameTypes
 
 /// <summary>Match direction then return appropriate left / right params.</summary>
 let matchDirection direction whenLeft whenRight =

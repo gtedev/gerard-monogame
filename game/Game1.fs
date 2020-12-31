@@ -2,7 +2,7 @@
 
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
-open Types
+open GameTypes
 open Microsoft.Xna.Framework.Media
 
 type Game1() as game =
@@ -52,7 +52,7 @@ type Game1() as game =
         spriteBatch.Begin()
 
         gameState.entities
-        |> List.iter (Sprites.drawSprite spriteBatch)
+        |> Dict.iter (fun kvp -> Sprites.drawSprite spriteBatch (snd kvp))
 
         spriteBatch.End()
 

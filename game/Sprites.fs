@@ -2,7 +2,7 @@
 module Sprites
 
 open Microsoft.Xna.Framework
-open Types
+open GameTypes
 open Microsoft.Xna.Framework.Graphics
 
 let private computeNextSpriteIndex sprites currentSpriteIndex =

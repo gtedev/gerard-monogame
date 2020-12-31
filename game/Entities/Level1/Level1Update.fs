@@ -2,7 +2,7 @@
 module Level1Update
 
 open Microsoft.Xna.Framework
-open Types
+open GameTypes
 open Level1Constants
 open Microsoft.Xna.Framework.Input
 
@@ -26,7 +26,7 @@ let updateLevel1YPosition (vectorMovement: Vector2) =
 
 
 
-let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: Level1Properties) =
+let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: Level1Properties) =
 
     let vectorMovement =
         KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())

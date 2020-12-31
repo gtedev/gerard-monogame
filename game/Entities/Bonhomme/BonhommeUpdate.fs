@@ -2,7 +2,7 @@
 module BonhommeUpdate
 
 open Microsoft.Xna.Framework
-open Types
+open GameTypes
 open BonhommeConstants
 open Microsoft.Xna.Framework.Input
 
@@ -67,7 +67,7 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> newJumpRight
         | (Idle prevDir, vectorMovement) when vectorMovement.Y < 0f ->
 
-            Helper.matchDirection prevDir newJumpLeft newJumpRight
+            GameHelper.matchDirection prevDir newJumpLeft newJumpRight
 
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
         | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
@@ -76,12 +76,12 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
         | (prevMovState, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
 
             let prevDir = extractDirection prevMovState
-            Helper.matchDirection prevDir (Idle Left) (Idle Right)
+            GameHelper.matchDirection prevDir (Idle Left) (Idle Right)
 
         | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
 
             let prevDir = extractDirection prevMovState
-            Helper.matchDirection prevDir (Duck Left) (Duck Right)
+            GameHelper.matchDirection prevDir (Duck Left) (Duck Right)
 
         | (_, _) -> prevMovState
 
@@ -119,7 +119,7 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
     |> withBoarderScreenLeftCheck properties.position.X
 
 
-let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
+let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
 
     let vectorMovement =
         KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())

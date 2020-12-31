@@ -1,4 +1,5 @@
 ﻿module BonhommeConstants
+let EntityId = "bonhomme"
 
 let ASSET_BONHOMME_RIGHT_IDLE_SPRITE = "bonhomme-idle-right"
 let ASSET_BONHOMME_LEFT_IDLE_SPRITE = "bonhomme-idle-left"

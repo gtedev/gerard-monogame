@@ -1,8 +1,11 @@
-﻿module Types
+﻿module GameTypes
 
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
+open System
 
+
+type GameEntityId = string
 type CurrentSpriteIndex = int
 type ElapsedTimeSinceLastFrame = float32
 type CurrentJumpVelocity = float32
@@ -23,7 +26,8 @@ type Sprite =
 
 
 type GameEntityProperties =
-    { isEnabled: bool
+    { id: GameEntityId
+      isEnabled: bool
       position: Vector2
       sprite: Sprite }
 
@@ -63,12 +67,17 @@ type CustomEntityProperties =
     | Level1Properties of Level1Properties
 
 
+type GameState<'TEntity, 'TEntities when 'TEntities :> dict<GameEntityId, 'TEntity>> = { entities: 'TEntities }
+
 type IGameEntity =
     abstract CustomEntityProperties: CustomEntityProperties option
     abstract Properties: GameEntityProperties
-    abstract UpdateEntity: GameTime -> IGameEntity -> IGameEntity
+
+    abstract UpdateEntity: GameTime
+     -> GameState<IGameEntity, dict<GameEntityId, IGameEntity>> -> IGameEntity -> IGameEntity
+
     abstract Position: Vector2
     abstract Sprite: Sprite
 
 
-type GameState = { entities: IGameEntity list }
+type GameState = GameState<IGameEntity, dict<GameEntityId, IGameEntity>>

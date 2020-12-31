@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
 module Level1Sprite
 
-open Types
+open GameTypes
 open Level1Constants
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics

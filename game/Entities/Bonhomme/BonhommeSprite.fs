@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
 module BonhommeSprite
 
-open Types
+open GameTypes
 open BonhommeConstants
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
@@ -62,35 +62,35 @@ let updateSprite gameTime
         | _, Jumping (dir, _) ->
 
             let jumpingSprite =
-                Helper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
+                GameHelper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
 
             SingleSprite jumpingSprite
 
         | _, Idle dir ->
 
             let idleSprite =
-                Helper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
+                GameHelper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
 
             SingleSprite idleSprite
 
         | _, Duck dir ->
 
             let duckSprite =
-                Helper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
+                GameHelper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
 
             SingleSprite duckSprite
 
         | Idle _, Running dir ->
 
             let runningSprites =
-                Helper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
 
             createBonhommeAnimatedSprite runningSprites
 
         | Duck _, Running dir ->
 
             let runningSprites =
-                Helper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
 
             createBonhommeAnimatedSprite runningSprites
 

@@ -1,14 +1,14 @@
 ﻿[<RequireQualifiedAccess>]
 module GameState
 
-open Types
+open GameTypes
 open Microsoft.Xna.Framework
 
 
-let updateEntities gameTime gameState: GameState =
+let updateEntities gameTime (gameState: GameState) =
     let newEntities =
         gameState.entities
-        |> List.map (fun entity -> entity.UpdateEntity gameTime entity)
+        |> Dict.map (fun (key, entity) -> (key, entity.UpdateEntity gameTime gameState entity))
 
     { entities = newEntities }
 
@@ -16,8 +16,13 @@ let updateEntities gameTime gameState: GameState =
 
 let initializeEntities<'T when 'T :> Game> (game: 'T) (gameState: GameState) =
 
-    let bonhommeGameEntity = BonhommeEntity.initializeEntity game
-    let level1GameEntity = Level1Entity.initializeEntity game
+    let bonhommeGameEntity = BonhommeEntity.initializeEntity game gameState
+    let level1GameEntity = Level1Entity.initializeEntity game gameState
+
+    let kvpEntities =
+        [ level1GameEntity; bonhommeGameEntity ]
+        |> List.map (fun entity -> (entity.Properties.id, entity))
+        |> List.toDict
 
     { gameState with
-          entities = [ level1GameEntity; bonhommeGameEntity ] }
+          entities = kvpEntities }
