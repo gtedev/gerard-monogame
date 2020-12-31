@@ -20,3 +20,15 @@ let iter action (dictionary: dict<'k, 'v>) =
     dictionary
     |> Seq.map (|KeyValue|)
     |> Seq.iter action
+
+/// <summary>Builds a new dictionary by applying a filter function on the dictionary.</summary>
+let filter predicate (dictionary: dict<'k, 'v>) =
+
+    let results =
+        dictionary
+        |> Seq.map (|KeyValue|)
+        |> Seq.filter predicate
+        |> Seq.map (fun kvp -> KeyValuePair(fst kvp, snd kvp))
+        |> dict
+
+    results
