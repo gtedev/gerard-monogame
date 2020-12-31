@@ -1,4 +1,5 @@
-﻿module Dict
+﻿[<RequireQualifiedAccess>]
+module Dict
 
 open System.Collections.Generic
 

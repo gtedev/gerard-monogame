@@ -1,4 +1,5 @@
-﻿module List
+﻿[<RequireQualifiedAccess>]
+module List
 
 open System.Collections.Generic
 

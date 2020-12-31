@@ -67,17 +67,18 @@ type CustomEntityProperties =
     | Level1Properties of Level1Properties
 
 
-type GameState<'TEntity, 'TEntities when 'TEntities :> dict<GameEntityId, 'TEntity>> = { entities: 'TEntities }
+// GameState<'TEntity> has been just introduced in order to be able to reference GameState in IGameEntity.UpdateEntity
+// for at least to having something typed.
+// As F# implies strict declaration order, it was not possible to reference GameState before.
+type GameState<'TEntity> =
+    { entities: dict<GameEntityId, 'TEntity> }
 
 type IGameEntity =
     abstract CustomEntityProperties: CustomEntityProperties option
     abstract Properties: GameEntityProperties
-
-    abstract UpdateEntity: GameTime
-     -> GameState<IGameEntity, dict<GameEntityId, IGameEntity>> -> IGameEntity -> IGameEntity
-
+    abstract UpdateEntity: GameTime -> GameState<IGameEntity> -> IGameEntity -> IGameEntity
     abstract Position: Vector2
     abstract Sprite: Sprite
 
 
-type GameState = GameState<IGameEntity, dict<GameEntityId, IGameEntity>>
+type GameState = GameState<IGameEntity>
