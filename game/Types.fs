@@ -47,12 +47,20 @@ type BonhommeSpriteSheet =
       rightRunningSprites: SpriteTexture list
       leftRunningSprites: SpriteTexture list }
 
+type Level1SpriteSheet = { level1Sprite: SpriteTexture }
+
+
 type BonhommeProperties =
     { movementStatus: BonhommeMovemementState
       spriteSheet: BonhommeSpriteSheet }
 
 
-type CustomEntityProperties = BonhommeProperties of BonhommeProperties
+type Level1Properties = { spriteSheet: Level1SpriteSheet }
+
+
+type CustomEntityProperties =
+    | BonhommeProperties of BonhommeProperties
+    | Level1Properties of Level1Properties
 
 
 type IGameEntity =

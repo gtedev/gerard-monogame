@@ -30,7 +30,7 @@ let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * V
 
 
 
-let private updateMovementYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
+let private updateYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
     let (nextMovState, nextMovPosition) = nextMovement
 
@@ -78,7 +78,7 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
 
 
 
-let private updateMovementXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
+let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
 
     let (nextMovState, nextMovPosition) = nextMovement
 
@@ -102,8 +102,8 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
 
     (previousState, properties.position)
     |> updateMovementState vectorMovement
-    |> updateMovementXPosition vectorMovement
-    |> updateMovementYPosition gameTime
+    |> updateXPosition vectorMovement
+    |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
 
 

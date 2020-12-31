@@ -17,6 +17,7 @@ let updateEntities gameTime gameState: GameState =
 let initializeEntities<'T when 'T :> Game> (game: 'T) (gameState: GameState) =
 
     let bonhommeGameEntity = BonhommeEntity.initializeEntity game
+    let level1GameEntity = Level1Entity.initializeEntity game
 
     { gameState with
-          entities = [ bonhommeGameEntity ] }
+          entities = [ level1GameEntity; bonhommeGameEntity ] }
