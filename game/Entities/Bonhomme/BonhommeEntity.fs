@@ -24,7 +24,7 @@ let initializeEntity (game: Game) =
         |> Some
 
     let properties =
-        { position = new Vector2(0f, BonhommeConstants.FLOOR_HEIGHT)
+        { position = new Vector2(BonhommeConstants.POSITION_X_STARTING, BonhommeConstants.FLOOR_HEIGHT)
           sprite = SingleSprite spriteSheet.rightIdleSprite
           isEnabled = true }
 
