@@ -17,8 +17,17 @@ let private extractDirection movState =
     | Jumping (dir, _) -> dir
     | Duck dir -> dir
 
-let private withBoarderScreenLeftCheck (nextMovement: (BonhommeMovemementState * Vector2)) =
-    nextMovement
+
+
+let private withBoarderScreenLeftCheck positionX (nextMovement: (BonhommeMovemementState * Vector2)) =
+
+    let (nextMovState, nextMovPosition) = nextMovement
+
+    let nextXPosition =
+        if positionX + nextMovPosition.X < 0f then 0f else nextMovPosition.X
+
+    (nextMovState, new Vector2(nextXPosition, nextMovPosition.Y))
+
 
 let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * Vector2)) =
 
@@ -107,7 +116,7 @@ let private updateBonhommeStateAndPosition (gameTime: GameTime)
     |> updateXPosition vectorMovement
     |> updateYPosition gameTime
     |> withFloorCheck properties.position.Y
-    |> withBoarderScreenLeftCheck
+    |> withBoarderScreenLeftCheck properties.position.X
 
 
 let updateEntity gameTime (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
