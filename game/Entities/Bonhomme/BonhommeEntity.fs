@@ -1,7 +1,7 @@
 ﻿module BonhommeEntity
 
 open Microsoft.Xna.Framework
-open GameTypes
+open Types
 
 
 let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =

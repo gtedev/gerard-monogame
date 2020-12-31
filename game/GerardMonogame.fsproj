@@ -16,10 +16,7 @@
   <ItemGroup>
     <None Include="Content\obj\DesktopGL\Content\.mgstats" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
-    <Compile Include="CommonTypes.fs" />
-    <Compile Include="Dictionary.fs" />
-    <Compile Include="List.fs" />
-    <Compile Include="GameTypes.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="GameHelper.fs" />
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Sprites.fs" />
@@ -45,5 +42,8 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FSharp.Core.Extensions\FSharp.Core.Extensions.fsproj" />
   </ItemGroup>
 </Project>

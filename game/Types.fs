@@ -1,8 +1,7 @@
-﻿module GameTypes
+﻿module Types
 
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
-open System
 
 
 type GameEntityId = string

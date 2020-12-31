@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
 module GameState
 
-open GameTypes
+open Types
 open Microsoft.Xna.Framework
 
 

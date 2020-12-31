@@ -2,7 +2,7 @@
 
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
-open GameTypes
+open Types
 open Microsoft.Xna.Framework.Media
 
 type Game1() as game =

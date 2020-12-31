@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
 module BonhommeSprite
 
-open GameTypes
+open Types
 open BonhommeConstants
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics

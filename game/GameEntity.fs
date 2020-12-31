@@ -1,7 +1,7 @@
 ﻿[<RequireQualifiedAccess>]
 module GameEntity
 
-open GameTypes
+open Types
 
 let createGameEntity properties customProperties updateEntity =
     { new IGameEntity with

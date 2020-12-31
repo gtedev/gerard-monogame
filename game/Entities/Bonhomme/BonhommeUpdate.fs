@@ -2,7 +2,7 @@
 module BonhommeUpdate
 
 open Microsoft.Xna.Framework
-open GameTypes
+open Types
 open BonhommeConstants
 open Microsoft.Xna.Framework.Input
 
