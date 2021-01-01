@@ -10,9 +10,11 @@ module BonhommeEntity =
 
     let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
 
-        match currentGameEntity.CustomEntityProperties with
-        | Some (BonhommeProperties properties) ->
-            BonhommeUpdate.updateEntity gameTime gameState currentGameEntity properties
+        match currentGameEntity with
+        | Bonhomme allEntityProperties ->
+
+            let bonhommeProperties = snd allEntityProperties
+            BonhommeUpdate.updateEntity gameTime gameState currentGameEntity bonhommeProperties
 
         | _ -> currentGameEntity
 

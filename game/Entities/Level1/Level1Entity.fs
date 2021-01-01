@@ -10,9 +10,11 @@ module Level1Entity =
 
     let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
 
-        match currentGameEntity.CustomEntityProperties with
-        | Some (Level1Properties properties) ->
-            Level1Update.updateEntity gameTime gameState currentGameEntity properties
+        match currentGameEntity with
+        | Level1 allEntityProperties ->
+
+            let level1Properties = snd allEntityProperties
+            Level1Update.updateEntity gameTime gameState currentGameEntity level1Properties
 
         | _ -> currentGameEntity
 

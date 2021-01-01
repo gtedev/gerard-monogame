@@ -5,7 +5,6 @@ module GameEntity =
 
     open Types
     open FSharp.Core.Extensions
-    open GerardMonogame.Constants
 
     let createGameEntity properties customProperties updateEntity =
         { new IGameEntity with

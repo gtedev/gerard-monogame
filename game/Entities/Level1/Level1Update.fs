@@ -75,6 +75,6 @@ module Level1Update =
         let someEntity = GameEntity.getEntityFromGameState gameState BonhommeConstants.EntityId
 
         match someEntity with
-        | SomeBonhommeEntity allBonHommeProperties ->
+        | SomeBonhomme allBonHommeProperties ->
             updateLevel1Entity allBonHommeProperties currentGameEntity properties
         | _ -> currentGameEntity
