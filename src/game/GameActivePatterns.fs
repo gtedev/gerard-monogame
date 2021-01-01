@@ -10,9 +10,9 @@ module GameActivePatterns =
     /// </summary>
     /// <param name="entity">game entity.</param>
     /// <returns>Bonhomme properties.</returns>
-    let (|Bonhomme|_|) (entity: IGameEntity) =
-        match entity.CustomEntityProperties with
-        | Some (BonhommeProperties properties) -> Some((entity.Properties, properties))
+    let (|Bonhomme|_|) (e: IGameEntity) =
+        match e.CustomEntityProperties with
+        | Some (BonhommeProperties p) -> Some((e.Properties, p))
         | _ -> None
 
 
@@ -22,9 +22,9 @@ module GameActivePatterns =
     /// </summary>
     /// <param name="someEntity">An optional game entity.</param>
     /// <returns>A tuple of game properties and bonhomme properties.</returns>
-    let (|SomeBonhomme|_|) (someEntity: IGameEntity option) =
-        match someEntity with
-        | Some (Bonhomme allEntityProperties) -> Some(allEntityProperties)
+    let (|SomeBonhomme|_|) (e: IGameEntity option) =
+        match e with
+        | Some (Bonhomme allProps) -> Some(allProps)
         | _ -> None
 
 
@@ -34,7 +34,7 @@ module GameActivePatterns =
     /// </summary>
     /// <param name="entity">game entity.</param>
     /// <returns>A tuple of game properties and Level1 properties.</returns>
-    let (|Level1|_|) (entity: IGameEntity) =
-        match entity.CustomEntityProperties with
-        | Some (Level1Properties properties) -> Some((entity.Properties, properties))
+    let (|Level1|_|) (e: IGameEntity) =
+        match e.CustomEntityProperties with
+        | Some (Level1Properties p) -> Some((e.Properties, p))
         | _ -> None

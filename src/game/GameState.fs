@@ -9,25 +9,23 @@ module GameState =
     open Microsoft.Xna.Framework
     open FSharp.Core.Extensions
 
-    let updateEntities gameTime (gameState: GameState) =
+    let updateEntities gameTime (gs: GameState) =
         let newEntities =
-            gameState.entities
-            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.UpdateEntity gameTime gameState entity))
+            gs.entities
+            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.UpdateEntity gameTime gs entity))
 
         { entities = newEntities }
 
 
 
-    let initializeEntities<'T when 'T :> Game> (game: 'T) (gameState: GameState) =
+    let initEntities<'T when 'T :> Game> (game: 'T) (gs: GameState) =
 
-        let bonhommeGameEntity =
-            BonhommeEntity.initializeEntity game gameState
+        let bh = BonhommeEntity.initEntity game gs
 
-        let level1GameEntity =
-            Level1Entity.initializeEntity game gameState
+        let l1 = Level1Entity.initEntity game gs
 
         let entities =
-            [ level1GameEntity; bonhommeGameEntity ]
-            |> List.toReadOnlyDict  (fun entity -> (entity.Properties.id, entity))
+            [ l1; bh ]
+            |> List.toReadOnlyDict (fun e -> (e.Properties.id, e))
 
-        { gameState with entities = entities }
+        { gs with entities = entities }

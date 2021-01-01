@@ -1,40 +1,41 @@
 ﻿namespace GerardMonogame.Game.Entities
 
 open GerardMonogame.Game
+open GerardMonogame.Constants
 
 module BonhommeEntity =
 
     open Microsoft.Xna.Framework
     open Types
-    open GerardMonogame.Constants
+    open GerardMonogame.Constants.BonhommeConstants
 
-    let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
 
-        match currentGameEntity with
-        | Bonhomme allEntityProperties ->
+        match currentEntity with
+        | Bonhomme allEntityProps ->
 
-            let bonhommeProperties = snd allEntityProperties
-            BonhommeUpdate.updateEntity gameTime gameState currentGameEntity bonhommeProperties
+            let bonhommeProps = snd allEntityProps
+            BonhommeUpdate.updateEntity gt gs currentEntity bonhommeProps
 
-        | _ -> currentGameEntity
+        | _ -> currentEntity
 
 
 
-    let initializeEntity (game: Game) (gameState: GameState) =
+    let initEntity (g: Game) (gs: GameState) =
 
-        let spriteSheet =
-            BonhommeSprite.createBonhommeSpriteSheet game
+        let ss =
+            BonhommeSprite.createBonhommeSpriteSheet g
 
         let bonhommeProperties =
             BonhommeProperties
                 { movementStatus = Idle Right
-                  spriteSheet = spriteSheet }
+                  spriteSheet = ss }
             |> Some
 
-        let properties =
+        let geProps =
             { id = BonhommeConstants.EntityId
-              position = new Vector2(BonhommeConstants.POSITION_X_STARTING, BonhommeConstants.FLOOR_HEIGHT)
-              sprite = SingleSprite spriteSheet.rightIdleSprite
+              position = new Vector2(POSITION_X_STARTING, FLOOR_HEIGHT)
+              sprite = SingleSprite ss.rightIdleSprite
               isEnabled = true }
 
-        GameEntity.createGameEntity properties bonhommeProperties updateEntity
+        GameEntity.createGameEntity geProps bonhommeProperties updateEntity

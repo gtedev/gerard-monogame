@@ -8,31 +8,30 @@ module Level1Entity =
     open Types
     open GerardMonogame.Constants
 
-    let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
 
-        match currentGameEntity with
-        | Level1 allEntityProperties ->
+        match currentEntity with
+        | Level1 allEntityProps ->
 
-            let level1Properties = snd allEntityProperties
-            Level1Update.updateEntity gameTime gameState currentGameEntity level1Properties
+            let lvl1Props = snd allEntityProps
+            Level1Update.updateEntity gt gs currentEntity lvl1Props
 
-        | _ -> currentGameEntity
+        | _ -> currentEntity
 
 
 
-    let initializeEntity (game: Game) (gameState: GameState) =
+    let initEntity (game: Game) (gs: GameState) =
 
-        let spriteSheet =
+        let ss =
             Level1Sprite.createLevel1SpriteSheet game
 
-        let level1Properties =
-            Level1Properties { spriteSheet = spriteSheet }
-            |> Some
+        let lvl1Props =
+            Level1Properties { spriteSheet = ss } |> Some
 
-        let properties =
+        let geProps =
             { id = Level1Constants.EntityId
               position = new Vector2(0f, Level1Constants.LEVEL1_Y_POSITION)
-              sprite = SingleSprite spriteSheet.level1Sprite
+              sprite = SingleSprite ss.level1Sprite
               isEnabled = true }
 
-        GameEntity.createGameEntity properties level1Properties updateEntity
+        GameEntity.createGameEntity geProps lvl1Props updateEntity

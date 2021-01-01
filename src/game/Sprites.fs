@@ -8,51 +8,53 @@ module Sprites =
     open Microsoft.Xna.Framework.Graphics
 
 
-    let private computeNextSpriteIndex sprites currentSpriteIndex =
+    let private nextSpriteIndex sprites currentIndex =
         let lastIndex = List.length sprites - 1
-        if currentSpriteIndex = lastIndex then 0 else (currentSpriteIndex + 1)
+
+        if currentIndex = lastIndex then 0 else (currentIndex + 1)
 
 
 
-    let private updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
+    let private updateAnimatedSprite (g: GameTime) (animState: AnimatedSpriteState) =
+
+        let currentIndex = animState.currentSpriteIndex
+        let sprites = animState.sprites
 
         let nextElapsedTime =
-            (float32) gameTime.ElapsedGameTime.TotalSeconds
-            + animatedSpriteState.elapsedTimeSinceLastFrame
+            (float32) g.ElapsedGameTime.TotalSeconds
+            + animState.elapsedTimeSinceLastFrame
 
-        let currentSpriteIndex = animatedSpriteState.currentSpriteIndex
-        let sprites = animatedSpriteState.sprites
-
-        let nextIndexAndElapsedTime =
-            if (nextElapsedTime > animatedSpriteState.frameTime)
-            then (computeNextSpriteIndex sprites currentSpriteIndex, 0f)
-            else (currentSpriteIndex, nextElapsedTime)
+        let (nextIndex, nextElapsedTime) =
+            if (nextElapsedTime > animState.frameTime)
+            then (nextSpriteIndex sprites currentIndex, 0f)
+            else (currentIndex, nextElapsedTime)
 
         AnimatedSprite
-            { animatedSpriteState with
-                  sprites = animatedSpriteState.sprites
-                  currentSpriteIndex = fst nextIndexAndElapsedTime
-                  elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
+            { animState with
+                  sprites = animState.sprites
+                  currentSpriteIndex = nextIndex
+                  elapsedTimeSinceLastFrame = nextElapsedTime }
 
 
 
-    let private getTextureToDraw sprite =
-        match sprite with
-        | SingleSprite sprite -> sprite.texture
-        | AnimatedSprite animatedSpriteState ->
-            animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
+    let private getTextureToDraw (s: Sprite) =
+        match s with
+        | SingleSprite s -> s.texture
+        | AnimatedSprite animState ->
+            animState.sprites.[animState.currentSpriteIndex]
                 .texture
 
 
 
-    let updateSpriteState gameTime sprite =
-        match sprite with
-        | SingleSprite _ -> sprite
-        | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
+    let updateSpriteState (gt: GameTime) (s: Sprite) =
+        match s with
+        | SingleSprite _ -> s
+        | AnimatedSprite animState -> updateAnimatedSprite gt animState
 
 
 
     let createAnimatedSprite frameTime sprite =
+
         AnimatedSprite
             { sprites = sprite
               currentSpriteIndex = 0
@@ -61,8 +63,8 @@ module Sprites =
 
 
 
-    let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
+    let drawSprite (spriteBatch: SpriteBatch) (ge: IGameEntity) =
 
-        let textureToDraw = getTextureToDraw gameEntity.Sprite
+        let t = getTextureToDraw ge.Sprite
 
-        spriteBatch.Draw(textureToDraw, gameEntity.Position, Color.White)
+        spriteBatch.Draw(t, ge.Position, Color.White)

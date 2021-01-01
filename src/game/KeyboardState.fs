@@ -11,7 +11,7 @@ module KeyboardState =
 
 
 
-    let getMovementVectorFromKeyState keyState =
+    let getMovementVector keyState =
 
         match keyState with
         | KeyDown Keys.Right & KeyDown Keys.Up -> Vector2(1.f, -1f)

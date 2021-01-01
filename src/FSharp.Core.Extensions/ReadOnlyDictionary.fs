@@ -10,10 +10,10 @@ module ReadOnlyDict =
     /// </summary>
     /// <param name="mapper">mapper function applied to each element of the read only dictionary.</param>
     /// <returns>A read only dictionary with mapped elements.</returns>
-    let map mapper (dictionary: readonlydict<'k, 'v>) =
+    let map mapper (dict: readonlydict<'k, 'v>) =
 
         let kvps =
-            dictionary
+            dict
             |> Seq.map (|KeyValue|)
             |> Seq.map mapper
             |> Seq.map (fun kvp -> KeyValuePair(fst kvp, snd kvp))
@@ -25,21 +25,19 @@ module ReadOnlyDict =
     /// <summary>Apply the given function to each element of the read only dictionary.</summary>
     /// <param name="action">action function applied to each element of the read only dictionary.</param>
     /// <returns>unit.</returns>
-    let iter action (dictionary: readonlydict<'k, 'v>) =
+    let iter action (dict: readonlydict<'k, 'v>) =
 
-        dictionary
-        |> Seq.map (|KeyValue|)
-        |> Seq.iter action
+        dict |> Seq.map (|KeyValue|) |> Seq.iter action
 
 
 
     /// <summary>Builds a new read only dictionary by applying a filter function on the read only dictionary.</summary>
     /// <param name="predicate">predicate function applied to filter the read only dictionary.</param>
     /// <returns>A read only dictionary filtered.</returns>
-    let filter predicate (dictionary: readonlydict<'k, 'v>) =
+    let filter predicate (dict: readonlydict<'k, 'v>) =
 
         let kvps =
-            dictionary
+            dict
             |> Seq.map (|KeyValue|)
             |> Seq.filter predicate
             |> Seq.map (fun kvp -> KeyValuePair(fst kvp, snd kvp))
@@ -51,8 +49,8 @@ module ReadOnlyDict =
     /// <summary>Try to get value in read only dictionary by its key. Returns an Option<value>.</summary>
     /// <param name="key">key to look for.</param>
     /// <returns>Option value element retrieved.</returns>
-    let tryGetValue key (dictionary: readonlydict<'k, 'v>) =
+    let tryGetValue key (dict: readonlydict<'k, 'v>) =
 
-        match dictionary.TryGetValue key with
+        match dict.TryGetValue key with
         | true, value -> Some(value)
         | _ -> None
