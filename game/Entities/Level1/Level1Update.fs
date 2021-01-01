@@ -10,10 +10,18 @@ module Level1Update =
     open GerardMonogame.Constants
 
 
+    let private ``make sure level1 moves never too much to the right`` positionX (vectorMovement: Vector2) =
 
-    let ``update level1 next movement X position with`` (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
-                                                        (vectorMovement: Vector2)
-                                                        =
+        let nextXPosition =
+            if positionX + vectorMovement.X > 0f then 0f else vectorMovement.X
+
+        new Vector2(nextXPosition, vectorMovement.Y)
+
+
+
+    let private ``update level1 next movement X position with`` (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
+                                                                (vectorMovement: Vector2)
+                                                                =
 
         let (gameEntityProperties, bonhommeProperties) = allBonHommeProperties
 
@@ -35,24 +43,26 @@ module Level1Update =
 
 
 
-    let ``update level1 next movement Y position`` (vectorMovement: Vector2) =
+    let private ``update level1 next movement Y position`` (vectorMovement: Vector2) =
         // maintain level background to same Y position !
         new Vector2(vectorMovement.X, 0f)
 
 
 
-    let updateLevel1Entity (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
-                           (currentGameEntity: IGameEntity)
-                           (properties: Level1Properties)
-                           =
+    let private updateLevel1Entity (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
+                                   (currentGameEntity: IGameEntity)
+                                   (properties: Level1Properties)
+                                   =
 
         let vectorMovement =
             KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
+
 
         let nextVectorPosition =
             vectorMovement
             |> ``update level1 next movement X position with`` allBonHommeProperties
             |> ``update level1 next movement Y position``
+            |> ``make sure level1 moves never too much to the right`` currentGameEntity.Position.X
 
         let nextLevel1Properties = Level1Properties(properties) |> Some
 
