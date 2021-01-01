@@ -7,9 +7,11 @@ module Sprites =
     open Types
     open Microsoft.Xna.Framework.Graphics
 
+
     let private computeNextSpriteIndex sprites currentSpriteIndex =
         let lastIndex = List.length sprites - 1
         if currentSpriteIndex = lastIndex then 0 else (currentSpriteIndex + 1)
+
 
 
     let private updateAnimatedSprite (gameTime: GameTime) animatedSpriteState =
@@ -32,6 +34,8 @@ module Sprites =
                   currentSpriteIndex = fst nextIndexAndElapsedTime
                   elapsedTimeSinceLastFrame = snd nextIndexAndElapsedTime }
 
+
+
     let private getTextureToDraw sprite =
         match sprite with
         | SingleSprite sprite -> sprite.texture
@@ -39,10 +43,13 @@ module Sprites =
             animatedSpriteState.sprites.[animatedSpriteState.currentSpriteIndex]
                 .texture
 
+
+
     let updateSpriteState gameTime sprite =
         match sprite with
         | SingleSprite _ -> sprite
         | AnimatedSprite animatedSpriteState -> updateAnimatedSprite gameTime animatedSpriteState
+
 
 
     let createAnimatedSprite frameTime sprite =
@@ -51,6 +58,8 @@ module Sprites =
               currentSpriteIndex = 0
               elapsedTimeSinceLastFrame = 0f
               frameTime = frameTime }
+
+
 
     let drawSprite (spriteBatch: SpriteBatch) (gameEntity: IGameEntity) =
 

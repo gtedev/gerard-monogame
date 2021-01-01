@@ -23,19 +23,24 @@ module Level1Update =
                               (vectorMovement: Vector2)
                               =
 
-        let (properties, bonhommeProperties) = allBonHommeProperties
-        let idleVector = new Vector2(0f, 0f)
+        let (gameEntityProperties, bonhommeProperties) = allBonHommeProperties
 
-        match bonhommeProperties.movementStatus with
-        | Duck _ -> idleVector
-        | _ when properties.position.X > Level1Constants.LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER ->
+        let bonhommePositionX = gameEntityProperties.position.X
+        let idleLevel1Vector = new Vector2(0f, 0f)
+
+        let moveLevel1Vector =
             new Vector2(
                 vectorMovement.X
                 * (-1f)
                 * Level1Constants.SPEED_MOVING_FLOOR,
                 vectorMovement.Y
             )
-        | _ -> idleVector
+
+        match bonhommeProperties.movementStatus with
+        | Duck _ -> idleLevel1Vector
+        | _ when bonhommePositionX > Level1Constants.LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER -> moveLevel1Vector
+        | _ -> idleLevel1Vector
+
 
 
     let updateLevel1YPosition (vectorMovement: Vector2) =
@@ -72,9 +77,9 @@ module Level1Update =
 
     let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: Level1Properties) =
 
-        let someEntity = GameEntity.getEntityFromGameState gameState BonhommeConstants.EntityId
+        let someEntity =
+            GameEntity.getEntityFromGameState gameState BonhommeConstants.EntityId
 
         match someEntity with
-        | SomeBonhomme allBonHommeProperties ->
-            updateLevel1Entity allBonHommeProperties currentGameEntity properties
+        | SomeBonhomme allBonHommeProperties -> updateLevel1Entity allBonHommeProperties currentGameEntity properties
         | _ -> currentGameEntity

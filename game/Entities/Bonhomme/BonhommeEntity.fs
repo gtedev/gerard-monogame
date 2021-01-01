@@ -19,6 +19,7 @@ module BonhommeEntity =
         | _ -> currentGameEntity
 
 
+
     let initializeEntity (game: Game) (gameState: GameState) =
 
         let spriteSheet =

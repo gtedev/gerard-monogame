@@ -14,6 +14,7 @@ module BonhommeSprite =
         Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
 
 
+
     let createBonhommeSpriteSheet (game: Game) =
 
         let rightJumpingTexture =
@@ -50,6 +51,7 @@ module BonhommeSprite =
           leftIdleSprite = leftIdleSprite
           rightRunningSprites = rightRunningTextures
           leftRunningSprites = leftRunningTextures }
+
 
 
     let updateSprite gameTime

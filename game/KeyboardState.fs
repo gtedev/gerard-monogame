@@ -9,6 +9,8 @@ module KeyboardState =
     let private (|KeyDown|_|) k (state: KeyboardState) =
         if state.IsKeyDown k then Some() else None
 
+
+
     let getMovementVectorFromKeyState keyState =
 
         match keyState with

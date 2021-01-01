@@ -26,10 +26,8 @@ module GameState =
         let level1GameEntity =
             Level1Entity.initializeEntity game gameState
 
-        let kvpEntities =
+        let entities =
             [ level1GameEntity; bonhommeGameEntity ]
-            |> List.map (fun entity -> (entity.Properties.id, entity))
-            |> List.toReadOnlyDict
+            |> List.toReadOnlyDict  (fun entity -> (entity.Properties.id, entity))
 
-        { gameState with
-              entities = kvpEntities }
+        { gameState with entities = entities }

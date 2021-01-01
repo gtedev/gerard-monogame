@@ -18,6 +18,7 @@ module GameEntity =
             member x.Sprite = properties.sprite }
 
 
+
     let getEntityFromGameState (gameState: GameState) entityId =
         gameState.entities
         |> ReadOnlyDict.tryGetValue entityId

@@ -35,6 +35,7 @@ module BonhommeUpdate =
         (nextMovState, new Vector2(nextXPosition, nextMovPosition.Y))
 
 
+
     let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * Vector2)) =
 
         let (nextMovState, nextMovPosition) = nextMovement
@@ -130,6 +131,7 @@ module BonhommeUpdate =
         |> updateYPosition gameTime
         |> withFloorCheck properties.position.Y
         |> withBoarderScreenLeftCheck properties.position.X
+
 
 
     let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =

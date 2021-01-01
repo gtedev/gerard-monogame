@@ -15,6 +15,8 @@ module GameActivePatterns =
         | Some (BonhommeProperties properties) -> Some((entity.Properties, properties))
         | _ -> None
 
+
+
     /// <summary>
     /// Active pattern that returns <see cref="Bonhomme"/> entity properties within a tuple.
     /// </summary>
@@ -22,11 +24,10 @@ module GameActivePatterns =
     /// <returns>A tuple of game properties and bonhomme properties.</returns>
     let (|SomeBonhomme|_|) (someEntity: IGameEntity option) =
         match someEntity with
-        | Some entity ->
-            match entity with
-            | Bonhomme allEntityProperties -> Some(allEntityProperties)
-            | _ -> None
+        | Some (Bonhomme allEntityProperties) -> Some(allEntityProperties)
         | _ -> None
+
+
 
     /// <summary>
     /// Active pattern that returns <see cref="Level1"/> entity properties within a tuple.
