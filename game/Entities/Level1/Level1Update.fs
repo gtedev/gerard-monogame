@@ -3,8 +3,8 @@ module Level1Update
 
 open Microsoft.Xna.Framework
 open Types
-open Level1Constants
 open Microsoft.Xna.Framework.Input
+open GerardMonogame.Constants
 
 let private withBoarderScreenLeftCheck positionX (vectorMovement: Vector2) =
 
@@ -15,9 +15,16 @@ let private withBoarderScreenLeftCheck positionX (vectorMovement: Vector2) =
 
 
 
-let updateLevel1XPosition (vectorMovement: Vector2) =
-    new Vector2(vectorMovement.X * (-1f) * SPEED_MOVING_FLOOR, vectorMovement.Y)
-
+let updateLevel1XPosition (bonhommeEntity: IGameEntity) (vectorMovement: Vector2) =
+    if bonhommeEntity.Position.X > Level1Constants.LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER then
+        new Vector2(
+            vectorMovement.X
+            * (-1f)
+            * Level1Constants.SPEED_MOVING_FLOOR,
+            vectorMovement.Y
+        )
+    else
+        new Vector2(0f, 0f)
 
 
 let updateLevel1YPosition (vectorMovement: Vector2) =
@@ -25,8 +32,7 @@ let updateLevel1YPosition (vectorMovement: Vector2) =
     new Vector2(vectorMovement.X, 0f)
 
 
-
-let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: Level1Properties) =
+let updateLevel1Entity (bonhommeEntity: IGameEntity) (currentGameEntity: IGameEntity) (properties: Level1Properties) =
 
     let vectorMovement =
         KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
@@ -35,7 +41,7 @@ let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity
 
     let nextVectorPosition =
         vectorMovement
-        |> updateLevel1XPosition
+        |> updateLevel1XPosition bonhommeEntity
         |> updateLevel1YPosition
         |> withBoarderScreenLeftCheck gameProperties.position.X
 
@@ -46,3 +52,13 @@ let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity
               position = Vector2.Add(currentGameEntity.Position, nextVectorPosition) }
 
     GameEntity.createGameEntity nextGameEntityProperties nextLevel1Properties currentGameEntity.UpdateEntity
+
+
+
+let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: Level1Properties) =
+
+    let someEntity = GameEntity.getBonhommeEntity gameState
+
+    match someEntity with
+    | Some bonhommeEntity -> updateLevel1Entity bonhommeEntity currentGameEntity properties
+    | None -> currentGameEntity

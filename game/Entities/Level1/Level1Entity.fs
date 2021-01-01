@@ -2,7 +2,7 @@
 
 open Microsoft.Xna.Framework
 open Types
-
+open GerardMonogame.Constants
 
 let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
 

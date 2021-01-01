@@ -4,6 +4,7 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
 open Microsoft.Xna.Framework.Media
+open FSharp.Core.Extensions
 
 type Game1() as game =
     inherit Game()
@@ -52,8 +53,8 @@ type Game1() as game =
         spriteBatch.Begin()
 
         gameState.entities
-        |> Dict.filter (fun (key, entity) -> entity.Properties.isEnabled)
-        |> Dict.iter (fun (key, entity) -> Sprites.drawSprite spriteBatch entity)
+        |> ReadOnlyDict.filter (fun (key, entity) -> entity.Properties.isEnabled)
+        |> ReadOnlyDict.iter (fun (key, entity) -> Sprites.drawSprite spriteBatch entity)
 
         spriteBatch.End()
 

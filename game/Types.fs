@@ -2,7 +2,7 @@
 
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
-
+open FSharp.Core.Extensions
 
 type GameEntityId = string
 type CurrentSpriteIndex = int
@@ -70,7 +70,7 @@ type CustomEntityProperties =
 // for at least to having something typed.
 // As F# implies strict declaration order, it was not possible to reference GameState before.
 type GameState<'TEntity> =
-    { entities: dict<GameEntityId, 'TEntity> }
+    { entities: readonlydict<GameEntityId, 'TEntity> }
 
 type IGameEntity =
     abstract CustomEntityProperties: CustomEntityProperties option

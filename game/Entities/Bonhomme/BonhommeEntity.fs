@@ -2,17 +2,18 @@
 
 open Microsoft.Xna.Framework
 open Types
-
+open GerardMonogame.Constants
 
 let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
 
     match currentGameEntity.CustomEntityProperties with
-    | Some (BonhommeProperties properties) -> BonhommeUpdate.updateEntity gameTime gameState currentGameEntity properties
+    | Some (BonhommeProperties properties) ->
+        BonhommeUpdate.updateEntity gameTime gameState currentGameEntity properties
 
     | _ -> currentGameEntity
 
 
-let initializeEntity (game: Game)(gameState: GameState) =
+let initializeEntity (game: Game) (gameState: GameState) =
 
     let spriteSheet =
         BonhommeSprite.createBonhommeSpriteSheet game

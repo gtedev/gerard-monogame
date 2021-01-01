@@ -1,6 +1,8 @@
-﻿[<AutoOpen>]
-module CommonTypes
+﻿namespace FSharp.Core.Extensions
 
-open System.Collections.Generic
+[<AutoOpen>]
+module Types =
 
-type dict<'a, 'b> = Dictionary<'a, 'b>
+    open System.Collections.Generic
+
+    type readonlydict<'a, 'b> = IReadOnlyDictionary<'a, 'b>

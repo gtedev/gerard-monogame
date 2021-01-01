@@ -3,12 +3,14 @@ module BonhommeUpdate
 
 open Microsoft.Xna.Framework
 open Types
-open BonhommeConstants
 open Microsoft.Xna.Framework.Input
+open GerardMonogame.Constants
 
-let private newJumpLeft = Jumping(Left, JUMP_VELOCITY_SPEED)
+let private newJumpLeft =
+    Jumping(Left, BonhommeConstants.JUMP_VELOCITY_SPEED)
 
-let private newJumpRight = Jumping(Right, JUMP_VELOCITY_SPEED)
+let private newJumpRight =
+    Jumping(Right, BonhommeConstants.JUMP_VELOCITY_SPEED)
 
 let private extractDirection movState =
     match movState with
@@ -35,7 +37,7 @@ let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * V
 
     let direction = extractDirection nextMovState
 
-    if positionY + nextMovPosition.Y > FLOOR_HEIGHT
+    if positionY + nextMovPosition.Y > BonhommeConstants.FLOOR_HEIGHT
     then (Idle direction, new Vector2(nextMovPosition.X, 0f))
     else nextMovement
 
@@ -62,7 +64,12 @@ let private updateMovementState (vectorMovement: Vector2) (nextMovement: (Bonhom
 
     let state =
         match (prevMovState, vectorMovement) with
-        | (Jumping (prevDir, velocity), _) -> Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
+        | (Jumping (prevDir, velocity), _) ->
+            Jumping(
+                prevDir,
+                velocity
+                + BonhommeConstants.JUMP_VELOCITY_INCREASE_STEP
+            )
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> newJumpLeft
         | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> newJumpRight
         | (Idle prevDir, vectorMovement) when vectorMovement.Y < 0f ->
@@ -96,7 +103,9 @@ let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMo
     let xPosition =
         match nextMovState with
         | Duck _ -> 0f
-        | Running _ -> vectorMovement.X * SPEED_RUNNING_BONHOMME
+        | Running _ ->
+            vectorMovement.X
+            * BonhommeConstants.SPEED_RUNNING_BONHOMME
         | _ -> vectorMovement.X
 
     (nextMovState, new Vector2(xPosition, nextMovPosition.Y))

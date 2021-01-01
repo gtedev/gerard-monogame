@@ -2,41 +2,41 @@
 module BonhommeSprite
 
 open Types
-open BonhommeConstants
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
+open GerardMonogame.Constants
 
 let private createBonhommeAnimatedSprite =
-    Sprites.createAnimatedSprite ANIMATION_FRAME_TIME
+    Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
 
 
 let createBonhommeSpriteSheet (game: Game) =
 
     let rightJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
 
     let leftJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
 
     let leftIdleSprite =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
 
     let rightIdleTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
 
     let leftDuckSprite =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
 
     let rightDuckTexture =
-        { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
+        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
 
     let rightRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
+        [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
 
     let leftRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
+        [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
+          { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
 
     { leftJumpingSprite = leftJumpingTexture
       rightJumpingSprite = rightJumpingTexture

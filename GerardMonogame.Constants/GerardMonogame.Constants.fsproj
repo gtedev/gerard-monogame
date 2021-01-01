@@ -5,9 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Types.fs" />
-    <Compile Include="ReadOnlyDictionary.fs" />
-    <Compile Include="List.fs" />
+    <Compile Include="BonhommeConstants.fs" />
+    <Compile Include="Level1Constants.fs" />
   </ItemGroup>
 
 </Project>

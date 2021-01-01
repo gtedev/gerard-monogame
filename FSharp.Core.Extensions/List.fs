@@ -1,13 +1,14 @@
-﻿[<RequireQualifiedAccess>]
-module List
+﻿namespace FSharp.Core.Extensions
 
-open System.Collections.Generic
+[<RequireQualifiedAccess>]
+module List =
 
-let toDict (list: ('k * 'v) list) =
+    open System.Collections.Generic
 
-    let results =
-        list
-        |> List.map (fun kvp -> KeyValuePair(fst kvp, snd kvp))
-        |> dict
+    let toReadOnlyDict (list: ('k * 'v) list) =
 
-    results
+        let kvps =
+            list
+            |> List.map (fun kvp -> KeyValuePair(fst kvp, snd kvp))
+
+        Dictionary(kvps) :> readonlydict<'k, 'v>
