@@ -25,7 +25,7 @@ module BonhommeUpdate =
 
 
 
-    let private withBoarderScreenLeftCheck positionX (nextMovement: (BonhommeMovemementState * Vector2)) =
+    let private withLeftBoarderWindowCheck positionX (nextMovement: (BonhommeMovemementState * Vector2)) =
 
         let (nextMovState, nextMovPosition) = nextMovement
 
@@ -130,7 +130,7 @@ module BonhommeUpdate =
         |> updateXPosition vectorMovement
         |> updateYPosition gameTime
         |> withFloorCheck properties.position.Y
-        |> withBoarderScreenLeftCheck properties.position.X
+        |> withLeftBoarderWindowCheck properties.position.X
 
 
 

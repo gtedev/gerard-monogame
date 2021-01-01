@@ -10,18 +10,10 @@ module Level1Update =
     open GerardMonogame.Constants
 
 
-    let private withBoarderScreenLeftCheck positionX (vectorMovement: Vector2) =
 
-        let nextXPosition =
-            if positionX + vectorMovement.X > 0f then 0f else vectorMovement.X
-
-        new Vector2(nextXPosition, vectorMovement.Y)
-
-
-
-    let updateLevel1XPosition (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
-                              (vectorMovement: Vector2)
-                              =
+    let ``update level1 next movement X position with`` (allBonHommeProperties: GameEntityProperties * BonhommeProperties)
+                                                        (vectorMovement: Vector2)
+                                                        =
 
         let (gameEntityProperties, bonhommeProperties) = allBonHommeProperties
 
@@ -43,7 +35,7 @@ module Level1Update =
 
 
 
-    let updateLevel1YPosition (vectorMovement: Vector2) =
+    let ``update level1 next movement Y position`` (vectorMovement: Vector2) =
         // maintain level background to same Y position !
         new Vector2(vectorMovement.X, 0f)
 
@@ -57,13 +49,10 @@ module Level1Update =
         let vectorMovement =
             KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
 
-        let gameProperties = currentGameEntity.Properties
-
         let nextVectorPosition =
             vectorMovement
-            |> updateLevel1XPosition allBonHommeProperties
-            |> updateLevel1YPosition
-            |> withBoarderScreenLeftCheck gameProperties.position.X
+            |> ``update level1 next movement X position with`` allBonHommeProperties
+            |> ``update level1 next movement Y position``
 
         let nextLevel1Properties = Level1Properties(properties) |> Some
 
