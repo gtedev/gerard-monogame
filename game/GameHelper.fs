@@ -1,10 +1,12 @@
-﻿[<RequireQualifiedAccess>]
-module GameHelper
+﻿namespace GerardMonogame.Game
 
-open Types
+[<RequireQualifiedAccess>]
+module GameHelper =
 
-/// <summary>Match direction then return appropriate left / right params.</summary>
-let matchDirection direction whenLeft whenRight =
-    match direction with
-    | Left -> whenLeft
-    | Right -> whenRight
+    open Types
+
+    /// <summary>Match direction then return appropriate left / right params.</summary>
+    let matchDirection direction whenLeft whenRight =
+        match direction with
+        | Left -> whenLeft
+        | Right -> whenRight

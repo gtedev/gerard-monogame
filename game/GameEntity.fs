@@ -1,22 +1,24 @@
-﻿[<RequireQualifiedAccess>]
-module GameEntity
+﻿namespace GerardMonogame.Game
 
-open Types
-open FSharp.Core.Extensions
-open GerardMonogame.Constants
+[<RequireQualifiedAccess>]
+module GameEntity =
 
-let createGameEntity properties customProperties updateEntity =
-    { new IGameEntity with
-        member x.CustomEntityProperties = customProperties
-        member x.Properties = properties
+    open Types
+    open FSharp.Core.Extensions
+    open GerardMonogame.Constants
 
-        member x.UpdateEntity gameTime gameState currentGameEntity =
-            updateEntity gameTime gameState currentGameEntity
+    let createGameEntity properties customProperties updateEntity =
+        { new IGameEntity with
+            member x.CustomEntityProperties = customProperties
+            member x.Properties = properties
 
-        member x.Position = properties.position
-        member x.Sprite = properties.sprite }
+            member x.UpdateEntity gameTime gameState currentGameEntity =
+                updateEntity gameTime gameState currentGameEntity
+
+            member x.Position = properties.position
+            member x.Sprite = properties.sprite }
 
 
-let getBonhommeEntity (gameState: GameState) =
-    gameState.entities
-    |> ReadOnlyDict.tryGetValue BonhommeConstants.EntityId
+    let getEntityFromGameState (gameState: GameState) entityId =
+        gameState.entities
+        |> ReadOnlyDict.tryGetValue entityId

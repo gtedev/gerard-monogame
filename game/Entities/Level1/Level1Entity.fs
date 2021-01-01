@@ -1,31 +1,36 @@
-﻿module Level1Entity
+﻿namespace GerardMonogame.Game.Entities
 
-open Microsoft.Xna.Framework
-open Types
-open GerardMonogame.Constants
+open GerardMonogame.Game
 
-let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+module Level1Entity =
 
-    match currentGameEntity.CustomEntityProperties with
-    | Some (Level1Properties properties) -> Level1Update.updateEntity gameTime gameState currentGameEntity properties
+    open Microsoft.Xna.Framework
+    open Types
+    open GerardMonogame.Constants
 
-    | _ -> currentGameEntity
+    let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+
+        match currentGameEntity.CustomEntityProperties with
+        | Some (Level1Properties properties) ->
+            Level1Update.updateEntity gameTime gameState currentGameEntity properties
+
+        | _ -> currentGameEntity
 
 
 
-let initializeEntity (game: Game) (gameState: GameState) =
+    let initializeEntity (game: Game) (gameState: GameState) =
 
-    let spriteSheet =
-        Level1Sprite.createLevel1SpriteSheet game
+        let spriteSheet =
+            Level1Sprite.createLevel1SpriteSheet game
 
-    let level1Properties =
-        Level1Properties { spriteSheet = spriteSheet }
-        |> Some
+        let level1Properties =
+            Level1Properties { spriteSheet = spriteSheet }
+            |> Some
 
-    let properties =
-        { id = Level1Constants.EntityId
-          position = new Vector2(0f, Level1Constants.LEVEL1_Y_POSITION)
-          sprite = SingleSprite spriteSheet.level1Sprite
-          isEnabled = true }
+        let properties =
+            { id = Level1Constants.EntityId
+              position = new Vector2(0f, Level1Constants.LEVEL1_Y_POSITION)
+              sprite = SingleSprite spriteSheet.level1Sprite
+              isEnabled = true }
 
-    GameEntity.createGameEntity properties level1Properties updateEntity
+        GameEntity.createGameEntity properties level1Properties updateEntity

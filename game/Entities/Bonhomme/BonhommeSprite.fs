@@ -1,102 +1,106 @@
-﻿[<RequireQualifiedAccess>]
-module BonhommeSprite
+﻿namespace GerardMonogame.Game.Entities
 
-open Types
-open Microsoft.Xna.Framework
-open Microsoft.Xna.Framework.Graphics
-open GerardMonogame.Constants
+open GerardMonogame.Game
 
-let private createBonhommeAnimatedSprite =
-    Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
+[<RequireQualifiedAccess>]
+module BonhommeSprite =
 
+    open Types
+    open Microsoft.Xna.Framework
+    open Microsoft.Xna.Framework.Graphics
+    open GerardMonogame.Constants
 
-let createBonhommeSpriteSheet (game: Game) =
-
-    let rightJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
-
-    let leftJumpingTexture =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
-
-    let leftIdleSprite =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
-
-    let rightIdleTexture =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
-
-    let leftDuckSprite =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
-
-    let rightDuckTexture =
-        { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
-
-    let rightRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
-
-    let leftRunningTextures =
-        [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
-          { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
-
-    { leftJumpingSprite = leftJumpingTexture
-      rightJumpingSprite = rightJumpingTexture
-      leftDuckSprite = leftDuckSprite
-      rightDuckSprite = rightDuckTexture
-      rightIdleSprite = rightIdleTexture
-      leftIdleSprite = leftIdleSprite
-      rightRunningSprites = rightRunningTextures
-      leftRunningSprites = leftRunningTextures }
+    let private createBonhommeAnimatedSprite =
+        Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
 
 
-let updateSprite gameTime
-                 (currentGameEntity: IGameEntity)
-                 (properties: BonhommeProperties)
-                 prevMovState
-                 currentMovState
-                 =
+    let createBonhommeSpriteSheet (game: Game) =
 
-    let ss = properties.spriteSheet
+        let rightJumpingTexture =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
 
-    let nextSprite =
-        match (prevMovState, currentMovState) with
-        | _, Jumping (dir, _) ->
+        let leftJumpingTexture =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
 
-            let jumpingSprite =
-                GameHelper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
+        let leftIdleSprite =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
 
-            SingleSprite jumpingSprite
+        let rightIdleTexture =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
 
-        | _, Idle dir ->
+        let leftDuckSprite =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
 
-            let idleSprite =
-                GameHelper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
+        let rightDuckTexture =
+            { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
 
-            SingleSprite idleSprite
+        let rightRunningTextures =
+            [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
+              { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
 
-        | _, Duck dir ->
+        let leftRunningTextures =
+            [ { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
+              { texture = game.Content.Load<Texture2D>(BonhommeConstants.ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
 
-            let duckSprite =
-                GameHelper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
+        { leftJumpingSprite = leftJumpingTexture
+          rightJumpingSprite = rightJumpingTexture
+          leftDuckSprite = leftDuckSprite
+          rightDuckSprite = rightDuckTexture
+          rightIdleSprite = rightIdleTexture
+          leftIdleSprite = leftIdleSprite
+          rightRunningSprites = rightRunningTextures
+          leftRunningSprites = leftRunningTextures }
 
-            SingleSprite duckSprite
 
-        | Idle _, Running dir ->
+    let updateSprite gameTime
+                     (currentGameEntity: IGameEntity)
+                     (properties: BonhommeProperties)
+                     prevMovState
+                     currentMovState
+                     =
 
-            let runningSprites =
-                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+        let ss = properties.spriteSheet
 
-            createBonhommeAnimatedSprite runningSprites
+        let nextSprite =
+            match (prevMovState, currentMovState) with
+            | _, Jumping (dir, _) ->
 
-        | Duck _, Running dir ->
+                let jumpingSprite =
+                    GameHelper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
 
-            let runningSprites =
-                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+                SingleSprite jumpingSprite
 
-            createBonhommeAnimatedSprite runningSprites
+            | _, Idle dir ->
 
-        | Running Left, Running Right -> createBonhommeAnimatedSprite ss.rightRunningSprites
-        | Running Right, Running Left -> createBonhommeAnimatedSprite ss.leftRunningSprites
-        | Running _, Running _ -> currentGameEntity.Sprite
-        | _ -> currentGameEntity.Sprite
+                let idleSprite =
+                    GameHelper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
 
-    Sprites.updateSpriteState gameTime nextSprite
+                SingleSprite idleSprite
+
+            | _, Duck dir ->
+
+                let duckSprite =
+                    GameHelper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
+
+                SingleSprite duckSprite
+
+            | Idle _, Running dir ->
+
+                let runningSprites =
+                    GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+
+                createBonhommeAnimatedSprite runningSprites
+
+            | Duck _, Running dir ->
+
+                let runningSprites =
+                    GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+
+                createBonhommeAnimatedSprite runningSprites
+
+            | Running Left, Running Right -> createBonhommeAnimatedSprite ss.rightRunningSprites
+            | Running Right, Running Left -> createBonhommeAnimatedSprite ss.leftRunningSprites
+            | Running _, Running _ -> currentGameEntity.Sprite
+            | _ -> currentGameEntity.Sprite
+
+        Sprites.updateSpriteState gameTime nextSprite

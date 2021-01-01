@@ -1,10 +1,12 @@
 ﻿module Game
 
+open GerardMonogame.Game
 open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
 open Microsoft.Xna.Framework.Media
 open FSharp.Core.Extensions
+
 
 type Game1() as game =
     inherit Game()

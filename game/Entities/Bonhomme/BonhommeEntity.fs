@@ -1,33 +1,37 @@
-﻿module BonhommeEntity
+﻿namespace GerardMonogame.Game.Entities
 
-open Microsoft.Xna.Framework
-open Types
-open GerardMonogame.Constants
+open GerardMonogame.Game
 
-let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+module BonhommeEntity =
 
-    match currentGameEntity.CustomEntityProperties with
-    | Some (BonhommeProperties properties) ->
-        BonhommeUpdate.updateEntity gameTime gameState currentGameEntity properties
+    open Microsoft.Xna.Framework
+    open Types
+    open GerardMonogame.Constants
 
-    | _ -> currentGameEntity
+    let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+
+        match currentGameEntity.CustomEntityProperties with
+        | Some (BonhommeProperties properties) ->
+            BonhommeUpdate.updateEntity gameTime gameState currentGameEntity properties
+
+        | _ -> currentGameEntity
 
 
-let initializeEntity (game: Game) (gameState: GameState) =
+    let initializeEntity (game: Game) (gameState: GameState) =
 
-    let spriteSheet =
-        BonhommeSprite.createBonhommeSpriteSheet game
+        let spriteSheet =
+            BonhommeSprite.createBonhommeSpriteSheet game
 
-    let bonhommeProperties =
-        BonhommeProperties
-            { movementStatus = Idle Right
-              spriteSheet = spriteSheet }
-        |> Some
+        let bonhommeProperties =
+            BonhommeProperties
+                { movementStatus = Idle Right
+                  spriteSheet = spriteSheet }
+            |> Some
 
-    let properties =
-        { id = BonhommeConstants.EntityId
-          position = new Vector2(BonhommeConstants.POSITION_X_STARTING, BonhommeConstants.FLOOR_HEIGHT)
-          sprite = SingleSprite spriteSheet.rightIdleSprite
-          isEnabled = true }
+        let properties =
+            { id = BonhommeConstants.EntityId
+              position = new Vector2(BonhommeConstants.POSITION_X_STARTING, BonhommeConstants.FLOOR_HEIGHT)
+              sprite = SingleSprite spriteSheet.rightIdleSprite
+              isEnabled = true }
 
-    GameEntity.createGameEntity properties bonhommeProperties updateEntity
+        GameEntity.createGameEntity properties bonhommeProperties updateEntity

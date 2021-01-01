@@ -18,6 +18,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <Compile Include="Types.fs" />
     <Compile Include="GameHelper.fs" />
+    <Compile Include="GameActivePatterns.fs" />
     <Compile Include="KeyboardState.fs" />
     <Compile Include="Sprites.fs" />
     <Compile Include="GameEntity.fs" />
