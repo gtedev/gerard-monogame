@@ -6,6 +6,7 @@ module Sprites =
     open Microsoft.Xna.Framework
     open Types
     open Microsoft.Xna.Framework.Graphics
+    open FSharp.Core.Extensions
 
 
     let private nextSpriteIndex sprites currentIndex =
@@ -73,8 +74,16 @@ module Sprites =
 
 
 
-    let drawEntity (spriteBatch: SpriteBatch) (key, entity: IGameEntity) =
+    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: IGameEntity) =
 
         let texture = getTextureToDraw entity.Sprite
 
         spriteBatch.Draw(texture, entity.Position, Color.White)
+
+
+
+    let drawEntities (spriteBatch: SpriteBatch) (entities: readonlydict<GameEntityId, IGameEntity>) =
+
+        entities
+        |> ReadOnlyDict.filter (fun (_, entity) -> entity.Properties.isEnabled)
+        |> ReadOnlyDict.iter (drawEntity spriteBatch)
