@@ -10,6 +10,8 @@ module BonhommeSprite =
     open Microsoft.Xna.Framework
     open GerardMonogame.Constants.BonhommeConstants
 
+
+
     let private createBonhommeAnimatedSprite =
         Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
 

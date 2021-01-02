@@ -9,6 +9,8 @@ module Level1Entity =
     open Types
     open GerardMonogame.Constants.Level1Constants
 
+
+
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
 
         match currentEntity with

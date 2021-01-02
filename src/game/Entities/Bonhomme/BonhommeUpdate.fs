@@ -10,10 +10,14 @@ module BonhommeUpdate =
     open Microsoft.Xna.Framework.Input
     open GerardMonogame.Constants.BonhommeConstants
 
+
+
     let private newJumpLeft = Jumping(Left, JUMP_VELOCITY_SPEED)
 
 
+
     let private newJumpRight = Jumping(Right, JUMP_VELOCITY_SPEED)
+
 
 
     let private extractDirection movState =

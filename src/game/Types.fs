@@ -2,9 +2,11 @@
 
 module Types =
 
+
     open Microsoft.Xna.Framework
     open Microsoft.Xna.Framework.Graphics
     open FSharp.Core.Extensions
+
 
     type GameEntityId = string
     type CurrentSpriteIndex = int
@@ -75,7 +77,7 @@ module Types =
         { entities: readonlydict<GameEntityId, 'TEntity> }
 
     type IGameEntity =
-        abstract ExtendProperties : ExtendEntityProperties option
+        abstract ExtendProperties: ExtendEntityProperties option
         abstract Properties: GameEntityProperties
         abstract UpdateEntity: GameTime -> GameState<IGameEntity> -> IGameEntity -> IGameEntity
         abstract Position: Vector2

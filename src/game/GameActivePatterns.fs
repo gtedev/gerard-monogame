@@ -5,6 +5,8 @@ module GameActivePatterns =
 
     open GerardMonogame.Game.Types
 
+
+
     /// <summary>
     /// Active pattern that returns <see cref="Bonhomme"/> properties.
     /// </summary>

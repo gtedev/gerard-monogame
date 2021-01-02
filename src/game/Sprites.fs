@@ -64,10 +64,10 @@ module Sprites =
 
 
 
-    let createAnimatedSprite frameTime sprite =
+    let createAnimatedSprite frameTime sprites =
 
         AnimatedSprite
-            { sprites = sprite
+            { sprites = sprites
               currentSpriteIndex = 0
               elapsedTimeSinceLastFrame = 0f
               frameTime = frameTime }
@@ -82,8 +82,8 @@ module Sprites =
 
 
 
-    let drawEntities (spriteBatch: SpriteBatch) (entities: readonlydict<GameEntityId, IGameEntity>) =
+    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, IGameEntity>) =
 
         entities
         |> ReadOnlyDict.filter (fun (_, entity) -> entity.Properties.isEnabled)
-        |> ReadOnlyDict.iter (drawEntity spriteBatch)
+        |> ReadOnlyDict.iter (drawEntity sb)

@@ -1,6 +1,7 @@
 ﻿namespace GerardMonogame.Constants
 
 module BonhommeConstants =
+
     let EntityId = "bonhomme"
 
     let ASSET_BONHOMME_RIGHT_IDLE_SPRITE = "bonhomme-idle-right"
