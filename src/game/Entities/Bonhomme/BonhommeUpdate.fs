@@ -74,20 +74,39 @@ module BonhommeUpdate =
 
         let nextMovState =
             match (prevMovState, vectorMov) with
+
             | (Jumping (prevDir, velocity), _) ->
 
                 Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
 
-            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X < 0f -> newJumpLeft
-            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X > 0f -> newJumpRight
+            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X < 0f ->
+
+                Jumping(Left, JUMP_VELOCITY_SPEED)
+
+            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X > 0f ->
+
+                Jumping(Right, JUMP_VELOCITY_SPEED)
+
             | (Idle prevDir, vectorMov) when vectorMov.Y < 0f ->
 
                 GameHelper.matchDirection prevDir newJumpLeft newJumpRight
 
-            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X < 0f -> Duck Left
-            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X > 0f -> Duck Right
-            | (_, vectorMov) when vectorMov.X < 0f -> Running Left
-            | (_, vectorMov) when vectorMov.X > 0f -> Running Right
+            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X < 0f ->
+
+                Duck Left
+
+            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X > 0f ->
+
+                Duck Right
+
+            | (_, vectorMov) when vectorMov.X < 0f ->
+
+                Running Left
+
+            | (_, vectorMov) when vectorMov.X > 0f ->
+
+                Running Right
+
             | (prevMovState, vectorMov) when vectorMov.X = 0f && vectorMov.Y = 0f ->
 
                 let prevDir = extractDirection prevMovState
@@ -99,6 +118,7 @@ module BonhommeUpdate =
                 GameHelper.matchDirection prevDir (Duck Left) (Duck Right)
 
             | (_, _) -> prevMovState
+
 
         (nextMovState, nextMovPos)
 
@@ -160,4 +180,5 @@ module BonhommeUpdate =
                   position = Vector2.Add(currentEntity.Position, nextPosMov)
                   sprite = newSprite }
 
-        GameEntity.createEntity nextEntityProps nextBonhommeProps currentEntity.UpdateEntity
+        currentEntity
+        |> GameEntity.updateEntity nextEntityProps nextBonhommeProps

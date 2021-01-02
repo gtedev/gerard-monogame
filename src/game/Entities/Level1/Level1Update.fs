@@ -60,11 +60,12 @@ module Level1Update =
 
         let nextLvl1Props = Level1Properties(lvl1Props) |> Some
 
-        let nextGameEntityProps =
+        let nextEntityProps =
             { currentEntity.Properties with
                   position = Vector2.Add(currentEntity.Position, nextVectorPos) }
 
-        GameEntity.createEntity nextGameEntityProps nextLvl1Props currentEntity.UpdateEntity
+        currentEntity
+        |> GameEntity.updateEntity nextEntityProps nextLvl1Props
 
 
 
@@ -74,5 +75,8 @@ module Level1Update =
             GameEntity.tryGetEntity gs BonhommeConstants.EntityId
 
         match bhEntity with
-        | SomeBonhomme allBonhommeProps -> updateLevel1Entity allBonhommeProps currentEntity lvl1Props
+        | SomeBonhomme allBonhommeProps ->
+
+            updateLevel1Entity allBonhommeProps currentEntity lvl1Props
+
         | _ -> currentEntity
