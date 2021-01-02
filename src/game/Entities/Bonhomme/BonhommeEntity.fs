@@ -38,4 +38,4 @@ module BonhommeEntity =
               sprite = SingleSprite ss.rightIdleSprite
               isEnabled = true }
 
-        GameEntity.createGameEntity geProps bonhommeProperties updateEntity
+        GameEntity.createEntity geProps bonhommeProperties updateEntity

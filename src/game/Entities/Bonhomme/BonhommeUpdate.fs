@@ -155,4 +155,4 @@ module BonhommeUpdate =
                   position = Vector2.Add(currentEntity.Position, nextPosMov)
                   sprite = newSprite }
 
-        GameEntity.createGameEntity nextGameEntityProps nextBonhommeProps currentEntity.UpdateEntity
+        GameEntity.createEntity nextGameEntityProps nextBonhommeProps currentEntity.UpdateEntity

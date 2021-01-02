@@ -10,7 +10,6 @@ module KeyboardState =
         if state.IsKeyDown k then Some() else None
 
 
-
     let getMovementVector keyState =
 
         match keyState with

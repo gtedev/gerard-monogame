@@ -16,6 +16,8 @@ module List =
 
         Dictionary(kvps) :> readonlydict<'k, 'v>
 
+
+
     /// <summary>Views the given List as a <see cref="ReadOnlyDictionary"/>. The function takes a function to map each element to key/value tuple. </summary>
     /// <param name="list">The list to transform to a <see cref="ReadOnlyDictionary"/>.</param>
     /// <returns>A read only dictionary.</returns>

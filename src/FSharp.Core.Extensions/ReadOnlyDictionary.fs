@@ -27,7 +27,9 @@ module ReadOnlyDict =
     /// <returns>unit.</returns>
     let iter action (dict: readonlydict<'k, 'v>) =
 
-        dict |> Seq.map (|KeyValue|) |> Seq.iter action
+        dict 
+        |> Seq.map (|KeyValue|) 
+        |> Seq.iter action
 
 
 

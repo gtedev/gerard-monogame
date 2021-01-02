@@ -35,4 +35,4 @@ module Level1Entity =
               sprite = SingleSprite ss.level1Sprite
               isEnabled = true }
 
-        GameEntity.createGameEntity geProps lvl1Props updateEntity
+        GameEntity.createEntity geProps lvl1Props updateEntity

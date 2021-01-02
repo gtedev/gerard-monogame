@@ -6,7 +6,7 @@ module GameEntity =
     open Types
     open FSharp.Core.Extensions
 
-    let createGameEntity props customProps update =
+    let createEntity props customProps update =
         { new IGameEntity with
             member x.CustomEntityProperties = customProps
             member x.Properties = props
@@ -19,6 +19,6 @@ module GameEntity =
 
 
 
-    let getEntity (gs: GameState) entityId =
+    let tryGetEntity (gs: GameState) entityId =
         gs.entities
         |> ReadOnlyDict.tryGetValue entityId
