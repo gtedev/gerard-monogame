@@ -54,9 +54,12 @@ type Game1() as game =
         // TODO: Add your drawing code here
         spriteBatch.Begin()
 
+        let isEntityEnabled (k, e: IGameEntity) = e.Properties.isEnabled
+        let drawEntity (k, e: IGameEntity) = Sprites.drawSprite spriteBatch e
+
         gameState.entities
-        |> ReadOnlyDict.filter (fun (k, e) -> e.Properties.isEnabled)
-        |> ReadOnlyDict.iter (fun (k, e) -> Sprites.drawSprite spriteBatch e)
+        |> ReadOnlyDict.filter isEntityEnabled
+        |> ReadOnlyDict.iter drawEntity
 
         spriteBatch.End()
 

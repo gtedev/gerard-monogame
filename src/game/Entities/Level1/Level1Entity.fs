@@ -1,12 +1,13 @@
 ﻿namespace GerardMonogame.Game.Entities
 
 open GerardMonogame.Game
+open GerardMonogame.Constants
 
 module Level1Entity =
 
     open Microsoft.Xna.Framework
     open Types
-    open GerardMonogame.Constants
+    open GerardMonogame.Constants.Level1Constants
 
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
 
@@ -30,7 +31,7 @@ module Level1Entity =
 
         let geProps =
             { id = Level1Constants.EntityId
-              position = new Vector2(0f, Level1Constants.LEVEL1_Y_POSITION)
+              position = new Vector2(0f, LEVEL1_Y_POSITION)
               sprite = SingleSprite ss.level1Sprite
               isEnabled = true }
 

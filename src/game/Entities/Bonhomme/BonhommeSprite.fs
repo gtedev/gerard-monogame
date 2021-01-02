@@ -18,40 +18,24 @@ module BonhommeSprite =
 
     let createBonhommeSpriteSheet (g: Game) =
 
-        let rightJmpTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_JUMPING_SPRITE) }
+        let createTexture = Sprites.createSpriteTexture g
 
-        let leftJmpTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_JUMPING_SPRITE) }
+        let createTextures = Sprites.createSpriteTextures g
 
-        let leftIdleTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_IDLE_SPRITE) }
+        { leftJumpingSprite = createTexture ASSET_BONHOMME_LEFT_JUMPING_SPRITE
+          rightJumpingSprite = createTexture ASSET_BONHOMME_RIGHT_JUMPING_SPRITE
+          leftDuckSprite = createTexture ASSET_BONHOMME_LEFT_DUCK_SPRITE
+          rightDuckSprite = createTexture ASSET_BONHOMME_RIGHT_DUCK_SPRITE
+          rightIdleSprite = createTexture ASSET_BONHOMME_RIGHT_IDLE_SPRITE
+          leftIdleSprite = createTexture ASSET_BONHOMME_LEFT_IDLE_SPRITE
 
-        let rightIdleTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_IDLE_SPRITE) }
+          rightRunningSprites =
+              createTextures [ ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1
+                               ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2 ]
 
-        let leftDuckTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_DUCK_SPRITE) }
-
-        let rightDuckTxture =
-            { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_DUCK_SPRITE) }
-
-        let rightRunningTxtures =
-            [ { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1) }
-              { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2) } ]
-
-        let leftRunningTxtures =
-            [ { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1) }
-              { texture = g.Content.Load<Texture2D>(ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2) } ]
-
-        { leftJumpingSprite = leftJmpTxture
-          rightJumpingSprite = rightJmpTxture
-          leftDuckSprite = leftDuckTxture
-          rightDuckSprite = rightDuckTxture
-          rightIdleSprite = rightIdleTxture
-          leftIdleSprite = leftIdleTxture
-          rightRunningSprites = rightRunningTxtures
-          leftRunningSprites = leftRunningTxtures }
+          leftRunningSprites =
+              createTextures [ ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1
+                               ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2 ] }
 
 
 

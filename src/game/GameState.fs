@@ -10,9 +10,11 @@ module GameState =
     open FSharp.Core.Extensions
 
     let updateEntities gameTime (gs: GameState) =
+
+        let updateEntity (key, e: IGameEntity) = (key, e.UpdateEntity gameTime gs e)
+
         let newEntities =
-            gs.entities
-            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.UpdateEntity gameTime gs entity))
+            gs.entities |> ReadOnlyDict.map updateEntity
 
         { entities = newEntities }
 

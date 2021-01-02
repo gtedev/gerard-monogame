@@ -46,6 +46,15 @@ module Sprites =
 
 
 
+    let createSpriteTexture (g: Game) x =
+        { texture = g.Content.Load<Texture2D>(x) }
+
+
+
+    let createSpriteTextures (g: Game) xs = xs |> List.map (createSpriteTexture g)
+
+
+
     let updateSpriteState (gt: GameTime) (s: Sprite) =
         match s with
         | SingleSprite _ -> s

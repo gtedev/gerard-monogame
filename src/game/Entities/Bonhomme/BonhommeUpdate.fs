@@ -67,7 +67,7 @@ module BonhommeUpdate =
 
         let (prevMovState, nextMovPos) = nextMov
 
-        let state =
+        let nextMovState =
             match (prevMovState, vectorMov) with
             | (Jumping (prevDir, velocity), _) ->
 
@@ -95,7 +95,7 @@ module BonhommeUpdate =
 
             | (_, _) -> prevMovState
 
-        (state, nextMovPos)
+        (nextMovState, nextMovPos)
 
 
 
