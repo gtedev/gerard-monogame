@@ -73,7 +73,7 @@ module Sprites =
 
 
 
-    let drawSprite (spriteBatch: SpriteBatch) (entity: IGameEntity) =
+    let drawEntity (spriteBatch: SpriteBatch) (key, entity: IGameEntity) =
 
         let texture = getTextureToDraw entity.Sprite
 
