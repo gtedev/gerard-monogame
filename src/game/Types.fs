@@ -63,7 +63,7 @@ module Types =
     type Level1Properties = { spriteSheet: Level1SpriteSheet }
 
 
-    type CustomEntityProperties =
+    type ExtendEntityProperties =
         | BonhommeProperties of BonhommeProperties
         | Level1Properties of Level1Properties
 
@@ -75,7 +75,7 @@ module Types =
         { entities: readonlydict<GameEntityId, 'TEntity> }
 
     type IGameEntity =
-        abstract CustomEntityProperties: CustomEntityProperties option
+        abstract ExtendProperties : ExtendEntityProperties option
         abstract Properties: GameEntityProperties
         abstract UpdateEntity: GameTime -> GameState<IGameEntity> -> IGameEntity -> IGameEntity
         abstract Position: Vector2

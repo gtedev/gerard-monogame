@@ -1,6 +1,5 @@
 ﻿namespace GerardMonogame.Constants
 
-[<RequireQualifiedAccess>]
 module BonhommeConstants =
     let EntityId = "bonhomme"
 

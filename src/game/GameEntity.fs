@@ -6,19 +6,18 @@ module GameEntity =
     open Types
     open FSharp.Core.Extensions
 
-    let createGameEntity properties customProperties updateEntity =
+    let createEntity props extendProps update =
         { new IGameEntity with
-            member x.CustomEntityProperties = customProperties
-            member x.Properties = properties
+            member x.ExtendProperties  = extendProps
+            member x.Properties = props
 
             member x.UpdateEntity gameTime gameState currentGameEntity =
-                updateEntity gameTime gameState currentGameEntity
+                update gameTime gameState currentGameEntity
 
-            member x.Position = properties.position
-            member x.Sprite = properties.sprite }
+            member x.Position = props.position
+            member x.Sprite = props.sprite }
 
 
 
-    let getEntityFromGameState (gameState: GameState) entityId =
-        gameState.entities
-        |> ReadOnlyDict.tryGetValue entityId
+    let tryGetEntity (gs: GameState) entityId =
+        gs.entities |> ReadOnlyDict.tryGetValue entityId

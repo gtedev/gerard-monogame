@@ -8,13 +8,13 @@ module BonhommeUpdate =
     open Microsoft.Xna.Framework
     open Types
     open Microsoft.Xna.Framework.Input
-    open GerardMonogame.Constants
+    open GerardMonogame.Constants.BonhommeConstants
 
-    let private newJumpLeft =
-        Jumping(Left, BonhommeConstants.JUMP_VELOCITY_SPEED)
+    let private newJumpLeft = Jumping(Left, JUMP_VELOCITY_SPEED)
 
-    let private newJumpRight =
-        Jumping(Right, BonhommeConstants.JUMP_VELOCITY_SPEED)
+
+    let private newJumpRight = Jumping(Right, JUMP_VELOCITY_SPEED)
+
 
     let private extractDirection movState =
         match movState with
@@ -25,138 +25,135 @@ module BonhommeUpdate =
 
 
 
-    let private withLeftBoarderWindowCheck positionX (nextMovement: (BonhommeMovemementState * Vector2)) =
+    let private withLeftBoarderWindowCheck posX (nextMov: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPosition) = nextMovement
+        let (nextMovState, nextMovPos) = nextMov
 
         let nextXPosition =
-            if positionX + nextMovPosition.X < 0f then 0f else nextMovPosition.X
+            if posX + nextMovPos.X < 0f then 0f else nextMovPos.X
 
-        (nextMovState, new Vector2(nextXPosition, nextMovPosition.Y))
-
-
-
-    let private withFloorCheck positionY (nextMovement: (BonhommeMovemementState * Vector2)) =
-
-        let (nextMovState, nextMovPosition) = nextMovement
-
-        let direction = extractDirection nextMovState
-
-        if positionY + nextMovPosition.Y > BonhommeConstants.FLOOR_HEIGHT
-        then (Idle direction, new Vector2(nextMovPosition.X, 0f))
-        else nextMovement
+        (nextMovState, new Vector2(nextXPosition, nextMovPos.Y))
 
 
 
-    let private updateYPosition (gameTime: GameTime) (nextMovement: (BonhommeMovemementState * Vector2)) =
+    let private withFloorCheck posY (nextMov: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPosition) = nextMovement
+        let (nextMovState, nextMovPos) = nextMov
 
-        let nextYPosition =
+        let dir = extractDirection nextMovState
+
+        if posY + nextMovPos.Y > FLOOR_HEIGHT
+        then (Idle dir, new Vector2(nextMovPos.X, 0f))
+        else nextMov
+
+
+
+    let private updateYPosition (gt: GameTime) (nextMov: (BonhommeMovemementState * Vector2)) =
+
+        let (nextMovState, nextMovPos) = nextMov
+
+        let nextYPos =
             match nextMovState with
-            | Jumping (prevDir, velocity) ->
-                velocity
-                * (float32) gameTime.ElapsedGameTime.TotalSeconds
+            | Jumping (prevDir, vl: CurrentJumpVelocity) ->
+
+                vl * (float32 gt.ElapsedGameTime.TotalSeconds)
+
             | _ -> 0f
 
-        (nextMovState, new Vector2(nextMovPosition.X, nextYPosition))
+        (nextMovState, new Vector2(nextMovPos.X, nextYPos))
 
 
 
-    let private updateMovementState (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
+    let private updateMovementState (vectorMov: Vector2) (nextMov: (BonhommeMovemementState * Vector2)) =
 
-        let (prevMovState, nextMovPosition) = nextMovement
+        let (prevMovState, nextMovPos) = nextMov
 
-        let state =
-            match (prevMovState, vectorMovement) with
+        let nextMovState =
+            match (prevMovState, vectorMov) with
             | (Jumping (prevDir, velocity), _) ->
-                Jumping(
-                    prevDir,
-                    velocity
-                    + BonhommeConstants.JUMP_VELOCITY_INCREASE_STEP
-                )
-            | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X < 0f -> newJumpLeft
-            | (_, vectorMovement) when vectorMovement.Y < 0f && vectorMovement.X > 0f -> newJumpRight
-            | (Idle prevDir, vectorMovement) when vectorMovement.Y < 0f ->
+
+                Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
+
+            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X < 0f -> newJumpLeft
+            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X > 0f -> newJumpRight
+            | (Idle prevDir, vectorMov) when vectorMov.Y < 0f ->
 
                 GameHelper.matchDirection prevDir newJumpLeft newJumpRight
 
-            | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X < 0f -> Duck Left
-            | (_, vectorMovement) when vectorMovement.Y > 0f && vectorMovement.X > 0f -> Duck Right
-            | (_, vectorMovement) when vectorMovement.X < 0f -> Running Left
-            | (_, vectorMovement) when vectorMovement.X > 0f -> Running Right
-            | (prevMovState, vectorMovement) when vectorMovement.X = 0f && vectorMovement.Y = 0f ->
+            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X < 0f -> Duck Left
+            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X > 0f -> Duck Right
+            | (_, vectorMov) when vectorMov.X < 0f -> Running Left
+            | (_, vectorMov) when vectorMov.X > 0f -> Running Right
+            | (prevMovState, vectorMov) when vectorMov.X = 0f && vectorMov.Y = 0f ->
 
                 let prevDir = extractDirection prevMovState
                 GameHelper.matchDirection prevDir (Idle Left) (Idle Right)
 
-            | (prevMovState, vectorMovement) when vectorMovement.Y > 0f ->
+            | (prevMovState, vectorMov) when vectorMov.Y > 0f ->
 
                 let prevDir = extractDirection prevMovState
                 GameHelper.matchDirection prevDir (Duck Left) (Duck Right)
 
             | (_, _) -> prevMovState
 
-        (state, nextMovPosition)
+        (nextMovState, nextMovPos)
 
 
 
-    let private updateXPosition (vectorMovement: Vector2) (nextMovement: (BonhommeMovemementState * Vector2)) =
+    let private updateXPosition (vectorMov: Vector2) (nextMov: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPosition) = nextMovement
+        let (nextMovState, nextMovPos) = nextMov
 
-        let xPosition =
+        let xPos =
             match nextMovState with
             | Duck _ -> 0f
-            | Running _ ->
-                vectorMovement.X
-                * BonhommeConstants.SPEED_RUNNING_BONHOMME
-            | _ -> vectorMovement.X
+            | Running _ -> vectorMov.X * SPEED_RUNNING_BONHOMME
+            | _ -> vectorMov.X
 
-        (nextMovState, new Vector2(xPosition, nextMovPosition.Y))
+        (nextMovState, new Vector2(xPos, nextMovPos.Y))
 
 
 
-    let private updateBonhommeStateAndPosition (gameTime: GameTime)
-                                               (properties: GameEntityProperties)
-                                               (bonhommeProperties: BonhommeProperties)
-                                               (vectorMovement: Vector2)
+    let private updateBonhommeStateAndPosition (gt: GameTime)
+                                               (entityProps: GameEntityProperties)
+                                               (bonhommeProps: BonhommeProperties)
+                                               (vectorMov: Vector2)
                                                =
 
-        let previousState = bonhommeProperties.movementStatus
+        let prevState = bonhommeProps.movementStatus
 
-        (previousState, properties.position)
-        |> updateMovementState vectorMovement
-        |> updateXPosition vectorMovement
-        |> updateYPosition gameTime
-        |> withFloorCheck properties.position.Y
-        |> withLeftBoarderWindowCheck properties.position.X
+        (prevState, entityProps.position)
+        |> updateMovementState vectorMov
+        |> updateXPosition vectorMov
+        |> updateYPosition gt
+        |> withFloorCheck entityProps.position.Y
+        |> withLeftBoarderWindowCheck entityProps.position.X
 
 
 
-    let updateEntity gameTime (gameState: GameState) (currentGameEntity: IGameEntity) (properties: BonhommeProperties) =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity) (bonhommeProps: BonhommeProperties) =
 
         let vectorMovement =
-            KeyboardState.getMovementVectorFromKeyState (Keyboard.GetState())
+            KeyboardState.getMovementVector (Keyboard.GetState())
 
-        let prevMovementState = properties.movementStatus
+        let prevMovState = bonhommeProps.movementStatus
 
-        let (nextMovementState, nextPositionMovement) =
-            updateBonhommeStateAndPosition gameTime currentGameEntity.Properties properties vectorMovement
+        let (nextMovState, nextPosMov) =
+            updateBonhommeStateAndPosition gt currentEntity.Properties bonhommeProps vectorMovement
 
         let newSprite =
-            BonhommeSprite.updateSprite gameTime currentGameEntity properties prevMovementState nextMovementState
+            BonhommeSprite.updateSprite gt currentEntity bonhommeProps prevMovState nextMovState
 
 
-        let nextBonhommeProperties =
+        let nextBonhommeProps =
             BonhommeProperties
-                { properties with
-                      movementStatus = nextMovementState }
+                { bonhommeProps with
+                      movementStatus = nextMovState }
             |> Some
 
-        let nextGameEntityProperties =
-            { currentGameEntity.Properties with
-                  position = Vector2.Add(currentGameEntity.Position, nextPositionMovement)
+        let nextEntityProps =
+            { currentEntity.Properties with
+                  position = Vector2.Add(currentEntity.Position, nextPosMov)
                   sprite = newSprite }
 
-        GameEntity.createGameEntity nextGameEntityProperties nextBonhommeProperties currentGameEntity.UpdateEntity
+        GameEntity.createEntity nextEntityProps nextBonhommeProps currentEntity.UpdateEntity

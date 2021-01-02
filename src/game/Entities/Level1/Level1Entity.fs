@@ -1,38 +1,38 @@
 ﻿namespace GerardMonogame.Game.Entities
 
 open GerardMonogame.Game
+open GerardMonogame.Constants
 
 module Level1Entity =
 
     open Microsoft.Xna.Framework
     open Types
-    open GerardMonogame.Constants
+    open GerardMonogame.Constants.Level1Constants
 
-    let updateEntity (gameTime: GameTime) (gameState: GameState) (currentGameEntity: IGameEntity): IGameEntity =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
 
-        match currentGameEntity with
-        | Level1 allEntityProperties ->
+        match currentEntity with
+        | Level1 allEntityProps ->
 
-            let level1Properties = snd allEntityProperties
-            Level1Update.updateEntity gameTime gameState currentGameEntity level1Properties
+            let lvl1Props = snd allEntityProps
+            Level1Update.updateEntity gt gs currentEntity lvl1Props
 
-        | _ -> currentGameEntity
+        | _ -> currentEntity
 
 
 
-    let initializeEntity (game: Game) (gameState: GameState) =
+    let initEntity (game: Game) (gs: GameState) =
 
-        let spriteSheet =
+        let spSheet =
             Level1Sprite.createLevel1SpriteSheet game
 
-        let level1Properties =
-            Level1Properties { spriteSheet = spriteSheet }
-            |> Some
+        let lvl1Props =
+            Level1Properties { spriteSheet = spSheet } |> Some
 
-        let properties =
+        let entityProps =
             { id = Level1Constants.EntityId
-              position = new Vector2(0f, Level1Constants.LEVEL1_Y_POSITION)
-              sprite = SingleSprite spriteSheet.level1Sprite
+              position = new Vector2(0f, LEVEL1_Y_POSITION)
+              sprite = SingleSprite spSheet.level1Sprite
               isEnabled = true }
 
-        GameEntity.createGameEntity properties level1Properties updateEntity
+        GameEntity.createEntity entityProps lvl1Props updateEntity

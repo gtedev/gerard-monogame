@@ -1,6 +1,5 @@
 ﻿namespace GerardMonogame.Constants
 
-[<RequireQualifiedAccess>]
 module Level1Constants =
 
     let EntityId = "level1"

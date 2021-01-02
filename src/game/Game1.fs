@@ -32,7 +32,7 @@ type Game1() as game =
     override x.LoadContent() =
 
         // TODO: use this.Content to load your game content here
-        gameState <- GameState.initializeEntities game gameState
+        gameState <- GameState.initEntities game gameState
         song <- game.Content.Load<Song>("super-spike-vball-nes-music-chicago-match")
         MediaPlayer.IsRepeating <- true
         //MediaPlayer.Play(song)
@@ -54,9 +54,12 @@ type Game1() as game =
         // TODO: Add your drawing code here
         spriteBatch.Begin()
 
+        let isEntityEnabled (k, e: IGameEntity) = e.Properties.isEnabled
+        let drawEntity (k, e: IGameEntity) = Sprites.drawSprite spriteBatch e
+
         gameState.entities
-        |> ReadOnlyDict.filter (fun (key, entity) -> entity.Properties.isEnabled)
-        |> ReadOnlyDict.iter (fun (key, entity) -> Sprites.drawSprite spriteBatch entity)
+        |> ReadOnlyDict.filter isEntityEnabled
+        |> ReadOnlyDict.iter drawEntity
 
         spriteBatch.End()
 
