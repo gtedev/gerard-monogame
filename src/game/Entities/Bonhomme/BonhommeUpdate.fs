@@ -12,7 +12,9 @@ module BonhommeUpdate =
 
     let private newJumpLeft = Jumping(Left, JUMP_VELOCITY_SPEED)
 
+
     let private newJumpRight = Jumping(Right, JUMP_VELOCITY_SPEED)
+
 
     let private extractDirection movState =
         match movState with
@@ -52,10 +54,9 @@ module BonhommeUpdate =
 
         let nextYPos =
             match nextMovState with
-            | Jumping (prevDir, velocity) ->
+            | Jumping (prevDir, vl: CurrentJumpVelocity) ->
 
-                velocity
-                * (float32) gt.ElapsedGameTime.TotalSeconds
+                vl * (float32) gt.ElapsedGameTime.TotalSeconds
 
             | _ -> 0f
 
@@ -113,20 +114,20 @@ module BonhommeUpdate =
 
 
 
-    let private updateBonhommeStateAndPosition (gameTime: GameTime)
-                                               (geProps: GameEntityProperties)
+    let private updateBonhommeStateAndPosition (gt: GameTime)
+                                               (entityProps: GameEntityProperties)
                                                (bonhommeProps: BonhommeProperties)
                                                (vectorMov: Vector2)
                                                =
 
         let prevState = bonhommeProps.movementStatus
 
-        (prevState, geProps.position)
+        (prevState, entityProps.position)
         |> updateMovementState vectorMov
         |> updateXPosition vectorMov
-        |> updateYPosition gameTime
-        |> withFloorCheck geProps.position.Y
-        |> withLeftBoarderWindowCheck geProps.position.X
+        |> updateYPosition gt
+        |> withFloorCheck entityProps.position.Y
+        |> withLeftBoarderWindowCheck entityProps.position.X
 
 
 
@@ -150,9 +151,9 @@ module BonhommeUpdate =
                       movementStatus = nextMovState }
             |> Some
 
-        let nextGameEntityProps =
+        let nextEntityProps =
             { currentEntity.Properties with
                   position = Vector2.Add(currentEntity.Position, nextPosMov)
                   sprite = newSprite }
 
-        GameEntity.createEntity nextGameEntityProps nextBonhommeProps currentEntity.UpdateEntity
+        GameEntity.createEntity nextEntityProps nextBonhommeProps currentEntity.UpdateEntity

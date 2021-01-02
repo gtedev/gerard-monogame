@@ -23,9 +23,9 @@ module Level1Update =
     let private ``update level1 movement from right to left`` (allBonhommeProps: GameEntityProperties * BonhommeProperties)
                                                               (vectorMov: Vector2)
                                                               =
-        let (geProps, bonhommeProps) = allBonhommeProps
+        let (entityProps, bonhommeProps) = allBonhommeProps
 
-        let bonhommePosX = geProps.position.X
+        let bonhommePosX = entityProps.position.X
         let idleLvl1Vector = new Vector2(0f, 0f)
 
         let moveLvl1Vector =
@@ -51,7 +51,6 @@ module Level1Update =
         let vectorMov =
             KeyboardState.getMovementVector (Keyboard.GetState())
 
-
         let nextVectorPos =
             vectorMov
             |> ``update level1 movement from right to left`` allBonhommeProps
@@ -70,9 +69,9 @@ module Level1Update =
 
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity) (lvl1Props: Level1Properties) =
 
-        let e =
+        let bhEntity =
             GameEntity.tryGetEntity gs BonhommeConstants.EntityId
 
-        match e with
+        match bhEntity with
         | SomeBonhomme allBonhommeProps -> updateLevel1Entity allBonhommeProps currentEntity lvl1Props
         | _ -> currentEntity

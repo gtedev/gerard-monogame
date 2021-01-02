@@ -8,7 +8,6 @@ module BonhommeSprite =
 
     open Types
     open Microsoft.Xna.Framework
-    open Microsoft.Xna.Framework.Graphics
     open GerardMonogame.Constants.BonhommeConstants
 
     let private createBonhommeAnimatedSprite =
@@ -41,37 +40,37 @@ module BonhommeSprite =
 
     let updateSprite gameTime (currentEntity: IGameEntity) (props: BonhommeProperties) prevMovState currentMovState =
 
-        let ss = props.spriteSheet
+        let spSheet = props.spriteSheet
 
         let nextSprite =
             match (prevMovState, currentMovState) with
             | _, Jumping (dir, _) ->
 
-                GameHelper.matchDirection dir ss.leftJumpingSprite ss.rightJumpingSprite
+                GameHelper.matchDirection dir spSheet.leftJumpingSprite spSheet.rightJumpingSprite
                 |> SingleSprite
 
             | _, Idle dir ->
 
-                GameHelper.matchDirection dir ss.leftIdleSprite ss.rightIdleSprite
+                GameHelper.matchDirection dir spSheet.leftIdleSprite spSheet.rightIdleSprite
                 |> SingleSprite
 
             | _, Duck dir ->
 
-                GameHelper.matchDirection dir ss.leftDuckSprite ss.rightDuckSprite
+                GameHelper.matchDirection dir spSheet.leftDuckSprite spSheet.rightDuckSprite
                 |> SingleSprite
 
             | Idle _, Running dir ->
 
-                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+                GameHelper.matchDirection dir spSheet.leftRunningSprites spSheet.rightRunningSprites
                 |> createBonhommeAnimatedSprite
 
             | Duck _, Running dir ->
 
-                GameHelper.matchDirection dir ss.leftRunningSprites ss.rightRunningSprites
+                GameHelper.matchDirection dir spSheet.leftRunningSprites spSheet.rightRunningSprites
                 |> createBonhommeAnimatedSprite
 
-            | Running Left, Running Right -> createBonhommeAnimatedSprite ss.rightRunningSprites
-            | Running Right, Running Left -> createBonhommeAnimatedSprite ss.leftRunningSprites
+            | Running Left, Running Right -> createBonhommeAnimatedSprite spSheet.rightRunningSprites
+            | Running Right, Running Left -> createBonhommeAnimatedSprite spSheet.leftRunningSprites
             | Running _, Running _ -> currentEntity.Sprite
             | _ -> currentEntity.Sprite
 

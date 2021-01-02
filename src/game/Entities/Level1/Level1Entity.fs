@@ -23,16 +23,16 @@ module Level1Entity =
 
     let initEntity (game: Game) (gs: GameState) =
 
-        let ss =
+        let spSheet =
             Level1Sprite.createLevel1SpriteSheet game
 
         let lvl1Props =
-            Level1Properties { spriteSheet = ss } |> Some
+            Level1Properties { spriteSheet = spSheet } |> Some
 
-        let geProps =
+        let entityProps =
             { id = Level1Constants.EntityId
               position = new Vector2(0f, LEVEL1_Y_POSITION)
-              sprite = SingleSprite ss.level1Sprite
+              sprite = SingleSprite spSheet.level1Sprite
               isEnabled = true }
 
-        GameEntity.createEntity geProps lvl1Props updateEntity
+        GameEntity.createEntity entityProps lvl1Props updateEntity

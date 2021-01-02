@@ -23,19 +23,19 @@ module BonhommeEntity =
 
     let initEntity (g: Game) (gs: GameState) =
 
-        let ss =
+        let spSheet =
             BonhommeSprite.createBonhommeSpriteSheet g
 
-        let bonhommeProperties =
+        let bonhommeProps =
             BonhommeProperties
                 { movementStatus = Idle Right
-                  spriteSheet = ss }
+                  spriteSheet = spSheet }
             |> Some
 
-        let geProps =
+        let entityProps =
             { id = BonhommeConstants.EntityId
               position = new Vector2(POSITION_X_STARTING, FLOOR_HEIGHT)
-              sprite = SingleSprite ss.rightIdleSprite
+              sprite = SingleSprite spSheet.rightIdleSprite
               isEnabled = true }
 
-        GameEntity.createEntity geProps bonhommeProperties updateEntity
+        GameEntity.createEntity entityProps bonhommeProps updateEntity

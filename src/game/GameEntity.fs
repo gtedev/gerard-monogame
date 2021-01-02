@@ -20,5 +20,4 @@ module GameEntity =
 
 
     let tryGetEntity (gs: GameState) entityId =
-        gs.entities
-        |> ReadOnlyDict.tryGetValue entityId
+        gs.entities |> ReadOnlyDict.tryGetValue entityId

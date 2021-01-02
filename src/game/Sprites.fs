@@ -15,13 +15,13 @@ module Sprites =
 
 
 
-    let private updateAnimatedSprite (g: GameTime) (animState: AnimatedSpriteState) =
+    let private updateAnimatedSprite (gt: GameTime) (animState: AnimatedSpriteState) =
 
         let currentIndex = animState.currentSpriteIndex
         let sprites = animState.sprites
 
         let nextElapsedTime =
-            (float32) g.ElapsedGameTime.TotalSeconds
+            (float32) gt.ElapsedGameTime.TotalSeconds
             + animState.elapsedTimeSinceLastFrame
 
         let (nextIndex, nextElapsedTime) =
@@ -37,27 +37,28 @@ module Sprites =
 
 
 
-    let private getTextureToDraw (s: Sprite) =
-        match s with
-        | SingleSprite s -> s.texture
+    let private getTextureToDraw sprite =
+        match sprite with
+        | SingleSprite sprite -> sprite.texture
         | AnimatedSprite animState ->
             animState.sprites.[animState.currentSpriteIndex]
                 .texture
 
 
 
-    let createSpriteTexture (g: Game) x =
-        { texture = g.Content.Load<Texture2D>(x) }
+    let createSpriteTexture (g: Game) assetName =
+        { texture = g.Content.Load<Texture2D>(assetName) }
 
 
 
-    let createSpriteTextures (g: Game) xs = xs |> List.map (createSpriteTexture g)
+    let createSpriteTextures (g: Game) assetNames =
+        assetNames |> List.map (createSpriteTexture g)
 
 
 
-    let updateSpriteState (gt: GameTime) (s: Sprite) =
-        match s with
-        | SingleSprite _ -> s
+    let updateSpriteState (gt: GameTime) sprite =
+        match sprite with
+        | SingleSprite _ -> sprite
         | AnimatedSprite animState -> updateAnimatedSprite gt animState
 
 
@@ -72,8 +73,8 @@ module Sprites =
 
 
 
-    let drawSprite (spriteBatch: SpriteBatch) (ge: IGameEntity) =
+    let drawSprite (spriteBatch: SpriteBatch) (entity: IGameEntity) =
 
-        let t = getTextureToDraw ge.Sprite
+        let texture = getTextureToDraw entity.Sprite
 
-        spriteBatch.Draw(t, ge.Position, Color.White)
+        spriteBatch.Draw(texture, entity.Position, Color.White)

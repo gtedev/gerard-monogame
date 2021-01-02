@@ -11,23 +11,23 @@ module GameState =
 
     let updateEntities gameTime (gs: GameState) =
 
-        let updateEntity (key, e: IGameEntity) = (key, e.UpdateEntity gameTime gs e)
-
         let newEntities =
-            gs.entities |> ReadOnlyDict.map updateEntity
+            gs.entities
+            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.UpdateEntity gameTime gs entity))
 
         { entities = newEntities }
 
 
 
-    let initEntities<'T when 'T :> Game> (game: 'T) (gs: GameState) =
+    let initEntities (game: Game) (gs: GameState) =
 
         let bh = BonhommeEntity.initEntity game gs
 
-        let l1 = Level1Entity.initEntity game gs
+        let lvl1 = Level1Entity.initEntity game gs
 
         let entities =
-            [ l1; bh ]
-            |> List.toReadOnlyDict (fun e -> (e.Properties.id, e))
+            [ lvl1; bh ]
+            |> List.map (fun e -> (e.Properties.id, e))
+            |> List.toReadOnlyDict
 
         { gs with entities = entities }
