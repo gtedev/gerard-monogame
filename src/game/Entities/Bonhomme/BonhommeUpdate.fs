@@ -56,7 +56,7 @@ module BonhommeUpdate =
             match nextMovState with
             | Jumping (prevDir, vl: CurrentJumpVelocity) ->
 
-                vl * (float32) gt.ElapsedGameTime.TotalSeconds
+                vl * (float32 gt.ElapsedGameTime.TotalSeconds)
 
             | _ -> 0f
 

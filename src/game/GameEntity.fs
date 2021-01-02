@@ -6,9 +6,9 @@ module GameEntity =
     open Types
     open FSharp.Core.Extensions
 
-    let createEntity props customProps update =
+    let createEntity props extendProps update =
         { new IGameEntity with
-            member x.CustomEntityProperties = customProps
+            member x.ExtendProperties  = extendProps
             member x.Properties = props
 
             member x.UpdateEntity gameTime gameState currentGameEntity =
