@@ -29,112 +29,115 @@ module BonhommeUpdate =
 
 
 
-    let private withLeftBoarderWindowCheck posX (nextMov: (BonhommeMovemementState * Vector2)) =
+    let private withLeftBoarderWindowCheck posX (sp: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPos) = nextMov
+        let (state, position) = sp
 
         let nextXPosition =
-            if posX + nextMovPos.X < 0f then 0f else nextMovPos.X
+            if posX + position.X < 0f then 0f else position.X
 
-        (nextMovState, new Vector2(nextXPosition, nextMovPos.Y))
-
-
-
-    let private withFloorCheck posY (nextMov: (BonhommeMovemementState * Vector2)) =
-
-        let (nextMovState, nextMovPos) = nextMov
-
-        let dir = extractDirection nextMovState
-
-        if posY + nextMovPos.Y > FLOOR_HEIGHT
-        then (Idle dir, new Vector2(nextMovPos.X, 0f))
-        else nextMov
+        (state, new Vector2(nextXPosition, position.Y))
 
 
 
-    let private updateYPosition (gt: GameTime) (nextMov: (BonhommeMovemementState * Vector2)) =
+    let private withFloorCheck posY (sp: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPos) = nextMov
+        let (state, position) = sp
+
+        let dir = extractDirection state
+        let nextYPos = posY + position.Y
+
+        match nextYPos with
+        | _ when nextYPos > FLOOR_HEIGHT ->
+
+            (Idle dir, new Vector2(position.X, 0f))
+
+        | _ -> sp
+
+
+
+    let private updateYPosition (gt: GameTime) (sp: (BonhommeMovemementState * Vector2)) =
+
+        let (state, position) = sp
 
         let nextYPos =
-            match nextMovState with
+            match state with
             | Jumping (prevDir, vl: CurrentJumpVelocity) ->
 
                 vl * (float32 gt.ElapsedGameTime.TotalSeconds)
 
             | _ -> 0f
 
-        (nextMovState, new Vector2(nextMovPos.X, nextYPos))
+        (state, new Vector2(position.X, nextYPos))
 
 
 
-    let private updateMovementState (vectorMov: Vector2) (nextMov: (BonhommeMovemementState * Vector2)) =
+    let private updateMovementState (vectorMov: Vector2) (sp: (BonhommeMovemementState * Vector2)) =
 
-        let (prevMovState, nextMovPos) = nextMov
+        let (state, position) = sp
 
         let nextMovState =
-            match (prevMovState, vectorMov) with
+            match state with
+            | Jumping (dir, velocity) ->
 
-            | (Jumping (prevDir, velocity), _) ->
+                Jumping(dir, velocity + JUMP_VELOCITY_INCREASE_STEP)
 
-                Jumping(prevDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
-
-            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X < 0f ->
+            | _ when vectorMov.Y < 0f && vectorMov.X < 0f ->
 
                 Jumping(Left, JUMP_VELOCITY_SPEED)
 
-            | (_, vectorMov) when vectorMov.Y < 0f && vectorMov.X > 0f ->
+            | _ when vectorMov.Y < 0f && vectorMov.X > 0f ->
 
                 Jumping(Right, JUMP_VELOCITY_SPEED)
 
-            | (Idle prevDir, vectorMov) when vectorMov.Y < 0f ->
+            | Idle dir when vectorMov.Y < 0f ->
 
-                GameHelper.matchDirection prevDir newJumpLeft newJumpRight
+                GameHelper.matchDirection dir newJumpLeft newJumpRight
 
-            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X < 0f ->
+            | _ when vectorMov.Y > 0f && vectorMov.X < 0f ->
 
                 Duck Left
 
-            | (_, vectorMov) when vectorMov.Y > 0f && vectorMov.X > 0f ->
+            | _ when vectorMov.Y > 0f && vectorMov.X > 0f ->
 
                 Duck Right
 
-            | (_, vectorMov) when vectorMov.X < 0f ->
+            | _ when vectorMov.X < 0f ->
 
                 Running Left
 
-            | (_, vectorMov) when vectorMov.X > 0f ->
+            | _ when vectorMov.X > 0f ->
 
                 Running Right
 
-            | (prevMovState, vectorMov) when vectorMov.X = 0f && vectorMov.Y = 0f ->
+            | _ when vectorMov.X = 0f && vectorMov.Y = 0f ->
 
-                let prevDir = extractDirection prevMovState
-                GameHelper.matchDirection prevDir (Idle Left) (Idle Right)
+                let dir = extractDirection state
+                GameHelper.matchDirection dir (Idle Left) (Idle Right)
 
-            | (prevMovState, vectorMov) when vectorMov.Y > 0f ->
+            | _ when vectorMov.Y > 0f ->
 
-                let prevDir = extractDirection prevMovState
-                GameHelper.matchDirection prevDir (Duck Left) (Duck Right)
+                let dir = extractDirection state
+                GameHelper.matchDirection dir (Duck Left) (Duck Right)
 
-            | (_, _) -> prevMovState
-
-
-        (nextMovState, nextMovPos)
+            | _ -> state
 
 
+        (nextMovState, position)
 
-    let private updateXPosition (vectorMov: Vector2) (nextMov: (BonhommeMovemementState * Vector2)) =
 
-        let (nextMovState, nextMovPos) = nextMov
+
+    let private updateXPosition (vectorMov: Vector2) (sp: (BonhommeMovemementState * Vector2)) =
+
+        let (state, position) = sp
 
         let xPos =
-            match nextMovState with
+            match state with
             | Duck _ -> 0f
             | Running _ -> vectorMov.X * SPEED_RUNNING_BONHOMME
             | _ -> vectorMov.X
 
-        (nextMovState, new Vector2(xPos, nextMovPos.Y))
+        (state, new Vector2(xPos, position.Y))
 
 
 
@@ -144,9 +147,9 @@ module BonhommeUpdate =
                                                (vectorMov: Vector2)
                                                =
 
-        let prevState = bonhommeProps.movementStatus
+        let currentMovState = bonhommeProps.movementStatus
 
-        (prevState, entityProps.position)
+        (currentMovState, entityProps.position)
         |> updateMovementState vectorMov
         |> updateXPosition vectorMov
         |> updateYPosition gt
