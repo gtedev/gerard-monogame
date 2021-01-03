@@ -11,15 +11,12 @@ module BonhommeUpdate =
     open GerardMonogame.Constants.BonhommeConstants
 
 
-    let private newJumpStraight direction =
-        Jumping(Up direction, JUMP_VELOCITY_SPEED)
 
-    let private newJumpLeft =
-        Jumping(Toward Left, JUMP_VELOCITY_SPEED)
+    let private newJumpStraight dir = Jumping(Up dir, JUMP_VELOCITY_SPEED)
 
-    let private newJumpRight =
-        Jumping(Toward Right, JUMP_VELOCITY_SPEED)
 
+    let private newJump dir =
+        Jumping(Toward dir, JUMP_VELOCITY_SPEED)
 
 
     let private extractDirection movState =
@@ -86,11 +83,11 @@ module BonhommeUpdate =
 
             | _ when vectorMov.Y < 0f && vectorMov.X < 0f ->
 
-                newJumpLeft
+                newJump Left
 
             | _ when vectorMov.Y < 0f && vectorMov.X > 0f ->
 
-                newJumpRight
+                newJump Right
 
             | Idle dir when vectorMov.Y < 0f ->
 
