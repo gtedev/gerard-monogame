@@ -12,6 +12,35 @@ module BonhommeSprite =
 
 
 
+    type BonhommeSpriteManager(spriteSheet) =
+
+        let _newAnimatedSprite =
+            Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
+
+        let _jumpSprite dir =
+            GameHelper.matchDirection dir spriteSheet.leftJumpingSprite spriteSheet.rightJumpingSprite
+            |> SingleSprite
+
+        let _runningSprite dir =
+            GameHelper.matchDirection dir spriteSheet.leftRunningSprites spriteSheet.rightRunningSprites
+            |> _newAnimatedSprite
+
+        let _duckSprite dir =
+            GameHelper.matchDirection dir spriteSheet.leftDuckSprite spriteSheet.rightDuckSprite
+            |> SingleSprite
+
+        let _idleSprite dir =
+            GameHelper.matchDirection dir spriteSheet.leftIdleSprite spriteSheet.rightIdleSprite
+            |> SingleSprite
+
+        member this.jumpSprite dir = _jumpSprite dir
+        member this.runningSprite dir = _runningSprite dir
+        member this.duckSprite dir = _duckSprite dir
+        member this.idleSprite dir = _idleSprite dir
+        member this.newAnimatedSprite dir = _newAnimatedSprite dir
+
+
+
     let createBonhommeSpriteSheet (g: Game) =
 
         let createTexture = Sprites.createSpriteTexture g
@@ -35,42 +64,23 @@ module BonhommeSprite =
 
 
 
-    let private newAnimatedSprite =
-        Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
-
-
-
     let updateSprite gameTime (currentEntity: GameEntity) (props: BonhommeProperties) currentMovState nextMovState =
 
         let spSheet = props.spriteSheet
 
-        let jumpSprite dir =
-            GameHelper.matchDirection dir spSheet.leftJumpingSprite spSheet.rightJumpingSprite
-            |> SingleSprite
-
-        let runningSprite dir =
-            GameHelper.matchDirection dir spSheet.leftRunningSprites spSheet.rightRunningSprites
-            |> newAnimatedSprite
-
-        let duckSprite dir =
-            GameHelper.matchDirection dir spSheet.leftDuckSprite spSheet.rightDuckSprite
-            |> SingleSprite
-
-        let idleSprite dir =
-            GameHelper.matchDirection dir spSheet.leftIdleSprite spSheet.rightIdleSprite
-            |> SingleSprite
+        let m = BonhommeSpriteManager(spSheet)
 
 
         let nextSprite =
             match (currentMovState, nextMovState) with
-            | _, Jumping (Toward dir, _) -> jumpSprite dir
-            | _, Jumping (Up dir, _) -> jumpSprite dir
-            | _, Idle dir -> idleSprite dir
-            | _, Duck dir -> duckSprite dir
-            | Idle _, Running dir -> runningSprite dir
-            | Duck _, Running dir -> runningSprite dir
-            | Running Left, Running Right -> newAnimatedSprite spSheet.rightRunningSprites
-            | Running Right, Running Left -> newAnimatedSprite spSheet.leftRunningSprites
+            | _, Jumping (Toward dir, _) -> m.jumpSprite dir
+            | _, Jumping (Up dir, _) -> m.jumpSprite dir
+            | _, Idle dir -> m.idleSprite dir
+            | _, Duck dir -> m.duckSprite dir
+            | Idle _, Running dir -> m.runningSprite dir
+            | Duck _, Running dir -> m.runningSprite dir
+            | Running Left, Running Right -> m.newAnimatedSprite spSheet.rightRunningSprites
+            | Running Right, Running Left -> m.newAnimatedSprite spSheet.leftRunningSprites
             | Running _, Running _ -> currentEntity.properties.sprite
             | _ -> currentEntity.properties.sprite
 
