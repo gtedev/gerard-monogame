@@ -11,7 +11,7 @@ module Level1Entity =
 
 
 
-    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity): IGameEntity =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity): GameEntity =
 
         match currentEntity with
         | Level1 allEntityProps ->

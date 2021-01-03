@@ -40,7 +40,7 @@ module BonhommeSprite =
 
 
 
-    let updateSprite gameTime (currentEntity: IGameEntity) (props: BonhommeProperties) currentMovState nextMovState =
+    let updateSprite gameTime (currentEntity: GameEntity) (props: BonhommeProperties) currentMovState nextMovState =
 
         let spSheet = props.spriteSheet
 
@@ -71,7 +71,7 @@ module BonhommeSprite =
             | Duck _, Running dir -> runningSprite dir
             | Running Left, Running Right -> newAnimatedSprite spSheet.rightRunningSprites
             | Running Right, Running Left -> newAnimatedSprite spSheet.leftRunningSprites
-            | Running _, Running _ -> currentEntity.Sprite
-            | _ -> currentEntity.Sprite
+            | Running _, Running _ -> currentEntity.properties.sprite
+            | _ -> currentEntity.properties.sprite
 
         Sprites.updateSpriteState gameTime nextSprite

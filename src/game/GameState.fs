@@ -13,7 +13,7 @@ module GameState =
 
         let newEntities =
             gs.entities
-            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.UpdateEntity gt gs entity))
+            |> ReadOnlyDict.map (fun (key, entity) -> (key, entity.updateEntity gt gs entity))
 
         { entities = newEntities }
 
@@ -27,7 +27,7 @@ module GameState =
 
         let entities =
             [ lvl1; bh ]
-            |> List.map (fun entity -> (entity.Properties.id, entity))
+            |> List.map (fun entity -> (entity.properties.id, entity))
             |> List.toReadOnlyDict
 
         { gs with entities = entities }

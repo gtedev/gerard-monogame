@@ -175,7 +175,7 @@ module BonhommeUpdate =
 
 
 
-    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity) (bonhommeProps: BonhommeProperties) =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity) (bonhommeProps: BonhommeProperties) =
 
         let vectorMovement =
             KeyboardState.getMovementVector (Keyboard.GetState())
@@ -183,7 +183,7 @@ module BonhommeUpdate =
         let currentMovState = bonhommeProps.movementStatus
 
         let (nextMovState, nextPosition) =
-            updateBonhommeStateAndPosition gt currentEntity.Properties bonhommeProps vectorMovement
+            updateBonhommeStateAndPosition gt currentEntity.properties bonhommeProps vectorMovement
 
         let nextSprite =
             BonhommeSprite.updateSprite gt currentEntity bonhommeProps currentMovState nextMovState
@@ -196,7 +196,7 @@ module BonhommeUpdate =
             |> Some
 
         let nextEntityProps =
-            { currentEntity.Properties with
+            { currentEntity.properties with
                   position = nextPosition
                   sprite = nextSprite }
 

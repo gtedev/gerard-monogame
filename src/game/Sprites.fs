@@ -74,16 +74,17 @@ module Sprites =
 
 
 
-    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: IGameEntity) =
+    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: GameEntity) =
 
-        let texture = getTextureToDraw entity.Sprite
+        let texture =
+            getTextureToDraw entity.properties.sprite
 
-        spriteBatch.Draw(texture, entity.Position, Color.White)
+        spriteBatch.Draw(texture, entity.properties.position, Color.White)
 
 
 
-    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, IGameEntity>) =
+    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, GameEntity>) =
 
         entities
-        |> ReadOnlyDict.filter (fun (_, entity) -> entity.Properties.isEnabled)
+        |> ReadOnlyDict.filter (fun (_, entity) -> entity.properties.isEnabled)
         |> ReadOnlyDict.iter (drawEntity sb)
