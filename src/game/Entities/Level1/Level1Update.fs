@@ -21,20 +21,33 @@ module Level1Update =
 
 
 
-    let private ``update level1 movement from right to left`` (allBonhommeProps: GameEntityProperties * BonhommeProperties)
-                                                              (vectorMov: Vector2)
-                                                              =
-        let (entityProps, bonhommeProps) = allBonhommeProps
+    let private ``update level1 movement in opposite direction of bonhomme`` (allBonhommeProps: GameEntityProperties * BonhommeProperties)
+                                                                             (vectorMov: Vector2)
+                                                                             =
+        let (bonhommEntityProps, bonhommeProps) = allBonhommeProps
 
-        let bonhommePosX = entityProps.position.X
         let idleLvl1Vector = new Vector2(0f, 0f)
 
-        let moveLvl1Vector =
-            new Vector2(vectorMov.X * (-1f) * SPEED_MOVING_FLOOR, vectorMov.Y)
+        let ``and bonhomme is after minimum X Position`` =
+            bonhommEntityProps.position.X > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER
+
+        let nextMoveLvl1Vector dir =
+            // move of the opposite direction
+            let nextXMovPos = GameHelper.matchDirection dir (1f) (-1f)
+
+            new Vector2(nextXMovPos * SPEED_MOVING_FLOOR, vectorMov.Y)
+
 
         match bonhommeProps.movementStatus with
         | Duck _ -> idleLvl1Vector
-        | _ when bonhommePosX > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER -> moveLvl1Vector
+        | Jumping (Toward dir, _) when ``and bonhomme is after minimum X Position`` ->
+
+            nextMoveLvl1Vector dir
+
+        | Running dir when ``and bonhomme is after minimum X Position`` ->
+
+            nextMoveLvl1Vector dir
+
         | _ -> idleLvl1Vector
 
 
@@ -46,7 +59,7 @@ module Level1Update =
 
 
     let private updateLevel1Entity (allBonhommeProps: GameEntityProperties * BonhommeProperties)
-                                   (currentEntity: IGameEntity)
+                                   (currentEntity: GameEntity)
                                    (lvl1Props: Level1Properties)
                                    =
         let vectorMov =
@@ -54,22 +67,22 @@ module Level1Update =
 
         let nextVectorPos =
             vectorMov
-            |> ``update level1 movement from right to left`` allBonhommeProps
+            |> ``update level1 movement in opposite direction of bonhomme`` allBonhommeProps
             |> ``make sure level1 never moves vertically``
-            |> ``make sure level1 never moves too much to the right`` currentEntity.Position.X
+            |> ``make sure level1 never moves too much to the right`` currentEntity.properties.position.X
 
         let nextLvl1Props = Level1Properties(lvl1Props) |> Some
 
         let nextEntityProps =
-            { currentEntity.Properties with
-                  position = Vector2.Add(currentEntity.Position, nextVectorPos) }
+            { currentEntity.properties with
+                  position = Vector2.Add(currentEntity.properties.position, nextVectorPos) }
 
         currentEntity
         |> GameEntity.updateEntity nextEntityProps nextLvl1Props
 
 
 
-    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: IGameEntity) (lvl1Props: Level1Properties) =
+    let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity) (lvl1Props: Level1Properties) =
 
         let bhEntity =
             GameEntity.tryGetEntity gs BonhommeConstants.EntityId

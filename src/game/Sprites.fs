@@ -9,6 +9,19 @@ module Sprites =
     open FSharp.Core.Extensions
 
 
+    type SpriteTextureFactory(game: Game) =
+
+        let _createSpriteTexture assetName =
+            { texture = game.Content.Load<Texture2D>(assetName) }
+
+        let _createSpriteTextures (assetNames: string list) =
+            assetNames |> List.map (_createSpriteTexture)
+
+        member this.createSpriteTexture assetName = _createSpriteTexture assetName
+        member this.createSpriteTextures assetNames = _createSpriteTextures assetNames
+
+
+
     let private nextSpriteIndex sprites currentIndex =
         let lastIndex = List.length sprites - 1
 
@@ -47,16 +60,6 @@ module Sprites =
 
 
 
-    let createSpriteTexture (g: Game) assetName =
-        { texture = g.Content.Load<Texture2D>(assetName) }
-
-
-
-    let createSpriteTextures (g: Game) assetNames =
-        assetNames |> List.map (createSpriteTexture g)
-
-
-
     let updateSpriteState (gt: GameTime) sprite =
         match sprite with
         | SingleSprite _ -> sprite
@@ -74,16 +77,17 @@ module Sprites =
 
 
 
-    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: IGameEntity) =
+    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: GameEntity) =
 
-        let texture = getTextureToDraw entity.Sprite
+        let texture =
+            getTextureToDraw entity.properties.sprite
 
-        spriteBatch.Draw(texture, entity.Position, Color.White)
+        spriteBatch.Draw(texture, entity.properties.position, Color.White)
 
 
 
-    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, IGameEntity>) =
+    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, GameEntity>) =
 
         entities
-        |> ReadOnlyDict.filter (fun (_, entity) -> entity.Properties.isEnabled)
+        |> ReadOnlyDict.filter (fun (_, entity) -> entity.properties.isEnabled)
         |> ReadOnlyDict.iter (drawEntity sb)

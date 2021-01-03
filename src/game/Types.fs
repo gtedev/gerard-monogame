@@ -38,10 +38,14 @@ module Types =
         | Left
         | Right
 
+    type JumpDirection =
+        | Toward of Direction
+        | Up of Direction
+
     type BonhommeMovemementState =
         | Idle of Direction
         | Running of Direction
-        | Jumping of Direction * CurrentJumpVelocity
+        | Jumping of JumpDirection * CurrentJumpVelocity
         | Duck of Direction
 
     type BonhommeSpriteSheet =
@@ -70,18 +74,17 @@ module Types =
         | Level1Properties of Level1Properties
 
 
-    // GameState<'TEntity> has been just introduced in order to be able to reference GameState in IGameEntity.UpdateEntity
+    // GameState<'TEntity> has been just introduced in order to be able to reference GameState in GameEntity.updateEntity
     // for at least to having something typed.
     // As F# implies strict declaration order, it was not possible to reference GameState before.
     type GameState<'TEntity> =
         { entities: readonlydict<GameEntityId, 'TEntity> }
 
-    type IGameEntity =
-        abstract ExtendProperties: ExtendEntityProperties option
-        abstract Properties: GameEntityProperties
-        abstract UpdateEntity: GameTime -> GameState<IGameEntity> -> IGameEntity -> IGameEntity
-        abstract Position: Vector2
-        abstract Sprite: Sprite
+
+    type GameEntity =
+        { extendProperties: ExtendEntityProperties option
+          properties: GameEntityProperties
+          updateEntity: GameTime -> GameState<GameEntity> -> GameEntity -> GameEntity }
 
 
-    type GameState = GameState<IGameEntity>
+    type GameState = GameState<GameEntity>
