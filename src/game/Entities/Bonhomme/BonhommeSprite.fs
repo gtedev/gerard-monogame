@@ -40,27 +40,24 @@ module BonhommeSprite =
         member this.newAnimatedSprite dir = _newAnimatedSprite dir
 
 
-
     let createBonhommeSpriteSheet (g: Game) =
 
-        let createTexture = Sprites.createSpriteTexture g
+        let f = Sprites.SpriteTextureFactory(g)
 
-        let createTextures = Sprites.createSpriteTextures g
-
-        { leftJumpingSprite = createTexture ASSET_BONHOMME_LEFT_JUMPING_SPRITE
-          rightJumpingSprite = createTexture ASSET_BONHOMME_RIGHT_JUMPING_SPRITE
-          leftDuckSprite = createTexture ASSET_BONHOMME_LEFT_DUCK_SPRITE
-          rightDuckSprite = createTexture ASSET_BONHOMME_RIGHT_DUCK_SPRITE
-          rightIdleSprite = createTexture ASSET_BONHOMME_RIGHT_IDLE_SPRITE
-          leftIdleSprite = createTexture ASSET_BONHOMME_LEFT_IDLE_SPRITE
+        { leftJumpingSprite = f.createSpriteTexture ASSET_BONHOMME_LEFT_JUMPING_SPRITE
+          rightJumpingSprite = f.createSpriteTexture ASSET_BONHOMME_RIGHT_JUMPING_SPRITE
+          leftDuckSprite = f.createSpriteTexture ASSET_BONHOMME_LEFT_DUCK_SPRITE
+          rightDuckSprite = f.createSpriteTexture ASSET_BONHOMME_RIGHT_DUCK_SPRITE
+          rightIdleSprite = f.createSpriteTexture ASSET_BONHOMME_RIGHT_IDLE_SPRITE
+          leftIdleSprite = f.createSpriteTexture ASSET_BONHOMME_LEFT_IDLE_SPRITE
 
           rightRunningSprites =
-              createTextures [ ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1
-                               ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2 ]
+              f.createSpriteTextures [ ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_1
+                                       ASSET_BONHOMME_RIGHT_RUNNING_SPRITE_2 ]
 
           leftRunningSprites =
-              createTextures [ ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1
-                               ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2 ] }
+              f.createSpriteTextures [ ASSET_BONHOMME_LEFT_RUNNING_SPRITE_1
+                                       ASSET_BONHOMME_LEFT_RUNNING_SPRITE_2 ] }
 
 
 

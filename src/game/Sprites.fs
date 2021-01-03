@@ -9,6 +9,19 @@ module Sprites =
     open FSharp.Core.Extensions
 
 
+    type SpriteTextureFactory(game: Game) =
+
+        let _createSpriteTexture assetName =
+            { texture = game.Content.Load<Texture2D>(assetName) }
+
+        let _createSpriteTextures (assetNames: string list) =
+            assetNames |> List.map (_createSpriteTexture)
+
+        member this.createSpriteTexture assetName = _createSpriteTexture assetName
+        member this.createSpriteTextures assetNames = _createSpriteTextures assetNames
+
+
+
     let private nextSpriteIndex sprites currentIndex =
         let lastIndex = List.length sprites - 1
 
@@ -44,16 +57,6 @@ module Sprites =
         | AnimatedSprite animState ->
             animState.sprites.[animState.currentSpriteIndex]
                 .texture
-
-
-
-    let createSpriteTexture (g: Game) assetName =
-        { texture = g.Content.Load<Texture2D>(assetName) }
-
-
-
-    let createSpriteTextures (g: Game) assetNames =
-        assetNames |> List.map (createSpriteTexture g)
 
 
 

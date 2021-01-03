@@ -12,4 +12,6 @@ module Level1Sprite =
 
     let createLevel1SpriteSheet (g: Game) =
 
-        { level1Sprite = Sprites.createSpriteTexture g ASSET_LEVEL1_SPRITE }
+        let f = Sprites.SpriteTextureFactory(g)
+
+        { level1Sprite = f.createSpriteTexture ASSET_LEVEL1_SPRITE }
