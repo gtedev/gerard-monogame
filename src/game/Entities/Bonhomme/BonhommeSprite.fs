@@ -40,13 +40,18 @@ module BonhommeSprite =
 
 
 
-    let updateSprite gameTime (currentEntity: IGameEntity) (props: BonhommeProperties) prevMovState currentMovState =
+    let updateSprite gameTime (currentEntity: IGameEntity) (props: BonhommeProperties) currentMovState nextMovState =
 
         let spSheet = props.spriteSheet
 
         let nextSprite =
-            match (prevMovState, currentMovState) with
-            | _, Jumping (dir, _) ->
+            match (currentMovState, nextMovState) with
+            | _, Jumping (Toward dir, _) ->
+
+                GameHelper.matchDirection dir spSheet.leftJumpingSprite spSheet.rightJumpingSprite
+                |> SingleSprite
+
+            | _, Jumping (Up dir, _) ->
 
                 GameHelper.matchDirection dir spSheet.leftJumpingSprite spSheet.rightJumpingSprite
                 |> SingleSprite
@@ -71,9 +76,18 @@ module BonhommeSprite =
                 GameHelper.matchDirection dir spSheet.leftRunningSprites spSheet.rightRunningSprites
                 |> createBonhommeAnimatedSprite
 
-            | Running Left, Running Right -> createBonhommeAnimatedSprite spSheet.rightRunningSprites
-            | Running Right, Running Left -> createBonhommeAnimatedSprite spSheet.leftRunningSprites
-            | Running _, Running _ -> currentEntity.Sprite
+            | Running Left, Running Right ->
+
+                createBonhommeAnimatedSprite spSheet.rightRunningSprites
+
+            | Running Right, Running Left ->
+
+                createBonhommeAnimatedSprite spSheet.leftRunningSprites
+
+            | Running _, Running _ ->
+
+                currentEntity.Sprite
+
             | _ -> currentEntity.Sprite
 
         Sprites.updateSpriteState gameTime nextSprite

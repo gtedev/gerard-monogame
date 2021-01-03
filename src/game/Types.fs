@@ -38,10 +38,14 @@ module Types =
         | Left
         | Right
 
+    type JumpDirection =
+        | Toward of Direction
+        | Up of Direction
+
     type BonhommeMovemementState =
         | Idle of Direction
         | Running of Direction
-        | Jumping of Direction * CurrentJumpVelocity
+        | Jumping of JumpDirection * CurrentJumpVelocity
         | Duck of Direction
 
     type BonhommeSpriteSheet =
