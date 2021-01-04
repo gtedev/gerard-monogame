@@ -74,17 +74,10 @@ module Types =
         | Level1Properties of Level1Properties
 
 
-    // GameState<'TEntity> has been just introduced in order to be able to reference GameState in GameEntity.updateEntity
-    // for at least to having something typed.
-    // As F# implies strict declaration order, it was not possible to reference GameState before.
-    type GameState<'TEntity> =
-        { entities: readonlydict<GameEntityId, 'TEntity> }
-
-
     type GameEntity =
         { extendProperties: ExtendEntityProperties option
           properties: GameEntityProperties
-          updateEntity: GameTime -> GameState<GameEntity> -> GameEntity -> GameEntity }
+          updateEntity: GameTime -> GameState -> GameEntity -> GameEntity }
 
-
-    type GameState = GameState<GameEntity>
+    and GameState =
+        { entities: readonlydict<GameEntityId, GameEntity> }
