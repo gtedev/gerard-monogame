@@ -75,7 +75,7 @@ module Types =
 
 
     type GameEntity =
-        { extendProperties: ExtendEntityProperties option
+        { extendProperties: ExtendEntityProperties
           properties: GameEntityProperties
           updateEntity: GameTime -> GameState -> GameEntity -> GameEntity }
 

@@ -32,7 +32,6 @@ module BonhommeEntity =
             BonhommeProperties
                 { movementStatus = Idle Right
                   spriteSheet = spSheet }
-            |> Some
 
         let entityProps =
             { id = BonhommeConstants.EntityId

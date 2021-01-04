@@ -193,7 +193,6 @@ module BonhommeUpdate =
             BonhommeProperties
                 { bonhommeProps with
                       movementStatus = nextMovState }
-            |> Some
 
         let nextEntityProps =
             { currentEntity.properties with

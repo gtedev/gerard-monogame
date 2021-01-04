@@ -71,7 +71,7 @@ module Level1Update =
             |> ``make sure level1 never moves vertically``
             |> ``make sure level1 never moves too much to the right`` currentEntity.properties.position.X
 
-        let nextLvl1Props = Level1Properties(lvl1Props) |> Some
+        let nextLvl1Props = Level1Properties(lvl1Props)
 
         let nextEntityProps =
             { currentEntity.properties with

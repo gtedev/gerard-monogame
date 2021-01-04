@@ -29,7 +29,7 @@ module Level1Entity =
             Level1Sprite.createLevel1SpriteSheet game
 
         let lvl1Props =
-            Level1Properties { spriteSheet = spSheet } |> Some
+            Level1Properties { spriteSheet = spSheet }
 
         let entityProps =
             { id = Level1Constants.EntityId
