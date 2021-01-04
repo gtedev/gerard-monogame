@@ -30,7 +30,7 @@ module BonhommeUpdate =
 
 
 
-    let private withLeftBoarderWindowCheck (sp: (BonhommeMovemementState * Vector2)) =
+    let private withLeftBoarderWindowCheck (sp: BonhommeMovemementState * Vector2) =
 
         let (state, entityPosition) = sp
 
@@ -41,7 +41,7 @@ module BonhommeUpdate =
 
 
 
-    let private withFloorCheck (sp: (BonhommeMovemementState * Vector2)) =
+    let private withFloorCheck (sp: BonhommeMovemementState * Vector2) =
 
         let (state, entityPosition) = sp
         let dir = extractDirection state
@@ -55,7 +55,7 @@ module BonhommeUpdate =
 
 
 
-    let private updateYPosition (gt: GameTime) (sp: (BonhommeMovemementState * Vector2)) =
+    let private updateYPosition (gt: GameTime) (sp: BonhommeMovemementState * Vector2) =
 
         let (state, entityPosition) = sp
 
@@ -72,7 +72,7 @@ module BonhommeUpdate =
 
 
 
-    let private updateMovementState (vectorMov: Vector2) (sp: (BonhommeMovemementState * Vector2)) =
+    let private updateMovementState (vectorMov: Vector2) (sp: BonhommeMovemementState * Vector2) =
 
         let (state, entityPosition) = sp
 
@@ -129,7 +129,7 @@ module BonhommeUpdate =
 
     let private updateXPosition (currentState: BonhommeMovemementState)
                                 (vectorMov: Vector2)
-                                (sp: (BonhommeMovemementState * Vector2))
+                                (sp: BonhommeMovemementState * Vector2)
                                 =
 
         let (nextState, entityPosition) = sp
@@ -144,7 +144,7 @@ module BonhommeUpdate =
             | Jumping (Toward currDir, _), Jumping (_, _) ->
 
                 let directionVectorMov =
-                    GameHelper.matchDirection  (-1f) (1f) currDir
+                    GameHelper.matchDirection (-1f) (1f) currDir
 
                 entityPosition.X
                 + directionVectorMov * SPEED_RUNNING_BONHOMME
