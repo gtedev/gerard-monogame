@@ -34,7 +34,7 @@ module BonhommeEntity =
                   spriteSheet = spSheet }
 
         let entityProps =
-            { id = BonhommeConstants.EntityId
+            { id = GameEntityId BonhommeConstants.EntityId
               position = new Vector2(POSITION_X_STARTING, FLOOR_HEIGHT)
               sprite = SingleSprite spSheet.rightIdleSprite
               isEnabled = true }

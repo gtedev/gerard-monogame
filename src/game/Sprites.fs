@@ -22,21 +22,25 @@ module Sprites =
 
 
 
-    let private nextSpriteIndex sprites currentIndex =
+    let private nextSpriteIndex sprites (currentIndex: CurrentSpriteIndex) =
         let lastIndex = List.length sprites - 1
+        let (CurrentSpriteIndex currentIndex) = currentIndex
 
-        if currentIndex = lastIndex then 0 else (currentIndex + 1)
+        let nextIndex =
+            if currentIndex = lastIndex then 0 else (currentIndex + 1)
 
+        CurrentSpriteIndex nextIndex
 
 
     let private updateAnimatedSprite (gt: GameTime) (animState: AnimatedSpriteState) =
 
         let currentIndex = animState.currentSpriteIndex
         let sprites = animState.sprites
+        let (ElapsedTimeSinceLastFrame elapsedTime) = animState.elapsedTimeSinceLastFrame
 
         let nextElapsedTime =
             (float32) gt.ElapsedGameTime.TotalSeconds
-            + animState.elapsedTimeSinceLastFrame
+            + elapsedTime
 
         let (nextIndex, nextElapsedTime) =
             if (nextElapsedTime > animState.frameTime)
@@ -47,7 +51,7 @@ module Sprites =
             { animState with
                   sprites = animState.sprites
                   currentSpriteIndex = nextIndex
-                  elapsedTimeSinceLastFrame = nextElapsedTime }
+                  elapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame nextElapsedTime }
 
 
 
@@ -55,8 +59,8 @@ module Sprites =
         match sprite with
         | SingleSprite sprite -> sprite.texture
         | AnimatedSprite animState ->
-            animState.sprites.[animState.currentSpriteIndex]
-                .texture
+            let (CurrentSpriteIndex currentIndex) = animState.currentSpriteIndex
+            animState.sprites.[currentIndex].texture
 
 
 
@@ -71,8 +75,8 @@ module Sprites =
 
         AnimatedSprite
             { sprites = sprites
-              currentSpriteIndex = 0
-              elapsedTimeSinceLastFrame = 0f
+              currentSpriteIndex = CurrentSpriteIndex 0
+              elapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame 0f
               frameTime = frameTime }
 
 

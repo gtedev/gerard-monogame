@@ -85,7 +85,7 @@ module Level1Update =
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity) (lvl1Props: Level1Properties) =
 
         let bhEntity =
-            GameEntity.tryGetEntity gs BonhommeConstants.EntityId
+            GameEntity.tryGetEntity gs (GameEntityId BonhommeConstants.EntityId)
 
         match bhEntity with
         | SomeBonhomme allBonhommeProps ->

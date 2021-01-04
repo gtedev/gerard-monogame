@@ -32,7 +32,7 @@ module Level1Entity =
             Level1Properties { spriteSheet = spSheet }
 
         let entityProps =
-            { id = Level1Constants.EntityId
+            { id = GameEntityId Level1Constants.EntityId
               position = new Vector2(0f, LEVEL1_Y_POSITION)
               sprite = SingleSprite spSheet.level1Sprite
               isEnabled = true }

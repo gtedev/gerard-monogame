@@ -8,10 +8,10 @@ module Types =
     open FSharp.Core.Extensions
 
 
-    type GameEntityId = string
-    type CurrentSpriteIndex = int
-    type ElapsedTimeSinceLastFrame = float32
-    type CurrentJumpVelocity = float32
+    type GameEntityId = GameEntityId of string
+    type CurrentSpriteIndex = CurrentSpriteIndex of int
+    type ElapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame of float32
+    type CurrentJumpVelocity = CurrentJumpVelocity of float32
 
     type SpriteTexture = { texture: Texture2D }
 

@@ -12,11 +12,12 @@ module BonhommeUpdate =
 
 
 
-    let private newJumpStraight dir = Jumping(Up dir, JUMP_VELOCITY_SPEED)
+    let private newJumpStraight dir =
+        Jumping(Up dir, CurrentJumpVelocity JUMP_VELOCITY_SPEED)
 
 
     let private newJump dir =
-        Jumping(Toward dir, JUMP_VELOCITY_SPEED)
+        Jumping(Toward dir, CurrentJumpVelocity JUMP_VELOCITY_SPEED)
 
 
     let private extractDirection movState =
@@ -60,7 +61,7 @@ module BonhommeUpdate =
 
         let nextYPos =
             match state with
-            | Jumping (prevDir, vl: CurrentJumpVelocity) ->
+            | Jumping (prevDir, (CurrentJumpVelocity vl)) ->
 
                 entityPosition.Y
                 + vl * (float32 gt.ElapsedGameTime.TotalSeconds)
@@ -77,9 +78,9 @@ module BonhommeUpdate =
 
         let nextMovState =
             match state with
-            | Jumping (jmpDir, velocity) ->
+            | Jumping (jmpDir, (CurrentJumpVelocity velocity)) ->
 
-                Jumping(jmpDir, velocity + JUMP_VELOCITY_INCREASE_STEP)
+                Jumping(jmpDir, CurrentJumpVelocity(velocity + JUMP_VELOCITY_INCREASE_STEP))
 
             | _ when vectorMov.Y < 0f && vectorMov.X < 0f ->
 

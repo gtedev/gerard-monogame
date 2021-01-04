@@ -37,5 +37,5 @@ module GameEntity =
               properties = props }
 
 
-    let tryGetEntity (gs: GameState) entityId =
+    let tryGetEntity (gs: GameState) (entityId: GameEntityId) =
         gs.entities |> ReadOnlyDict.tryGetValue entityId
