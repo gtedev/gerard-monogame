@@ -33,7 +33,7 @@ module Level1Update =
 
         let nextMoveLvl1Vector dir =
             // move of the opposite direction
-            let nextXMovPos = GameHelper.matchDirection dir (1f) (-1f)
+            let nextXMovPos = GameHelper.matchDirection (1f) (-1f) dir
 
             new Vector2(nextXMovPos * SPEED_MOVING_FLOOR, vectorMov.Y)
 

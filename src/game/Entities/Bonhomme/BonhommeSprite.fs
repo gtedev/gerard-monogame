@@ -18,19 +18,25 @@ module BonhommeSprite =
             Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
 
         let _jumpSprite dir =
-            GameHelper.matchDirection dir spriteSheet.leftJumpingSprite spriteSheet.rightJumpingSprite
+
+            dir
+            |> GameHelper.matchDirection spriteSheet.leftJumpingSprite spriteSheet.rightJumpingSprite
             |> SingleSprite
 
         let _runningSprite dir =
-            GameHelper.matchDirection dir spriteSheet.leftRunningSprites spriteSheet.rightRunningSprites
+
+            dir
+            |> GameHelper.matchDirection spriteSheet.leftRunningSprites spriteSheet.rightRunningSprites
             |> _newAnimatedSprite
 
         let _duckSprite dir =
-            GameHelper.matchDirection dir spriteSheet.leftDuckSprite spriteSheet.rightDuckSprite
+            dir
+            |> GameHelper.matchDirection spriteSheet.leftDuckSprite spriteSheet.rightDuckSprite
             |> SingleSprite
 
         let _idleSprite dir =
-            GameHelper.matchDirection dir spriteSheet.leftIdleSprite spriteSheet.rightIdleSprite
+            dir
+            |> GameHelper.matchDirection spriteSheet.leftIdleSprite spriteSheet.rightIdleSprite
             |> SingleSprite
 
         member this.jumpSprite dir = _jumpSprite dir
@@ -38,6 +44,7 @@ module BonhommeSprite =
         member this.duckSprite dir = _duckSprite dir
         member this.idleSprite dir = _idleSprite dir
         member this.newAnimatedSprite dir = _newAnimatedSprite dir
+
 
 
     let createBonhommeSpriteSheet (g: Game) =

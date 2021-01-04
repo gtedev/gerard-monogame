@@ -8,7 +8,7 @@ module GameActivePatterns =
 
 
     /// <summary>
-    /// Active pattern that returns <see cref="Bonhomme"/> properties.
+    /// Active pattern that returns <see cref="Bonhomme"/> entity properties within a tuple.
     /// </summary>
     /// <param name="entity">game entity.</param>
     /// <returns>Bonhomme properties.</returns>

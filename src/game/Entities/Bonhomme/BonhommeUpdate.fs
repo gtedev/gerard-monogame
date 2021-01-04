@@ -112,13 +112,13 @@ module BonhommeUpdate =
 
             | _ when vectorMov.X = 0f && vectorMov.Y = 0f ->
 
-                let dir = extractDirection state
-                GameHelper.matchDirection dir (Idle Left) (Idle Right)
+                extractDirection state
+                |> GameHelper.matchDirection (Idle Left) (Idle Right)
 
             | _ when vectorMov.Y > 0f ->
 
-                let dir = extractDirection state
-                GameHelper.matchDirection dir (Duck Left) (Duck Right)
+                extractDirection state
+                |> GameHelper.matchDirection (Duck Left) (Duck Right)
 
             | _ -> state
 
@@ -144,7 +144,7 @@ module BonhommeUpdate =
             | Jumping (Toward currDir, _), Jumping (_, _) ->
 
                 let directionVectorMov =
-                    GameHelper.matchDirection currDir (-1f) (1f)
+                    GameHelper.matchDirection  (-1f) (1f) currDir
 
                 entityPosition.X
                 + directionVectorMov * SPEED_RUNNING_BONHOMME

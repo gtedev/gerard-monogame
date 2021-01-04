@@ -8,7 +8,7 @@ module GameHelper =
 
 
     /// <summary>Match direction then return appropriate left / right params.</summary>
-    let matchDirection dir left right =
+    let matchDirection left right dir =
         match dir with
         | Left -> left
         | Right -> right

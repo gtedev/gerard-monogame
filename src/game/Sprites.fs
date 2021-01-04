@@ -39,7 +39,7 @@ module Sprites =
         let (ElapsedTimeSinceLastFrame elapsedTime) = animState.elapsedTimeSinceLastFrame
 
         let nextElapsedTime =
-            (float32) gt.ElapsedGameTime.TotalSeconds
+            (float32 gt.ElapsedGameTime.TotalSeconds)
             + elapsedTime
 
         let (nextIndex, nextElapsedTime) =
