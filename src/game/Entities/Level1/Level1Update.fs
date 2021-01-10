@@ -62,11 +62,9 @@ module Level1Update =
                                    (currentEntity: GameEntity)
                                    (lvl1Props: Level1Properties)
                                    =
-        let vectorMov =
-            KeyboardState.getMovementVector (Keyboard.GetState())
 
         let nextVectorPos =
-            vectorMov
+            new Vector2(0f, 0f)
             |> ``update level1 movement in opposite direction of bonhomme`` allBonhommeProps
             |> ``make sure level1 never moves vertically``
             |> ``make sure level1 never moves too much to the right`` currentEntity.properties.position.X
