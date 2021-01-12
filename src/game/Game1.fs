@@ -16,7 +16,7 @@ type Game1() as game =
 
     let mutable spriteBatch = Unchecked.defaultof<SpriteBatch>
     let mutable gameState = Unchecked.defaultof<GameState>
-    ////let mutable spriteFont = Unchecked.defaultof<SpriteFont>
+    let mutable spriteFont = Unchecked.defaultof<SpriteFont>
 
     override game.Initialize() =
         do spriteBatch <- new SpriteBatch(game.GraphicsDevice)
@@ -30,7 +30,7 @@ type Game1() as game =
 
     override x.LoadContent() =
 
-        ////spriteFont <- x.Content.Load<SpriteFont>("pixel-art")
+        spriteFont <- x.Content.Load<SpriteFont>("pixel-arial")
         gameState <- GameState.initEntities game gameState
 
 
@@ -53,10 +53,12 @@ type Game1() as game =
 
         spriteBatch.Begin()
 
-        let game = x :> Game
+        let spriteService =
+            { spriteBatch = spriteBatch
+              spriteFont = spriteFont }
 
         gameState.entities
-        |> Sprites.drawEntities game spriteBatch
+        |> Sprites.drawEntities spriteService
 
         spriteBatch.End()
 

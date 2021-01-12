@@ -81,11 +81,12 @@ module Types =
           isEnabled: bool
           extendProperties: ExtendProperties
           updateEntity: GameTime -> GameState -> GameEntity -> GameEntity
-          drawEntity: Game -> SpriteBatch -> GameEntity -> unit }
+          drawEntity: SpriteService -> GameEntity -> unit }
 
     and GameState =
         { entities: readonlydict<GameEntityId, GameEntity> }
 
+    /// Service that contains bunch of Monogame singletons
     and SpriteService =
         { spriteBatch: SpriteBatch
           spriteFont: SpriteFont }

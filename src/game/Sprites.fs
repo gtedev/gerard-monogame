@@ -31,7 +31,8 @@ module Sprites =
         CurrentSpriteIndex nextIndex
 
 
-    let private updateAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
+
+    let private nextAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
 
         let currentIndex = animSpriteProps.currentSpriteIndex
         let sprites = animSpriteProps.sprites
@@ -59,21 +60,10 @@ module Sprites =
 
 
 
-    ////let private getTextureToDraw sprite =
-    ////    match sprite with
-    ////    | SingleSprite sprite -> [ sprite ]
-    ////    | AnimatedSprite animProps ->
-    ////        let (CurrentSpriteIndex currentIndex) = animProps.currentSpriteIndex
-    ////        [ animProps.sprites.[currentIndex] ]
-    ////    | GroupOfSprites list -> list
-
-
-
-    let updateSpriteState (gt: GameTime) sprite position =
+    let updateAnimatedSprite (gt: GameTime) sprite position =
         match sprite with
-        | AnimatedSprite animState -> updateAnimatedSprite gt animState position
-        | SingleSprite props -> SingleSprite({ props with position = position })
-        | GroupOfSprites _ -> sprite
+        | AnimatedSprite animState -> nextAnimatedSprite gt animState position
+        | _ -> sprite
 
 
 
@@ -88,12 +78,12 @@ module Sprites =
 
 
 
-    let drawEntity (game: Game) (spriteBatch: SpriteBatch) (entity: GameEntity) =
+    let drawEntity (sv: SpriteService) (entity: GameEntity) =
 
         let sprite = entity.sprite
 
         let drawSingleSprite (sp: SingleSpriteProperties) =
-            spriteBatch.Draw(sp.texture, sp.position, Color.White)
+            sv.spriteBatch.Draw(sp.texture, sp.position, Color.White)
 
 
         match sprite with
@@ -106,14 +96,14 @@ module Sprites =
             let (CurrentSpriteIndex currentIndex) = animProps.currentSpriteIndex
             let texture = animProps.sprites.[currentIndex]
 
-            spriteBatch.Draw(texture, animProps.position, Color.White)
+            sv.spriteBatch.Draw(texture, animProps.position, Color.White)
 
         | GroupOfSprites spList -> spList |> List.iter drawSingleSprite
 
 
 
-    let drawEntities (g: Game) (sb: SpriteBatch) (entities: readonlydict<GameEntityId, GameEntity>) =
+    let drawEntities (sv: SpriteService) (entities: readonlydict<GameEntityId, GameEntity>) =
 
         entities
         |> ReadOnlyDict.filter (fun (_, entity) -> entity.isEnabled)
-        |> ReadOnlyDict.iter (fun (_, entity) -> entity.drawEntity g sb entity)
+        |> ReadOnlyDict.iter (fun (_, entity) -> entity.drawEntity sv entity)

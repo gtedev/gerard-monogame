@@ -60,8 +60,6 @@ module Level1Update =
                                    (currentEntity: GameEntity)
                                    (lvl1Props: Level1Properties)
                                    =
-        ////let vectorMov =
-        ////    KeyboardState.getMovementVector (Keyboard.GetState())
 
         let nextVectorPos =
             new Vector2(0f, 0f)

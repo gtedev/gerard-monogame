@@ -14,7 +14,7 @@ module BonhommeSprite =
 
     type BonhommeSpriteManager(spriteSheet, position) =
 
-        let newSingleSprite texture =
+        let _newSingleSprite texture =
             { texture = texture
               position = position }
             |> SingleSprite
@@ -26,7 +26,7 @@ module BonhommeSprite =
 
             dir
             |> GameHelper.matchDirection spriteSheet.leftJumpingSprite spriteSheet.rightJumpingSprite
-            |> newSingleSprite
+            |> _newSingleSprite
 
         let _runningSprite dir =
 
@@ -37,12 +37,12 @@ module BonhommeSprite =
         let _duckSprite dir =
             dir
             |> GameHelper.matchDirection spriteSheet.leftDuckSprite spriteSheet.rightDuckSprite
-            |> newSingleSprite
+            |> _newSingleSprite
 
         let _idleSprite dir =
             dir
             |> GameHelper.matchDirection spriteSheet.leftIdleSprite spriteSheet.rightIdleSprite
-            |> newSingleSprite
+            |> _newSingleSprite
 
         member this.jumpSprite dir = _jumpSprite dir
         member this.runningSprite dir = _runningSprite dir
@@ -78,12 +78,13 @@ module BonhommeSprite =
                      (props: BonhommeProperties)
                      currentMovState
                      nextMovState
-                     position
+                     nextPosition
                      =
 
         let spSheet = props.spriteSheet
 
-        let m = BonhommeSpriteManager(spSheet, position)
+        let m =
+            BonhommeSpriteManager(spSheet, nextPosition)
 
 
         let nextSprite =
@@ -96,7 +97,11 @@ module BonhommeSprite =
             | Duck _, Running dir -> m.runningSprite dir
             | Running Left, Running Right -> m.newAnimatedSprite spSheet.rightRunningSprites
             | Running Right, Running Left -> m.newAnimatedSprite spSheet.leftRunningSprites
-            | Running _, Running _ -> currentEntity.sprite
+            | Running _, Running _ ->
+
+                Sprites.updateAnimatedSprite gameTime currentEntity.sprite nextPosition
+
             | _ -> currentEntity.sprite
 
-        Sprites.updateSpriteState gameTime nextSprite position
+
+        nextSprite

@@ -208,15 +208,12 @@ module BonhommeUpdate =
         ////currentEntity
         ////|> GameEntity.updateEntity nextSprite nextBonhommeProps
 
-        let decoratorDraw (g: Game) sb e =
+        let decoratorDraw (sv: SpriteService) e =
 
-            Sprites.drawEntity g sb e
+            Sprites.drawEntity sv e
 
-            let font =
-                g.Content.Load<SpriteFont>("pixel-arial")
-
-            sb.DrawString(
-                font,
+            sv.spriteBatch.DrawString(
+                sv.spriteFont,
                 "bonhommePos Position X:"
                 + nextPosition.X.ToString(),
                 new Vector2(100f, 100f),
