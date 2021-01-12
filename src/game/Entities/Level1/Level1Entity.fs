@@ -14,9 +14,8 @@ module Level1Entity =
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity): GameEntity =
 
         match currentEntity with
-        | Level1 allEntityProps ->
+        | Level1 lvl1Props ->
 
-            let lvl1Props = snd allEntityProps
             Level1Update.updateEntity gt gs currentEntity lvl1Props
 
         | _ -> currentEntity
@@ -28,13 +27,20 @@ module Level1Entity =
         let spSheet =
             Level1Sprite.createLevel1SpriteSheet game
 
+        let lv1Pos = new Vector2(0f, LEVEL1_Y_POSITION)
+
         let lvl1Props =
-            Level1Properties { spriteSheet = spSheet }
+            Level1Properties
+                { spriteSheet = spSheet
+                  position = lv1Pos }
 
-        let entityProps =
-            { id = GameEntityId Level1Constants.EntityId
-              position = new Vector2(0f, LEVEL1_Y_POSITION)
-              sprite = SingleSprite spSheet.level1Sprite
-              isEnabled = true }
+        let spriteProps =
+            { texture = spSheet.level1Sprite
+              position = lv1Pos }
 
-        GameEntity.createEntity entityProps lvl1Props updateEntity
+        { id = GameEntityId Level1Constants.EntityId
+          sprite = SingleSprite spriteProps
+          extendProperties = lvl1Props
+          updateEntity = updateEntity
+          drawEntity = Sprites.drawEntity
+          isEnabled = true }

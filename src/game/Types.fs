@@ -12,27 +12,25 @@ module Types =
     type CurrentSpriteIndex = CurrentSpriteIndex of int
     type ElapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame of float32
     type CurrentJumpVelocity = CurrentJumpVelocity of float32
+    type SpritePosition = Vector2
 
-    type SpriteTexture = { texture: Texture2D }
 
+    type SingleSpriteProperties =
+        { texture: Texture2D
+          position: SpritePosition }
 
-    type AnimatedSpriteState =
-        { sprites: SpriteTexture list
+    type AnimatedSpriteProperties =
+        { sprites: Texture2D list
+          position: SpritePosition
           currentSpriteIndex: CurrentSpriteIndex
           elapsedTimeSinceLastFrame: ElapsedTimeSinceLastFrame
           frameTime: float32 }
 
-
     type Sprite =
-        | SingleSprite of SpriteTexture
-        | AnimatedSprite of AnimatedSpriteState
+        | SingleSprite of SingleSpriteProperties
+        | AnimatedSprite of AnimatedSpriteProperties
+        | GroupOfSprites of SingleSpriteProperties list
 
-
-    type GameEntityProperties =
-        { id: GameEntityId
-          isEnabled: bool
-          position: Vector2
-          sprite: Sprite }
 
     type Direction =
         | Left
@@ -49,35 +47,45 @@ module Types =
         | Duck of Direction
 
     type BonhommeSpriteSheet =
-        { rightIdleSprite: SpriteTexture
-          leftIdleSprite: SpriteTexture
-          rightDuckSprite: SpriteTexture
-          leftDuckSprite: SpriteTexture
-          rightJumpingSprite: SpriteTexture
-          leftJumpingSprite: SpriteTexture
-          rightRunningSprites: SpriteTexture list
-          leftRunningSprites: SpriteTexture list }
+        { rightIdleSprite: Texture2D
+          leftIdleSprite: Texture2D
+          rightDuckSprite: Texture2D
+          leftDuckSprite: Texture2D
+          rightJumpingSprite: Texture2D
+          leftJumpingSprite: Texture2D
+          rightRunningSprites: Texture2D list
+          leftRunningSprites: Texture2D list }
 
-    type Level1SpriteSheet = { level1Sprite: SpriteTexture }
+    type Level1SpriteSheet = { level1Sprite: Texture2D }
 
 
     type BonhommeProperties =
         { movementStatus: BonhommeMovemementState
-          spriteSheet: BonhommeSpriteSheet }
+          spriteSheet: BonhommeSpriteSheet
+          position: SpritePosition }
 
 
-    type Level1Properties = { spriteSheet: Level1SpriteSheet }
+    type Level1Properties =
+        { spriteSheet: Level1SpriteSheet
+          position: SpritePosition }
 
 
-    type ExtendEntityProperties =
+    type ExtendProperties =
         | BonhommeProperties of BonhommeProperties
         | Level1Properties of Level1Properties
 
 
     type GameEntity =
-        { extendProperties: ExtendEntityProperties
-          properties: GameEntityProperties
-          updateEntity: GameTime -> GameState -> GameEntity -> GameEntity }
+        { id: GameEntityId
+          sprite: Sprite
+          isEnabled: bool
+          extendProperties: ExtendProperties
+          updateEntity: GameTime -> GameState -> GameEntity -> GameEntity
+          drawEntity: Game -> SpriteBatch -> GameEntity -> unit }
 
     and GameState =
         { entities: readonlydict<GameEntityId, GameEntity> }
+
+    and SpriteService =
+        { spriteBatch: SpriteBatch
+          spriteFont: SpriteFont }

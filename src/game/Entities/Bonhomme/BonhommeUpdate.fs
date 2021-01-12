@@ -1,6 +1,7 @@
 ﻿namespace GerardMonogame.Game.Entities
 
 open GerardMonogame.Game
+open Microsoft.Xna.Framework.Graphics
 
 [<RequireQualifiedAccess>]
 module BonhommeUpdate =
@@ -28,6 +29,18 @@ module BonhommeUpdate =
         | Jumping (Up dir, _) -> dir
         | Duck dir -> dir
 
+
+
+    let withXLimitPositionCheck currentXPosition (sp: BonhommeMovemementState * Vector2) =
+
+        let (state, entityPosition) = sp
+
+        let nextXPosition =
+            if entityPosition.X > POSITION_X_LIMIT_RUNNING
+            then currentXPosition
+            else entityPosition.X
+
+        (state, new Vector2(nextXPosition, entityPosition.Y))
 
 
     let private withLeftBoarderWindowCheck (sp: BonhommeMovemementState * Vector2) =
@@ -159,21 +172,17 @@ module BonhommeUpdate =
 
 
 
-    let private updateBonhommeStateAndPosition (gt: GameTime)
-                                               (entityProps: GameEntityProperties)
-                                               (bonhommeProps: BonhommeProperties)
-                                               (vectorMov: Vector2)
-                                               =
+    let private updateBonhommeStateAndPosition (gt: GameTime) (bonhommeProps: BonhommeProperties) (vectorMov: Vector2) =
 
         let currentMovState = bonhommeProps.movementStatus
 
-        (currentMovState, entityProps.position)
+        (currentMovState, bonhommeProps.position)
         |> updateMovementState vectorMov
         |> updateXPosition currentMovState vectorMov
         |> updateYPosition gt
         |> withFloorCheck
         |> withLeftBoarderWindowCheck
-
+        |> withXLimitPositionCheck bonhommeProps.position.X
 
 
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity) (bonhommeProps: BonhommeProperties) =
@@ -184,21 +193,37 @@ module BonhommeUpdate =
         let currentMovState = bonhommeProps.movementStatus
 
         let (nextMovState, nextPosition) =
-            updateBonhommeStateAndPosition gt currentEntity.properties bonhommeProps vectorMovement
+            updateBonhommeStateAndPosition gt bonhommeProps vectorMovement
 
         let nextSprite =
-            BonhommeSprite.updateSprite gt currentEntity bonhommeProps currentMovState nextMovState
+            BonhommeSprite.updateSprite gt currentEntity bonhommeProps currentMovState nextMovState nextPosition
 
 
         let nextBonhommeProps =
             BonhommeProperties
                 { bonhommeProps with
-                      movementStatus = nextMovState }
+                      movementStatus = nextMovState
+                      position = nextPosition }
 
-        let nextEntityProps =
-            { currentEntity.properties with
-                  position = nextPosition
-                  sprite = nextSprite }
+        ////currentEntity
+        ////|> GameEntity.updateEntity nextSprite nextBonhommeProps
 
-        currentEntity
-        |> GameEntity.updateEntity nextEntityProps nextBonhommeProps
+        let decoratorDraw (g: Game) sb e =
+
+            Sprites.drawEntity g sb e
+
+            let font =
+                g.Content.Load<SpriteFont>("pixel-arial")
+
+            sb.DrawString(
+                font,
+                "bonhommePos Position X:"
+                + nextPosition.X.ToString(),
+                new Vector2(100f, 100f),
+                Color.Yellow
+            )
+
+        { currentEntity with
+              extendProperties = nextBonhommeProps
+              sprite = nextSprite
+              drawEntity = decoratorDraw }

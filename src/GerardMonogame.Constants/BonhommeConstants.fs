@@ -25,3 +25,5 @@ module BonhommeConstants =
     let JUMP_VELOCITY_INCREASE_STEP = 25f
     let FLOOR_HEIGHT = 505f
     let POSITION_X_STARTING = 30f
+
+    let POSITION_X_LIMIT_RUNNING = 650f

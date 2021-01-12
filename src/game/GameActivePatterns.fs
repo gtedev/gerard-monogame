@@ -14,7 +14,7 @@ module GameActivePatterns =
     /// <returns>Bonhomme properties.</returns>
     let (|Bonhomme|_|) (entity: GameEntity) =
         match entity.extendProperties with
-        | BonhommeProperties bonhommeProps -> Some((entity.properties, bonhommeProps))
+        | BonhommeProperties bonhommeProps -> Some(bonhommeProps)
         | _ -> None
 
 
@@ -38,5 +38,5 @@ module GameActivePatterns =
     /// <returns>A tuple of game properties and Level1 properties.</returns>
     let (|Level1|_|) (entity: GameEntity) =
         match entity.extendProperties with
-        | Level1Properties lvlProps -> Some((entity.properties, lvlProps))
+        | Level1Properties lvlProps -> Some(lvlProps)
         | _ -> None

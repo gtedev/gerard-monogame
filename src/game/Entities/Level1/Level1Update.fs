@@ -21,15 +21,13 @@ module Level1Update =
 
 
 
-    let private ``update level1 movement in opposite direction of bonhomme`` (allBonhommeProps: GameEntityProperties * BonhommeProperties)
+    let private ``update level1 movement in opposite direction of bonhomme`` (bonhommeProps: BonhommeProperties)
                                                                              (vectorMov: Vector2)
                                                                              =
-        let (bonhommEntityProps, bonhommeProps) = allBonhommeProps
-
         let idleLvl1Vector = new Vector2(0f, 0f)
 
         let ``and bonhomme is after minimum X Position`` =
-            bonhommEntityProps.position.X > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER
+            bonhommeProps.position.X > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER
 
         let nextMoveLvl1Vector dir =
             // move of the opposite direction
@@ -58,27 +56,33 @@ module Level1Update =
 
 
 
-    let private updateLevel1Entity (allBonhommeProps: GameEntityProperties * BonhommeProperties)
+    let private updateLevel1Entity (bonhommeProps: BonhommeProperties)
                                    (currentEntity: GameEntity)
                                    (lvl1Props: Level1Properties)
                                    =
-        let vectorMov =
-            KeyboardState.getMovementVector (Keyboard.GetState())
+        ////let vectorMov =
+        ////    KeyboardState.getMovementVector (Keyboard.GetState())
 
         let nextVectorPos =
-            vectorMov
-            |> ``update level1 movement in opposite direction of bonhomme`` allBonhommeProps
+            new Vector2(0f, 0f)
+            |> ``update level1 movement in opposite direction of bonhomme`` bonhommeProps
             |> ``make sure level1 never moves vertically``
-            |> ``make sure level1 never moves too much to the right`` currentEntity.properties.position.X
+            |> ``make sure level1 never moves too much to the right`` lvl1Props.position.X
 
-        let nextLvl1Props = Level1Properties(lvl1Props)
+        let nextPos =
+            Vector2.Add(lvl1Props.position, nextVectorPos)
 
-        let nextEntityProps =
-            { currentEntity.properties with
-                  position = Vector2.Add(currentEntity.properties.position, nextVectorPos) }
+        let nextLvl1Props =
+            Level1Properties({ lvl1Props with position = nextPos })
+
+        let spriteProps =
+            { texture = lvl1Props.spriteSheet.level1Sprite
+              position = nextPos }
+
+        let nextSprite = SingleSprite spriteProps
 
         currentEntity
-        |> GameEntity.updateEntity nextEntityProps nextLvl1Props
+        |> GameEntity.updateEntity nextSprite nextLvl1Props
 
 
 
@@ -88,8 +92,8 @@ module Level1Update =
             GameEntity.tryGetEntity gs (GameEntityId BonhommeConstants.EntityId)
 
         match bhEntity with
-        | SomeBonhomme allBonhommeProps ->
+        | SomeBonhomme props ->
 
-            updateLevel1Entity allBonhommeProps currentEntity lvl1Props
+            updateLevel1Entity props currentEntity lvl1Props
 
         | _ -> currentEntity

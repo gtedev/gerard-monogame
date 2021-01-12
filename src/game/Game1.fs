@@ -5,7 +5,7 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Types
 open Microsoft.Xna.Framework.Media
-
+open FSharp.Core.Extensions
 
 type Game1() as game =
     inherit Game()
@@ -16,7 +16,7 @@ type Game1() as game =
 
     let mutable spriteBatch = Unchecked.defaultof<SpriteBatch>
     let mutable gameState = Unchecked.defaultof<GameState>
-
+    ////let mutable spriteFont = Unchecked.defaultof<SpriteFont>
 
     override game.Initialize() =
         do spriteBatch <- new SpriteBatch(game.GraphicsDevice)
@@ -30,6 +30,7 @@ type Game1() as game =
 
     override x.LoadContent() =
 
+        ////spriteFont <- x.Content.Load<SpriteFont>("pixel-art")
         gameState <- GameState.initEntities game gameState
 
 
@@ -52,8 +53,10 @@ type Game1() as game =
 
         spriteBatch.Begin()
 
+        let game = x :> Game
+
         gameState.entities
-        |> Sprites.drawEntities spriteBatch
+        |> Sprites.drawEntities game spriteBatch
 
         spriteBatch.End()
 

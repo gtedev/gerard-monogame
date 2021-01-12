@@ -11,8 +11,7 @@ module Sprites =
 
     type SpriteTextureFactory(game: Game) =
 
-        let _createSpriteTexture assetName =
-            { texture = game.Content.Load<Texture2D>(assetName) }
+        let _createSpriteTexture assetName = game.Content.Load<Texture2D>(assetName)
 
         let _createSpriteTextures (assetNames: string list) =
             assetNames |> List.map (_createSpriteTexture)
@@ -32,66 +31,89 @@ module Sprites =
         CurrentSpriteIndex nextIndex
 
 
-    let private updateAnimatedSprite (gt: GameTime) (animState: AnimatedSpriteState) =
+    let private updateAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
 
-        let currentIndex = animState.currentSpriteIndex
-        let sprites = animState.sprites
-        let (ElapsedTimeSinceLastFrame elapsedTime) = animState.elapsedTimeSinceLastFrame
+        let currentIndex = animSpriteProps.currentSpriteIndex
+        let sprites = animSpriteProps.sprites
+
+        let (ElapsedTimeSinceLastFrame elapsedTime) =
+            animSpriteProps.elapsedTimeSinceLastFrame
 
         let nextElapsedTime =
             (float32 gt.ElapsedGameTime.TotalSeconds)
             + elapsedTime
 
         let (nextIndex, nextElapsedTime) =
-            if (nextElapsedTime > animState.frameTime)
+            if (nextElapsedTime > animSpriteProps.frameTime)
             then (nextSpriteIndex sprites currentIndex, 0f)
             else (currentIndex, nextElapsedTime)
 
-        AnimatedSprite
-            { animState with
-                  sprites = animState.sprites
+        let nextAnimProps =
+            { animSpriteProps with
+                  sprites = animSpriteProps.sprites
                   currentSpriteIndex = nextIndex
-                  elapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame nextElapsedTime }
+                  elapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame nextElapsedTime
+                  position = nextPosition }
+
+        AnimatedSprite nextAnimProps
 
 
 
-    let private getTextureToDraw sprite =
+    ////let private getTextureToDraw sprite =
+    ////    match sprite with
+    ////    | SingleSprite sprite -> [ sprite ]
+    ////    | AnimatedSprite animProps ->
+    ////        let (CurrentSpriteIndex currentIndex) = animProps.currentSpriteIndex
+    ////        [ animProps.sprites.[currentIndex] ]
+    ////    | GroupOfSprites list -> list
+
+
+
+    let updateSpriteState (gt: GameTime) sprite position =
         match sprite with
-        | SingleSprite sprite -> sprite.texture
-        | AnimatedSprite animState ->
-            let (CurrentSpriteIndex currentIndex) = animState.currentSpriteIndex
-            animState.sprites.[currentIndex].texture
+        | AnimatedSprite animState -> updateAnimatedSprite gt animState position
+        | SingleSprite props -> SingleSprite({ props with position = position })
+        | GroupOfSprites _ -> sprite
 
 
 
-    let updateSpriteState (gt: GameTime) sprite =
-        match sprite with
-        | SingleSprite _ -> sprite
-        | AnimatedSprite animState -> updateAnimatedSprite gt animState
-
-
-
-    let createAnimatedSprite frameTime sprites =
+    let createAnimatedSprite frameTime position sprites =
 
         AnimatedSprite
             { sprites = sprites
               currentSpriteIndex = CurrentSpriteIndex 0
               elapsedTimeSinceLastFrame = ElapsedTimeSinceLastFrame 0f
-              frameTime = frameTime }
+              frameTime = frameTime
+              position = position }
 
 
 
-    let private drawEntity (spriteBatch: SpriteBatch) (key, entity: GameEntity) =
+    let drawEntity (game: Game) (spriteBatch: SpriteBatch) (entity: GameEntity) =
 
-        let texture =
-            getTextureToDraw entity.properties.sprite
+        let sprite = entity.sprite
 
-        spriteBatch.Draw(texture, entity.properties.position, Color.White)
+        let drawSingleSprite (sp: SingleSpriteProperties) =
+            spriteBatch.Draw(sp.texture, sp.position, Color.White)
+
+
+        match sprite with
+        | SingleSprite props ->
+
+            drawSingleSprite props
+
+        | AnimatedSprite animProps ->
+
+            let (CurrentSpriteIndex currentIndex) = animProps.currentSpriteIndex
+            let texture = animProps.sprites.[currentIndex]
+
+            spriteBatch.Draw(texture, animProps.position, Color.White)
+
+        | GroupOfSprites spList -> spList |> List.iter drawSingleSprite
 
 
 
-    let drawEntities (sb: SpriteBatch) (entities: readonlydict<GameEntityId, GameEntity>) =
+    let drawEntities (g: Game) (sb: SpriteBatch) (entities: readonlydict<GameEntityId, GameEntity>) =
 
         entities
-        |> ReadOnlyDict.filter (fun (_, entity) -> entity.properties.isEnabled)
-        |> ReadOnlyDict.iter (drawEntity sb)
+        |> ReadOnlyDict.filter (fun (_, entity) -> entity.isEnabled)
+        |> ReadOnlyDict.iter (fun (_, entity) -> entity.drawEntity g sb entity)
