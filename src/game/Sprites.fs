@@ -32,7 +32,7 @@ module Sprites =
 
 
 
-    let private nextAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
+    let updateAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
 
         let currentIndex = animSpriteProps.currentSpriteIndex
         let sprites = animSpriteProps.sprites
@@ -57,13 +57,6 @@ module Sprites =
                   position = nextPosition }
 
         AnimatedSprite nextAnimProps
-
-
-
-    let updateAnimatedSprite (gt: GameTime) sprite position =
-        match sprite with
-        | AnimatedSprite animState -> nextAnimatedSprite gt animState position
-        | _ -> sprite
 
 
 
