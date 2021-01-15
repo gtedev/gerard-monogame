@@ -88,20 +88,18 @@ module BonhommeSprite =
 
 
         let nextSprite =
+            match (currentMovState, nextMovState) with
+            | _, Jumping (Toward dir, _) -> m.jumpSprite dir
+            | _, Jumping (Up dir, _) -> m.jumpSprite dir
+            | _, Idle dir -> m.idleSprite dir
+            | _, Duck dir -> m.duckSprite dir
+            | Idle _, Running dir -> m.runningSprite dir
+            | Duck _, Running dir -> m.runningSprite dir
+            | Running Left, Running Right -> m.newAnimatedSprite spSheet.rightRunningSprites
+            | Running Right, Running Left -> m.newAnimatedSprite spSheet.leftRunningSprites
+            | Running _, Running _ ->
 
-            match (currentMovState, nextMovState, currentEntity.sprite) with
-
-            | _____________, Jumping (Toward dir, _), __________ -> m.jumpSprite dir
-            | _____________, Jumping (Up dir, _), ______________ -> m.jumpSprite dir
-            | _____________, Idle dir, _________________________ -> m.idleSprite dir
-            | _____________, Duck dir, _________________________ -> m.duckSprite dir
-            | Idle ________, Running dir, ______________________ -> m.runningSprite dir
-            | Duck ________, Running dir, ______________________ -> m.runningSprite dir
-            | Running Left, Running Right, _____________________ -> m.newAnimatedSprite spSheet.rightRunningSprites
-            | Running Right, Running Left, _____________________ -> m.newAnimatedSprite spSheet.leftRunningSprites
-            | Running _____, Running _, AnimatedSprite animProps ->
-
-                Sprites.updateAnimatedSprite gameTime animProps nextPosition
+                Sprites.tryUpdateAnimatedSprite gameTime currentEntity.sprite nextPosition
 
             | _ -> currentEntity.sprite
 

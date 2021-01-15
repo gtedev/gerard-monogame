@@ -41,12 +41,9 @@ module BonhommeEntity =
             { texture = spSheet.rightIdleSprite
               position = bonhommePos }
 
-        let sprite = SingleSprite spriteProps
-
-
         { id = GameEntityId BonhommeConstants.EntityId
           isEnabled = true
           extendProperties = bonhommeProps
-          sprite = sprite
+          sprite = SingleSprite spriteProps
           drawEntity = Sprites.drawEntity
           updateEntity = updateEntity }

@@ -32,7 +32,7 @@ module Sprites =
 
 
 
-    let updateAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
+    let private nextAnimatedSprite (gt: GameTime) (animSpriteProps: AnimatedSpriteProperties) nextPosition =
 
         let currentIndex = animSpriteProps.currentSpriteIndex
         let sprites = animSpriteProps.sprites
@@ -57,6 +57,16 @@ module Sprites =
                   position = nextPosition }
 
         AnimatedSprite nextAnimProps
+
+
+    /// <summary>Try updating sprite if Sprite passed is Animated Sprite. Otherwise, it just returns the Sprite passed by default.</summary>
+    /// <param name="sprite">Sprite.</param>
+    /// <param name="position">position.</param>
+    /// <returns>Updated animated sprite or the default sprite.</returns>
+    let tryUpdateAnimatedSprite (gt: GameTime) sprite position =
+        match sprite with
+        | AnimatedSprite animState -> nextAnimatedSprite gt animState position
+        | _ -> sprite
 
 
 
