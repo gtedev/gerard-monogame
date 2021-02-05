@@ -73,11 +73,35 @@ module Level1Update =
         let nextLvl1Props =
             Level1Properties({ lvl1Props with position = nextPos })
 
-        let spriteProps =
-            { texture = lvl1Props.spriteSheet.level1Sprite
-              position = nextPos }
 
-        let nextSprite = SingleSprite spriteProps
+
+        let nextSprite =
+            match nextPos.X with
+            | xPos when xPos > -1456f ->
+
+                let spriteProps =
+                    { texture = lvl1Props.spriteSheet.level1Sprite
+                      position = nextPos }
+
+                SingleSprite spriteProps
+
+            | xPos when xPos < -1456f ->
+
+                let spriteProps1 =
+                    { texture = lvl1Props.spriteSheet.level1Sprite
+                      position = nextPos }
+
+                let spriteProps2 =
+                    { texture = lvl1Props.spriteSheet.level1Sprite
+                      position = nextPos + new Vector2(2450f, 0f) }
+
+                GroupOfSprites [ spriteProps1
+                                 spriteProps2 ]
+
+
+            | _ -> currentEntity.sprite
+
+
 
         currentEntity
         |> GameEntity.updateEntity nextSprite nextLvl1Props
