@@ -68,18 +68,18 @@ module Level1Update =
             |> ``make sure level1 never moves too much to the right`` ((List.head lvl1Props.positions).X)
 
 
-        let updateWithToto (list: SpritePosition list) =
+        let ``remove sprite when it goes off screen and queue new sprite`` (list: SpritePosition list) =
             let first = List.head list
             
             match first.X with 
-            | posX when posX < -2476f ->  List.tail list |> (fun  listt -> List.append (listt) ([new Vector2(2476f, LEVEL1_Y_POSITION)]))
+            | posX when posX < -2476f ->  List.tail list |> (fun  ls -> List.append (ls) ([new Vector2(2476f, LEVEL1_Y_POSITION)]))
             | _ -> list
 
 
         let nextPosList =
             lvl1Props.positions
             |> List.map (fun pos -> Vector2.Add(pos, nextVectorPos))
-            |> updateWithToto
+            |> ``remove sprite when it goes off screen and queue new sprite``
 
         let nextLvl1Props =
             Level1Properties(
