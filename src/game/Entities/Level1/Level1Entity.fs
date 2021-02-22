@@ -27,19 +27,25 @@ module Level1Entity =
         let spSheet =
             Level1Sprite.createLevel1SpriteSheet game
 
-        let lv1Pos = new Vector2(0f, LEVEL1_Y_POSITION)
+        let lv1Pos1 = new Vector2(0f, LEVEL1_Y_POSITION)
+        let lv1Pos2 = new Vector2(2476f, LEVEL1_Y_POSITION)
+
+        let listPos = [ lv1Pos1; lv1Pos2 ]
 
         let lvl1Props =
             Level1Properties
                 { spriteSheet = spSheet
-                  position = lv1Pos }
+                  positions = listPos }
 
-        let spriteProps =
+        let createSpriteProps pos =
             { texture = spSheet.level1Sprite
-              position = lv1Pos }
+              position = pos }
+
+        let spriteProps = listPos |> List.map createSpriteProps
+
 
         { id = GameEntityId Level1Constants.EntityId
-          sprite = SingleSprite spriteProps
+          sprite = GroupOfSprites spriteProps
           extendProperties = lvl1Props
           updateEntity = updateEntity
           drawEntity = Sprites.drawEntity

@@ -65,42 +65,40 @@ module Level1Update =
             new Vector2(0f, 0f)
             |> ``update level1 movement in opposite direction of bonhomme`` bonhommeProps
             |> ``make sure level1 never moves vertically``
-            |> ``make sure level1 never moves too much to the right`` lvl1Props.position.X
+            |> ``make sure level1 never moves too much to the right`` ((List.head lvl1Props.positions).X)
 
-        let nextPos =
-            Vector2.Add(lvl1Props.position, nextVectorPos)
+
+        let updateWithToto (list: SpritePosition list) =
+            let first = List.head list
+            
+            match first.X with 
+            | posX when posX < -2476f ->  List.tail list |> (fun  listt -> List.append (listt) ([new Vector2(2476f, LEVEL1_Y_POSITION)]))
+            | _ -> list
+
+
+        let nextPosList =
+            lvl1Props.positions
+            |> List.map (fun pos -> Vector2.Add(pos, nextVectorPos))
+            |> updateWithToto
 
         let nextLvl1Props =
-            Level1Properties({ lvl1Props with position = nextPos })
+            Level1Properties(
+                { lvl1Props with
+                      positions = nextPosList }
+            )
 
 
 
         let nextSprite =
-            match nextPos.X with
-            | xPos when xPos > -1456f ->
 
-                let spriteProps =
-                    { texture = lvl1Props.spriteSheet.level1Sprite
-                      position = nextPos }
+            let createSpriteProps pos =
+                { texture = lvl1Props.spriteSheet.level1Sprite
+                  position = pos }
 
-                SingleSprite spriteProps
+            let spriteProps =
+                nextPosList |> List.map createSpriteProps
 
-            | xPos when xPos < -1456f ->
-
-                let spriteProps1 =
-                    { texture = lvl1Props.spriteSheet.level1Sprite
-                      position = nextPos }
-
-                let spriteProps2 =
-                    { texture = lvl1Props.spriteSheet.level1Sprite
-                      position = nextPos + new Vector2(2450f, 0f) }
-
-                GroupOfSprites [ spriteProps1
-                                 spriteProps2 ]
-
-
-            | _ -> currentEntity.sprite
-
+            GroupOfSprites spriteProps
 
 
         currentEntity

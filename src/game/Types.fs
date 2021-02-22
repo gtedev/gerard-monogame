@@ -67,7 +67,7 @@ module Types =
 
     type Level1Properties =
         { spriteSheet: Level1SpriteSheet
-          position: SpritePosition }
+          positions: SpritePosition list}
 
 
     type ExtendProperties =
