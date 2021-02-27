@@ -60,7 +60,8 @@ module Types =
 
 
     type BonhommeProperties =
-        { movementStatus: BonhommeMovemementState
+        { virtualPosX: float32
+          movementStatus: BonhommeMovemementState
           spriteSheet: BonhommeSpriteSheet
           position: SpritePosition }
 

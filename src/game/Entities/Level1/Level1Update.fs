@@ -27,7 +27,7 @@ module Level1Update =
         let idleLvl1Vector = new Vector2(0f, 0f)
 
         let ``and bonhomme is after minimum X Position`` =
-            bonhommeProps.position.X > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER
+            bonhommeProps.virtualPosX > LEVEL1_BONHOMME_X_POSITION_MOVE_TRIGGER
 
         let nextMoveLvl1Vector dir =
             // move of the opposite direction
@@ -70,9 +70,13 @@ module Level1Update =
 
         let ``remove sprite when it goes off screen and queue new sprite`` (list: SpritePosition list) =
             let first = List.head list
-            
-            match first.X with 
-            | posX when posX < -2476f ->  List.tail list |> (fun  ls -> List.append (ls) ([new Vector2(2476f, LEVEL1_Y_POSITION)]))
+
+            match first.X with
+            | posX when posX < -2476f ->
+
+                List.tail list
+                |> (fun ls -> List.append (ls) ([ new Vector2(2476f, LEVEL1_Y_POSITION) ]))
+
             | _ -> list
 
 

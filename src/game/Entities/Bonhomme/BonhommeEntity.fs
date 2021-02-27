@@ -33,7 +33,8 @@ module BonhommeEntity =
 
         let bonhommeProps =
             BonhommeProperties
-                { movementStatus = Idle Right
+                { virtualPosX = POSITION_X_STARTING
+                  movementStatus = Idle Right
                   spriteSheet = spSheet
                   position = bonhommePos }
 
