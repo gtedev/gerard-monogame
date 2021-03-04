@@ -8,33 +8,11 @@ module GameEntity =
 
 
 
-    let createEntity props extendProps update =
-
-        // before making entity a record
-        // gameEntity was using F# class
-        // in attempt to use pseudo inheritance
-
-        ////{ new GameEntity with
-        ////    member x.ExtendProperties = extendProps
-        ////    member x.Properties = props
-
-        ////    member x.UpdateEntity gameTime gameState currentGameEntity =
-        ////        update gameTime gameState currentGameEntity
-
-        ////    member x.Position = props.position
-        ////    member x.Sprite = props.sprite }
-
-        { extendProperties = extendProps
-          properties = props
-          updateEntity = update }
-
-
-
-    let updateEntity props extendProps (currentEntity: GameEntity) =
+    let updateEntity sprite extendProps (currentEntity: GameEntity) =
 
         { currentEntity with
               extendProperties = extendProps
-              properties = props }
+              sprite = sprite }
 
 
     let tryGetEntity (gs: GameState) (entityId: GameEntityId) =

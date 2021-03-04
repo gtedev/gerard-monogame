@@ -27,7 +27,7 @@ module GameState =
 
         let entities =
             [ lvl1; bh ]
-            |> List.map (fun entity -> (entity.properties.id, entity))
+            |> List.map (fun entity -> (entity.id, entity))
             |> List.toReadOnlyDict
 
         { gs with entities = entities }

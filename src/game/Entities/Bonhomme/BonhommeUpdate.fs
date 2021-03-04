@@ -1,6 +1,7 @@
 ﻿namespace GerardMonogame.Game.Entities
 
 open GerardMonogame.Game
+open Microsoft.Xna.Framework.Graphics
 
 [<RequireQualifiedAccess>]
 module BonhommeUpdate =
@@ -30,34 +31,53 @@ module BonhommeUpdate =
 
 
 
-    let private withLeftBoarderWindowCheck (sp: BonhommeMovemementState * Vector2) =
+    let withXLimitPositionCheck currentXPosition (sp: BonhommeMovemementState * Vector2 * float32) =
 
-        let (state, entityPosition) = sp
+        let (state, entityPosition, virtualXPos) = sp
+
+        let nextXPosition =
+            if entityPosition.X > POSITION_X_LIMIT_RUNNING_RIGHT then
+                currentXPosition
+            else if entityPosition.X < POSITION_X_LIMIT_RUNNING_LEFT
+                    && virtualXPos > POSITION_X_LIMIT_RUNNING_LEFT then
+                currentXPosition
+            else
+                entityPosition.X
+
+        (state, new Vector2(nextXPosition, entityPosition.Y), virtualXPos)
+
+
+    let private withLeftBoarderWindowCheck (sp: BonhommeMovemementState * Vector2 * float32) =
+
+        let (state, entityPosition, virtualPosX) = sp
 
         let nextXPosition =
             if entityPosition.X < 0f then 0f else entityPosition.X
 
-        (state, new Vector2(nextXPosition, entityPosition.Y))
+        let nextVirtualPosX =
+            if virtualPosX < 0f then 0f else virtualPosX
+
+        (state, new Vector2(nextXPosition, entityPosition.Y), nextVirtualPosX)
 
 
 
-    let private withFloorCheck (sp: BonhommeMovemementState * Vector2) =
+    let private withFloorCheck (sp: BonhommeMovemementState * Vector2 * float32) =
 
-        let (state, entityPosition) = sp
+        let (state, entityPosition, virtualXPos) = sp
         let dir = extractDirection state
 
         match entityPosition.Y with
         | _ when entityPosition.Y > FLOOR_HEIGHT ->
 
-            (Idle dir, new Vector2(entityPosition.X, FLOOR_HEIGHT))
+            (Idle dir, new Vector2(entityPosition.X, FLOOR_HEIGHT), virtualXPos)
 
         | _ -> sp
 
 
 
-    let private updateYPosition (gt: GameTime) (sp: BonhommeMovemementState * Vector2) =
+    let private updateYPosition (gt: GameTime) (sp: BonhommeMovemementState * Vector2 * float32) =
 
-        let (state, entityPosition) = sp
+        let (state, entityPosition, virtualXPos) = sp
 
         let nextYPos =
             match state with
@@ -68,13 +88,13 @@ module BonhommeUpdate =
 
             | _ -> entityPosition.Y
 
-        (state, new Vector2(entityPosition.X, nextYPos))
+        (state, new Vector2(entityPosition.X, nextYPos), virtualXPos)
 
 
 
-    let private updateMovementState (vectorMov: Vector2) (sp: BonhommeMovemementState * Vector2) =
+    let private updateMovementState (vectorMov: Vector2) (sp: BonhommeMovemementState * Vector2 * float32) =
 
-        let (state, entityPosition) = sp
+        let (state, entityPosition, virtualPosX) = sp
 
         let nextMovState =
             match state with
@@ -123,57 +143,60 @@ module BonhommeUpdate =
             | _ -> state
 
 
-        (nextMovState, entityPosition)
+        (nextMovState, entityPosition, virtualPosX)
 
 
 
     let private updateXPosition (currentState: BonhommeMovemementState)
                                 (vectorMov: Vector2)
-                                (sp: BonhommeMovemementState * Vector2)
+                                (sp: BonhommeMovemementState * Vector2 * float32)
                                 =
 
-        let (nextState, entityPosition) = sp
+        let (nextState, entityPosition, virtualPosX) = sp
 
-        let xPos =
+        let (xPos, nextVirtualPosX) =
             match (currentState, nextState) with
-            | _, Duck _ -> entityPosition.X
+            | _, Duck _ ->
+
+                (entityPosition.X, virtualPosX)
+
             | Jumping (Up _, _), Jumping (_, _) ->
 
-                entityPosition.X
+                (entityPosition.X, virtualPosX)
 
             | Jumping (Toward currDir, _), Jumping (_, _) ->
 
                 let directionVectorMov =
                     GameHelper.matchDirection (-1f) (1f) currDir
 
-                entityPosition.X
-                + directionVectorMov * SPEED_RUNNING_BONHOMME
+                let distToward =
+                    directionVectorMov * SPEED_RUNNING_BONHOMME
+
+                (entityPosition.X + distToward, virtualPosX + distToward)
+
 
             | _ ->
 
+                let distToward = vectorMov.X * SPEED_RUNNING_BONHOMME
+
                 // if idle (vector.X = 0)
-                entityPosition.X
-                + vectorMov.X * SPEED_RUNNING_BONHOMME
+                (entityPosition.X + distToward, virtualPosX + distToward)
 
-        (nextState, new Vector2(xPos, entityPosition.Y))
-
+        (nextState, new Vector2(xPos, entityPosition.Y), nextVirtualPosX)
 
 
-    let private updateBonhommeStateAndPosition (gt: GameTime)
-                                               (entityProps: GameEntityProperties)
-                                               (bonhommeProps: BonhommeProperties)
-                                               (vectorMov: Vector2)
-                                               =
+
+    let private updateBonhommeStateAndPosition (gt: GameTime) (bonhommeProps: BonhommeProperties) (vectorMov: Vector2) =
 
         let currentMovState = bonhommeProps.movementStatus
 
-        (currentMovState, entityProps.position)
+        (currentMovState, bonhommeProps.position, bonhommeProps.virtualPosX)
         |> updateMovementState vectorMov
         |> updateXPosition currentMovState vectorMov
         |> updateYPosition gt
         |> withFloorCheck
         |> withLeftBoarderWindowCheck
-
+        |> withXLimitPositionCheck bonhommeProps.position.X
 
 
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity) (bonhommeProps: BonhommeProperties) =
@@ -183,22 +206,43 @@ module BonhommeUpdate =
 
         let currentMovState = bonhommeProps.movementStatus
 
-        let (nextMovState, nextPosition) =
-            updateBonhommeStateAndPosition gt currentEntity.properties bonhommeProps vectorMovement
+        let (nextMovState, nextPosition, nextVirtualXPos) =
+            updateBonhommeStateAndPosition gt bonhommeProps vectorMovement
 
         let nextSprite =
-            BonhommeSprite.updateSprite gt currentEntity bonhommeProps currentMovState nextMovState
+            BonhommeSprite.updateSprite gt currentEntity bonhommeProps currentMovState nextMovState nextPosition
 
 
         let nextBonhommeProps =
             BonhommeProperties
                 { bonhommeProps with
-                      movementStatus = nextMovState }
+                      virtualPosX = nextVirtualXPos
+                      movementStatus = nextMovState
+                      position = nextPosition }
 
-        let nextEntityProps =
-            { currentEntity.properties with
-                  position = nextPosition
-                  sprite = nextSprite }
+        ////currentEntity
+        ////|> GameEntity.updateEntity nextSprite nextBonhommeProps
 
-        currentEntity
-        |> GameEntity.updateEntity nextEntityProps nextBonhommeProps
+        let decoratorDraw (sv: SpriteService) e =
+
+            Sprites.drawEntity sv e
+
+            sv.spriteBatch.DrawString(
+                sv.spriteFont,
+                "bonhomme Position X:" + nextPosition.X.ToString(),
+                new Vector2(100f, 100f),
+                Color.Yellow
+            )
+
+            sv.spriteBatch.DrawString(
+                sv.spriteFont,
+                "bonhomme Virtual Pos X:"
+                + nextVirtualXPos.ToString(),
+                new Vector2(100f, 130f),
+                Color.GreenYellow
+            )
+
+        { currentEntity with
+              extendProperties = nextBonhommeProps
+              sprite = nextSprite
+              drawEntity = decoratorDraw }

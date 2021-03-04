@@ -2,6 +2,7 @@
 
 open GerardMonogame.Game
 open GerardMonogame.Constants
+open Microsoft.Xna.Framework.Graphics
 
 module BonhommeEntity =
 
@@ -14,10 +15,9 @@ module BonhommeEntity =
     let updateEntity (gt: GameTime) (gs: GameState) (currentEntity: GameEntity): GameEntity =
 
         match currentEntity with
-        | Bonhomme allEntityProps ->
+        | Bonhomme props ->
 
-            let bonhommeProps = snd allEntityProps
-            BonhommeUpdate.updateEntity gt gs currentEntity bonhommeProps
+            BonhommeUpdate.updateEntity gt gs currentEntity props
 
         | _ -> currentEntity
 
@@ -28,15 +28,23 @@ module BonhommeEntity =
         let spSheet =
             BonhommeSprite.createBonhommeSpriteSheet g
 
+        let bonhommePos =
+            new Vector2(POSITION_X_STARTING, FLOOR_HEIGHT)
+
         let bonhommeProps =
             BonhommeProperties
-                { movementStatus = Idle Right
-                  spriteSheet = spSheet }
+                { virtualPosX = POSITION_X_STARTING
+                  movementStatus = Idle Right
+                  spriteSheet = spSheet
+                  position = bonhommePos }
 
-        let entityProps =
-            { id = GameEntityId BonhommeConstants.EntityId
-              position = new Vector2(POSITION_X_STARTING, FLOOR_HEIGHT)
-              sprite = SingleSprite spSheet.rightIdleSprite
-              isEnabled = true }
+        let spriteProps =
+            { texture = spSheet.rightIdleSprite
+              position = bonhommePos }
 
-        GameEntity.createEntity entityProps bonhommeProps updateEntity
+        { id = GameEntityId BonhommeConstants.EntityId
+          isEnabled = true
+          extendProperties = bonhommeProps
+          sprite = SingleSprite spriteProps
+          drawEntity = Sprites.drawEntity
+          updateEntity = updateEntity }

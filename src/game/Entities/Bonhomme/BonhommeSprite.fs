@@ -12,16 +12,21 @@ module BonhommeSprite =
 
 
 
-    type BonhommeSpriteManager(spriteSheet) =
+    type BonhommeSpriteManager(spriteSheet, position) =
+
+        let _newSingleSprite texture =
+            { texture = texture
+              position = position }
+            |> SingleSprite
 
         let _newAnimatedSprite =
-            Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME
+            Sprites.createAnimatedSprite BonhommeConstants.ANIMATION_FRAME_TIME position
 
         let _jumpSprite dir =
 
             dir
             |> GameHelper.matchDirection spriteSheet.leftJumpingSprite spriteSheet.rightJumpingSprite
-            |> SingleSprite
+            |> _newSingleSprite
 
         let _runningSprite dir =
 
@@ -32,12 +37,12 @@ module BonhommeSprite =
         let _duckSprite dir =
             dir
             |> GameHelper.matchDirection spriteSheet.leftDuckSprite spriteSheet.rightDuckSprite
-            |> SingleSprite
+            |> _newSingleSprite
 
         let _idleSprite dir =
             dir
             |> GameHelper.matchDirection spriteSheet.leftIdleSprite spriteSheet.rightIdleSprite
-            |> SingleSprite
+            |> _newSingleSprite
 
         member this.jumpSprite dir = _jumpSprite dir
         member this.runningSprite dir = _runningSprite dir
@@ -68,11 +73,18 @@ module BonhommeSprite =
 
 
 
-    let updateSprite gameTime (currentEntity: GameEntity) (props: BonhommeProperties) currentMovState nextMovState =
+    let updateSprite gameTime
+                     (currentEntity: GameEntity)
+                     (props: BonhommeProperties)
+                     currentMovState
+                     nextMovState
+                     nextPosition
+                     =
 
         let spSheet = props.spriteSheet
 
-        let m = BonhommeSpriteManager(spSheet)
+        let m =
+            BonhommeSpriteManager(spSheet, nextPosition)
 
 
         let nextSprite =
@@ -85,7 +97,11 @@ module BonhommeSprite =
             | Duck _, Running dir -> m.runningSprite dir
             | Running Left, Running Right -> m.newAnimatedSprite spSheet.rightRunningSprites
             | Running Right, Running Left -> m.newAnimatedSprite spSheet.leftRunningSprites
-            | Running _, Running _ -> currentEntity.properties.sprite
-            | _ -> currentEntity.properties.sprite
+            | Running _, Running _ ->
 
-        Sprites.updateSpriteState gameTime nextSprite
+                Sprites.tryUpdateAnimatedSprite gameTime currentEntity.sprite nextPosition
+
+            | _ -> currentEntity.sprite
+
+
+        nextSprite
