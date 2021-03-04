@@ -36,9 +36,13 @@ module BonhommeUpdate =
         let (state, entityPosition, virtualXPos) = sp
 
         let nextXPosition =
-            if entityPosition.X > POSITION_X_LIMIT_RUNNING
-            then currentXPosition
-            else entityPosition.X
+            if entityPosition.X > POSITION_X_LIMIT_RUNNING_RIGHT then
+                currentXPosition
+            else if entityPosition.X < POSITION_X_LIMIT_RUNNING_LEFT
+                    && virtualXPos > POSITION_X_LIMIT_RUNNING_LEFT then
+                currentXPosition
+            else
+                entityPosition.X
 
         (state, new Vector2(nextXPosition, entityPosition.Y), virtualXPos)
 
@@ -49,7 +53,7 @@ module BonhommeUpdate =
 
         let nextXPosition =
             if entityPosition.X < 0f then 0f else entityPosition.X
-        
+
         let nextVirtualPosX =
             if virtualPosX < 0f then 0f else virtualPosX
 
@@ -173,8 +177,7 @@ module BonhommeUpdate =
 
             | _ ->
 
-                let distToward =
-                            vectorMov.X * SPEED_RUNNING_BONHOMME
+                let distToward = vectorMov.X * SPEED_RUNNING_BONHOMME
 
                 // if idle (vector.X = 0)
                 (entityPosition.X + distToward, virtualPosX + distToward)
@@ -226,8 +229,7 @@ module BonhommeUpdate =
 
             sv.spriteBatch.DrawString(
                 sv.spriteFont,
-                "bonhomme Position X:"
-                + nextPosition.X.ToString(),
+                "bonhomme Position X:" + nextPosition.X.ToString(),
                 new Vector2(100f, 100f),
                 Color.Yellow
             )

@@ -26,4 +26,5 @@ module BonhommeConstants =
     let FLOOR_HEIGHT = 505f
     let POSITION_X_STARTING = 30f
 
-    let POSITION_X_LIMIT_RUNNING = 650f
+    let POSITION_X_LIMIT_RUNNING_RIGHT = 650f
+    let POSITION_X_LIMIT_RUNNING_LEFT = 250f
