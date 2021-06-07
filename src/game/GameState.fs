@@ -25,8 +25,10 @@ module GameState =
 
         let lvl1 = Level1Entity.initEntity g gs
 
+        let mechant = MechantEntity.initEntity g gs
+
         let entities =
-            [ lvl1; bh ]
+            [ lvl1; bh; mechant ]
             |> List.map (fun entity -> (entity.id, entity))
             |> List.toReadOnlyDict
 

@@ -26,6 +26,9 @@
     <None Include="app.manifest" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <Compile Include="Entities\Mechant\MechantUpdate.fs" />
+    <Compile Include="Entities\Mechant\MechantSprite.fs" />
+    <Compile Include="Entities\Mechant\MechantEntity.fs" />
     <Compile Include="Entities\Level1\Level1Sprite.fs" />
     <Compile Include="Entities\Level1\Level1Update.fs" />
     <Compile Include="Entities\Level1\Level1Entity.fs" />

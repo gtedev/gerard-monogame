@@ -40,3 +40,15 @@ module GameActivePatterns =
         match entity.extendProperties with
         | Level1Properties lvlProps -> Some(lvlProps)
         | _ -> None
+
+
+
+    /// <summary>
+    /// Active pattern that returns <see cref="Mechant"/> entity properties within a tuple.
+    /// </summary>
+    /// <param name="entity">game entity.</param>
+    /// <returns>A tuple of game properties and Mechant properties.</returns>
+    let (|Mechant|_|) (entity: GameEntity) =
+        match entity.extendProperties with
+        | MechantProperties mechantProps -> Some(mechantProps)
+        | _ -> None

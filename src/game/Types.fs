@@ -58,6 +58,7 @@ module Types =
 
     type Level1SpriteSheet = { level1Sprite: Texture2D }
 
+    type MechantSpriteSheet = { mechantSprite: Texture2D }
 
     type BonhommeProperties =
         { virtualPosX: float32
@@ -68,12 +69,16 @@ module Types =
 
     type Level1Properties =
         { spriteSheet: Level1SpriteSheet
-          positions: SpritePosition list}
+          positions: SpritePosition list }
 
+    type MechantProperties =
+        { spriteSheet: MechantSpriteSheet
+          position: SpritePosition }
 
     type ExtendProperties =
         | BonhommeProperties of BonhommeProperties
         | Level1Properties of Level1Properties
+        | MechantProperties of MechantProperties
 
 
     type GameEntity =

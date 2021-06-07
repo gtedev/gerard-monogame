@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="BonhommeConstants.fs" />
+    <Compile Include="MechantConstants.fs" />
     <Compile Include="Level1Constants.fs" />
   </ItemGroup>
 
